@@ -5,8 +5,8 @@ type MascotProps = {
 };
 
 const moodLabels: Record<MascotMood, string> = {
-  idle: "Pret",
-  thinking: "Je reflechis",
+  idle: "Prêt",
+  thinking: "Je réfléchis",
   happy: "Bravo",
   encouraging: "On continue",
   celebrating: "Mission finie",

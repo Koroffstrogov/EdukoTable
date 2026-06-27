@@ -36,10 +36,10 @@ export function AnswerGrid({ question, feedback, onAnswer }: AnswerGridProps) {
           >
             <span className="answer-value">{choice}</span>
             {feedback && isCorrectChoice && (
-              <span className="answer-caption">Bonne reponse</span>
+              <span className="answer-caption">Bonne réponse</span>
             )}
             {feedback && wasSelected && !isCorrectChoice && (
-              <span className="answer-caption">A revoir</span>
+              <span className="answer-caption">À revoir</span>
             )}
           </button>
         );

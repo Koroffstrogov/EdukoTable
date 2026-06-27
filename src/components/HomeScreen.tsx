@@ -8,6 +8,8 @@ type HomeScreenProps = {
   mascotMood: MascotMood;
   onStartRandom: () => void;
   onStartTraining: () => void;
+  onOpenAlbum: () => void;
+  onOpenProgress: () => void;
 };
 
 export function HomeScreen({
@@ -17,6 +19,8 @@ export function HomeScreen({
   mascotMood,
   onStartRandom,
   onStartTraining,
+  onOpenAlbum,
+  onOpenProgress,
 }: HomeScreenProps) {
   return (
     <section className="screen home-screen">
@@ -28,10 +32,10 @@ export function HomeScreen({
         <Mascot mood={mascotMood} />
       </div>
 
-      <div className="home-stats" aria-label="Recompenses">
+      <div className="home-stats" aria-label="Récompenses">
         <div>
           <span className="stat-value">{rewards.stars}</span>
-          <span className="stat-label">etoiles</span>
+          <span className="stat-label">étoiles</span>
         </div>
         <div>
           <span className="stat-value">{rewards.stickersUnlocked.length}</span>
@@ -55,7 +59,16 @@ export function HomeScreen({
           Mission rapide
         </button>
         <button className="button secondary" type="button" onClick={onStartTraining}>
-          Entrainement cible
+          Entraînement ciblé
+        </button>
+      </div>
+
+      <div className="secondary-actions">
+        <button className="button secondary" type="button" onClick={onOpenAlbum}>
+          Album
+        </button>
+        <button className="button secondary" type="button" onClick={onOpenProgress}>
+          Progression
         </button>
       </div>
 

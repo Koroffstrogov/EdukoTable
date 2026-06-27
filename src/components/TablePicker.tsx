@@ -10,9 +10,9 @@ type TablePickerProps = {
 };
 
 const groups: { label: string; tables: Factor[] }[] = [
-  { label: "2 a 5", tables: [2, 3, 4, 5] },
-  { label: "2 a 6", tables: [2, 3, 4, 5, 6] },
-  { label: "2 a 10", tables: [...FACTORS] },
+  { label: "2 à 5", tables: [2, 3, 4, 5] },
+  { label: "2 à 6", tables: [2, 3, 4, 5, 6] },
+  { label: "2 à 10", tables: [...FACTORS] },
 ];
 
 export function TablePicker({
@@ -24,7 +24,7 @@ export function TablePicker({
 }: TablePickerProps) {
   const operationCount = buildOperationPool(selectedTables).length;
   const title =
-    mode === "training" ? "Entrainement cible" : "Mission rapide";
+    mode === "training" ? "Entraînement ciblé" : "Mission rapide";
 
   function toggleTable(table: Factor): void {
     const nextTables = selectedTables.includes(table)
@@ -45,7 +45,7 @@ export function TablePicker({
         <p className="eyebrow">{title}</p>
       </div>
 
-      <h1>Je revise quelles tables ?</h1>
+      <h1>Je révise quelles tables ?</h1>
 
       <div className="button-grid table-grid" aria-label="Tables">
         {FACTORS.map((table) => {
@@ -79,7 +79,7 @@ export function TablePicker({
       </div>
 
       <div className="selected-strip" aria-live="polite">
-        <strong>{operationCount}</strong> operations possibles
+        <strong>{operationCount}</strong> opérations possibles
       </div>
 
       <button className="button primary full" type="button" onClick={onStart}>

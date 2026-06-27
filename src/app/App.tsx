@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { HomeScreen } from "../components/HomeScreen";
+import { ProgressDashboard } from "../components/ProgressDashboard";
 import { SessionSummary } from "../components/SessionSummary";
+import { StickerAlbum } from "../components/StickerAlbum";
 import { TablePicker } from "../components/TablePicker";
 import { QuestionCard } from "../components/QuestionCard";
 import {
@@ -16,6 +18,8 @@ import {
 import {
   isDifficultOperationFixed,
   recordOperationAnswer,
+  resetAdventure,
+  resetResults,
 } from "../domain/progress";
 import type {
   AppState,
@@ -31,7 +35,7 @@ import type {
 } from "../domain/types";
 import { loadAppState, saveAppState } from "../storage/localStore";
 
-type Screen = "home" | "table-picker" | "session" | "summary";
+type Screen = "home" | "table-picker" | "session" | "summary" | "album" | "progress";
 
 type FeedbackState = {
   wasCorrect: boolean;
@@ -222,6 +226,24 @@ export function App() {
     }
   }
 
+  function handleResetResults(): void {
+    clearAdvanceTimer();
+    setAppState((current) => resetResults(current));
+    setSession(null);
+    setSummary(null);
+  }
+
+  function handleResetAdventure(): void {
+    clearAdvanceTimer();
+    const freshState = resetAdventure();
+
+    setAppState(freshState);
+    setDraftTables(freshState.settings.selectedTables);
+    setSession(null);
+    setSummary(null);
+    setScreen("home");
+  }
+
   return (
     <main
       className={`app-shell ${
@@ -236,6 +258,25 @@ export function App() {
           mascotMood={mascotMood}
           onStartRandom={() => openTablePicker("random")}
           onStartTraining={() => openTablePicker("training")}
+          onOpenAlbum={() => setScreen("album")}
+          onOpenProgress={() => setScreen("progress")}
+        />
+      )}
+
+      {screen === "album" && (
+        <StickerAlbum
+          rewards={appState.rewards}
+          latestStickerId={latestStickerId ?? null}
+          onBack={() => setScreen("home")}
+        />
+      )}
+
+      {screen === "progress" && (
+        <ProgressDashboard
+          progress={appState.progress}
+          onBack={() => setScreen("home")}
+          onResetResults={handleResetResults}
+          onResetAdventure={handleResetAdventure}
         />
       )}
 

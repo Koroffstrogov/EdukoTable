@@ -35,7 +35,7 @@ export function QuestionCard({
           <p className="eyebrow">
             Question {questionIndex} / {totalQuestions}
           </p>
-          <div className="star-meter" aria-label={`${sessionStars} etoiles`}>
+          <div className="star-meter" aria-label={`${sessionStars} étoiles`}>
             {Array.from({ length: totalQuestions }, (_, index) => (
               <span
                 className={index < sessionStars ? "star is-filled" : "star"}
@@ -53,7 +53,7 @@ export function QuestionCard({
       <div className="question-card">
         <p>Combien font ?</p>
         <strong className="operation">
-          {question.operation.a} x {question.operation.b}
+          {question.operation.a} × {question.operation.b}
         </strong>
       </div>
 

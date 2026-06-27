@@ -26,6 +26,21 @@ export type OperationStatus =
   | "fragile"
   | "strong";
 
+export type TableProgressSummary = {
+  table: Factor;
+  attempts: number;
+  correct: number;
+  wrong: number;
+  successRate: number | null;
+};
+
+export type OperationProgressSummary = {
+  operation: Operation;
+  stats: OperationStats;
+  successRate: number | null;
+  status: OperationStatus;
+};
+
 export type ProgressState = {
   version: number;
   operationStats: Record<string, OperationStats>;

@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { buildAllOperations, getOperationKey } from "./operations";
 import {
+  getDifficultOperationSummaries,
   getOperationStatus,
   getSuccessRate,
+  getTableProgressSummaries,
   isDifficultOperationFixed,
   resetAdventure,
   resetResults,
@@ -20,6 +22,7 @@ import {
   generateQuestion,
   getChoicesFingerprint,
   getTrainingWeight,
+  pickRandomOperation,
   toQuestionHistoryItem,
 } from "./questionEngine";
 
@@ -82,6 +85,20 @@ describe("answer choices", () => {
     }
   });
 
+  it("avoids absurdly distant distractors when credible choices exist", () => {
+    const operation = buildAllOperations().find(
+      (candidate) => candidate.key === "6x3",
+    );
+
+    if (!operation) throw new Error("Missing operation 6x3");
+
+    const choices = generateChoices(operation, [], seededRandom(12));
+
+    expect(choices).toContain(18);
+    expect(choices).not.toContain(100);
+    expect(choices.every((choice) => Math.abs(choice - 18) <= 25)).toBe(true);
+  });
+
   it("builds fingerprints independent of answer order", () => {
     expect(getChoicesFingerprint([36, 42, 48, 49])).toBe("36|42|48|49");
     expect(getChoicesFingerprint([42, 49, 36, 48])).toBe("36|42|48|49");
@@ -125,6 +142,52 @@ describe("question anti-repetition", () => {
 
       history.push(item);
     }
+  });
+
+  it("avoids the last 3 operation keys when the pool allows it", () => {
+    const history: QuestionHistoryItem[] = [
+      historyItem("6x2", "2x6", 12, [10, 12, 14, 18], 1),
+      historyItem("6x3", "3x6", 18, [12, 18, 21, 24], 1),
+      historyItem("6x4", "4x6", 24, [18, 21, 24, 30], 2),
+    ];
+    const config = {
+      mode: "random" as const,
+      selectedTables: [6] as Factor[],
+      questionCount: 10,
+    };
+    const question = generateQuestion(config, {}, history, seededRandom(2));
+    const recentKeys = new Set(history.map((item) => item.operationKey));
+
+    expect(recentKeys.has(question.operation.key)).toBe(false);
+  });
+
+  it("avoids the immediate commutative pair when the pool allows it", () => {
+    const config = {
+      mode: "random" as const,
+      selectedTables: [6, 7] as Factor[],
+      questionCount: 10,
+    };
+    const history = [
+      historyItem("6x7", "6x7", 42, [35, 36, 42, 48], 2),
+    ];
+    const question = generateQuestion(config, {}, history, seededRandom(4));
+
+    expect(question.operation.pairKey).not.toBe("6x7");
+  });
+
+  it("falls back cleanly when the operation pool is too small", () => {
+    const operation = buildAllOperations().find(
+      (candidate) => candidate.key === "6x7",
+    );
+
+    if (!operation) throw new Error("Missing operation 6x7");
+
+    const history = [
+      historyItem("6x7", "6x7", 42, [35, 36, 42, 48], 2),
+    ];
+    const picked = pickRandomOperation([operation], history, seededRandom(1));
+
+    expect(picked.key).toBe("6x7");
   });
 
   it("keeps training mode anti-repetition after weighting", () => {
@@ -197,6 +260,26 @@ describe("progress", () => {
     const next = updateOperationStats(previous, true);
 
     expect(isDifficultOperationFixed(previous, next, true)).toBe(true);
+  });
+
+  it("summarizes table progress and difficult operations", () => {
+    const statsByKey = {
+      "6x7": { attempts: 5, correct: 2, wrong: 3 },
+      "7x6": { attempts: 4, correct: 3, wrong: 1 },
+      "2x2": { attempts: 3, correct: 3, wrong: 0 },
+    };
+    const tableSix = getTableProgressSummaries(statsByKey).find(
+      (summary) => summary.table === 6,
+    );
+    const difficult = getDifficultOperationSummaries(statsByKey, 2);
+
+    expect(tableSix).toMatchObject({
+      attempts: 9,
+      correct: 5,
+      wrong: 4,
+    });
+    expect(tableSix?.successRate).toBeCloseTo(5 / 9);
+    expect(difficult[0].operation.key).toBe("6x7");
   });
 });
 
@@ -331,10 +414,30 @@ describe("rewards", () => {
     expect(resultsReset.progress.operationStats).toEqual({});
     expect(resultsReset.rewards.stars).toBe(20);
     expect(resultsReset.rewards.stickersUnlocked).toEqual(["forest-leaf"]);
+    expect(resultsReset.rewards.badgesUnlocked).toEqual(["first-session"]);
+    expect(resultsReset.settings).toEqual(rewarded.settings);
     expect(adventureReset.rewards.stars).toBe(0);
     expect(adventureReset.rewards.stickersUnlocked).toEqual([]);
+    expect(adventureReset.rewards.badgesUnlocked).toEqual([]);
+    expect(adventureReset.settings.selectedTables).toEqual([2, 3, 4, 5]);
   });
 });
+
+function historyItem(
+  operationKey: string,
+  pairKey: string,
+  correctAnswer: number,
+  choices: number[],
+  correctChoiceIndex: number,
+): QuestionHistoryItem {
+  return {
+    operationKey,
+    pairKey,
+    correctAnswer,
+    choicesFingerprint: getChoicesFingerprint(choices),
+    correctChoiceIndex,
+  };
+}
 
 function seededRandom(seed: number): () => number {
   let value = seed % 2_147_483_647;

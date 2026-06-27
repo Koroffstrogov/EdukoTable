@@ -1,10 +1,20 @@
 import { getOperationProduct } from "./operations";
 import { buildOperationPool } from "./tableSelection";
-import { FACTORS, type Operation, type OperationStats, type Question, type QuestionHistoryItem, type SessionConfig } from "./types";
+import {
+  FACTORS,
+  type Operation,
+  type OperationStats,
+  type Question,
+  type QuestionHistoryItem,
+  type SessionConfig,
+} from "./types";
 
 export type RandomGenerator = () => number;
 
 const DEFAULT_QUESTION_COUNT = 10;
+const MAX_OPERATION_ATTEMPTS = 81;
+const MAX_CHOICE_ATTEMPTS = 24;
+const MIN_WRONG_CHOICES = 3;
 
 export function createSessionConfig(
   config: Partial<SessionConfig> & Pick<SessionConfig, "mode" | "selectedTables">,
@@ -96,8 +106,13 @@ export function generateQuestion(
   const pool = buildOperationPool(config.selectedTables);
   const triedOperationKeys = new Set<string>();
   let fallbackQuestion: Question | null = null;
+  const operationAttemptLimit = Math.min(pool.length, MAX_OPERATION_ATTEMPTS);
 
-  for (let operationAttempt = 0; operationAttempt < pool.length; operationAttempt += 1) {
+  for (
+    let operationAttempt = 0;
+    operationAttempt < operationAttemptLimit;
+    operationAttempt += 1
+  ) {
     const availablePool = pool.filter(
       (operation) => !triedOperationKeys.has(operation.key),
     );
@@ -110,7 +125,11 @@ export function generateQuestion(
     );
     triedOperationKeys.add(operation.key);
 
-    for (let choiceAttempt = 0; choiceAttempt < 20; choiceAttempt += 1) {
+    for (
+      let choiceAttempt = 0;
+      choiceAttempt < MAX_CHOICE_ATTEMPTS;
+      choiceAttempt += 1
+    ) {
       const choices = generateChoices(operation, history, rng);
       const question = {
         operation,
@@ -258,15 +277,12 @@ function isAcceptableQuestion(
 ): boolean {
   const last = history.at(-1);
   const fingerprint = getChoicesFingerprint(question.choices);
-  const recentFingerprints = new Set(
-    history.slice(-2).map((item) => item.choicesFingerprint),
-  );
 
   if (poolSize > 1 && question.operation.key === last?.operationKey) {
     return false;
   }
 
-  if (poolSize > 1 && recentFingerprints.has(fingerprint)) {
+  if (poolSize > 1 && fingerprint === last?.choicesFingerprint) {
     return false;
   }
 
@@ -279,7 +295,9 @@ function pickWrongChoices(
 ): number[] {
   const correctAnswer = getOperationProduct(operation);
   const candidates = buildDistractorCandidates(operation);
-  const near = candidates.filter((value) => Math.abs(value - correctAnswer) <= 10);
+  const near = candidates.filter(
+    (value) => Math.abs(value - correctAnswer) <= 10,
+  );
   const medium = candidates.filter((value) => {
     const distance = Math.abs(value - correctAnswer);
     return distance > 10 && distance <= 25;
@@ -305,40 +323,85 @@ function pickWrongChoices(
 function buildDistractorCandidates(operation: Operation): number[] {
   const { a, b } = operation;
   const correctAnswer = getOperationProduct(operation);
-  const rawCandidates = [
-    a * (b - 1),
-    a * (b + 1),
-    (a - 1) * b,
-    (a + 1) * b,
-    correctAnswer - a,
-    correctAnswer + a,
-    correctAnswer - b,
-    correctAnswer + b,
-    a + b,
-  ];
+  const rawCandidates = new Map<number, number>();
+  const addCandidate = (value: number, priority: number): void => {
+    const currentPriority = rawCandidates.get(value);
+    if (currentPriority === undefined || priority < currentPriority) {
+      rawCandidates.set(value, priority);
+    }
+  };
+
+  for (const factor of FACTORS) {
+    addCandidate(a * factor, 0);
+    addCandidate(factor * b, 0);
+  }
+
+  addCandidate(a * (b - 2), 0);
+  addCandidate(a * (b - 1), 0);
+  addCandidate(a * (b + 1), 0);
+  addCandidate(a * (b + 2), 0);
+  addCandidate((a - 2) * b, 0);
+  addCandidate((a - 1) * b, 0);
+  addCandidate((a + 1) * b, 0);
+  addCandidate((a + 2) * b, 0);
+  addCandidate(correctAnswer - a, 1);
+  addCandidate(correctAnswer + a, 1);
+  addCandidate(correctAnswer - b, 1);
+  addCandidate(correctAnswer + b, 1);
+  addCandidate(correctAnswer - 2 * a, 1);
+  addCandidate(correctAnswer + 2 * a, 1);
+  addCandidate(correctAnswer - 2 * b, 1);
+  addCandidate(correctAnswer + 2 * b, 1);
+  addCandidate(a + b, 2);
 
   for (const left of FACTORS) {
     for (const right of FACTORS) {
-      rawCandidates.push(left * right);
+      const isNeighborProduct =
+        Math.abs(left - a) <= 1 || Math.abs(right - b) <= 1;
+      addCandidate(left * right, isNeighborProduct ? 2 : 3);
     }
   }
 
-  return Array.from(new Set(rawCandidates))
-    .filter((value) => {
+  const validCandidates = Array.from(rawCandidates.entries())
+    .map(([value, priority]) => ({
+      value,
+      priority,
+      distance: Math.abs(value - correctAnswer),
+    }))
+    .filter((candidate) => {
       return (
-        Number.isInteger(value) &&
-        value > 0 &&
-        value <= 100 &&
-        value !== correctAnswer
+        Number.isInteger(candidate.value) &&
+        candidate.value > 0 &&
+        candidate.value <= 100 &&
+        candidate.value !== correctAnswer
       );
-    })
-    .sort((left, right) => {
-      const leftDistance = Math.abs(left - correctAnswer);
-      const rightDistance = Math.abs(right - correctAnswer);
-      return leftDistance === rightDistance
-        ? left - right
-        : leftDistance - rightDistance;
     });
+  const plausibleDistanceLimit = getPlausibleDistanceLimit(correctAnswer);
+  const plausibleCandidates = validCandidates.filter(
+    (candidate) => candidate.distance <= plausibleDistanceLimit,
+  );
+  const candidates =
+    plausibleCandidates.length >= MIN_WRONG_CHOICES
+      ? plausibleCandidates
+      : validCandidates;
+
+  return candidates
+    .sort((left, right) => {
+      if (left.priority !== right.priority) {
+        return left.priority - right.priority;
+      }
+
+      if (left.distance !== right.distance) {
+        return left.distance - right.distance;
+      }
+
+      return left.value - right.value;
+    })
+    .map((candidate) => candidate.value);
+}
+
+function getPlausibleDistanceLimit(correctAnswer: number): number {
+  return Math.max(18, Math.min(36, Math.round(correctAnswer * 0.65)));
 }
 
 function addRandomFromBucket(

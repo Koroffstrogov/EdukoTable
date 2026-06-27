@@ -14,10 +14,10 @@ export function RewardBurst({ grant }: RewardBurstProps) {
     .filter((badge) => badge !== undefined);
 
   return (
-    <div className="reward-burst" aria-label="Recompenses gagnees">
+    <div className="reward-burst" aria-label="Récompenses gagnées">
       <div className="reward-line">
         <span className="reward-token">+{grant.stars}</span>
-        <span>etoiles gagnees</span>
+        <span>étoiles gagnées</span>
       </div>
 
       {stickers.map((sticker) => (

@@ -1,11 +1,17 @@
 import { createInitialRewardState } from "./rewards";
 import { DEFAULT_SELECTED_TABLES } from "./tableSelection";
+import { buildAllOperations } from "./operations";
+import { getOperationsForTable } from "./tableSelection";
+import { FACTORS } from "./types";
 import type {
   AppState,
+  Factor,
+  OperationProgressSummary,
   OperationStats,
   OperationStatus,
   ProgressState,
   SettingsState,
+  TableProgressSummary,
 } from "./types";
 
 export const APP_STATE_VERSION = 1;
@@ -105,6 +111,79 @@ export function isDifficultOperationFixed(
     nextRate !== null &&
     nextRate >= 0.8
   );
+}
+
+export function getTableProgressSummary(
+  table: Factor,
+  statsByKey: Record<string, OperationStats>,
+): TableProgressSummary {
+  const operations = getOperationsForTable(table);
+  const totals = operations.reduce(
+    (summary, operation) => {
+      const stats = statsByKey[operation.key];
+
+      if (!stats) return summary;
+
+      return {
+        attempts: summary.attempts + stats.attempts,
+        correct: summary.correct + stats.correct,
+        wrong: summary.wrong + stats.wrong,
+      };
+    },
+    { attempts: 0, correct: 0, wrong: 0 },
+  );
+
+  return {
+    table,
+    ...totals,
+    successRate:
+      totals.attempts > 0 ? totals.correct / totals.attempts : null,
+  };
+}
+
+export function getTableProgressSummaries(
+  statsByKey: Record<string, OperationStats>,
+): TableProgressSummary[] {
+  return FACTORS.map((table) => getTableProgressSummary(table, statsByKey));
+}
+
+export function getDifficultOperationSummaries(
+  statsByKey: Record<string, OperationStats>,
+  limit = 6,
+): OperationProgressSummary[] {
+  return buildAllOperations()
+    .map((operation) => {
+      const stats = statsByKey[operation.key];
+
+      if (!stats || stats.attempts === 0) return null;
+
+      return {
+        operation,
+        stats,
+        successRate: getSuccessRate(stats),
+        status: getOperationStatus(stats),
+      };
+    })
+    .filter((summary): summary is OperationProgressSummary => {
+      return (
+        summary !== null &&
+        (summary.stats.wrong > 0 ||
+          summary.status === "difficult" ||
+          summary.status === "fragile")
+      );
+    })
+    .sort((left, right) => {
+      const leftRate = left.successRate ?? 1;
+      const rightRate = right.successRate ?? 1;
+
+      if (leftRate !== rightRate) return leftRate - rightRate;
+      if (left.stats.wrong !== right.stats.wrong) {
+        return right.stats.wrong - left.stats.wrong;
+      }
+
+      return right.stats.attempts - left.stats.attempts;
+    })
+    .slice(0, limit);
 }
 
 export function resetResults(state: AppState): AppState {

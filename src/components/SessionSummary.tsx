@@ -23,9 +23,9 @@ export function SessionSummary({
     <section className="screen summary-screen">
       <div className="summary-top">
         <div>
-          <p className="eyebrow">Mission terminee</p>
+          <p className="eyebrow">Mission terminée</p>
           <h1>
-            {result.correctCount} / {result.total} reussies
+            {result.correctCount} / {result.total} réussies
           </h1>
         </div>
         <Mascot mood={mascotMood} />
@@ -34,14 +34,14 @@ export function SessionSummary({
       <RewardBurst grant={grant} />
 
       <div className="review-block">
-        <h2>A revoir</h2>
+        <h2>À revoir</h2>
         {wrongOperations.length === 0 ? (
           <p>Tout est juste sur cette mission.</p>
         ) : (
           <ul>
             {wrongOperations.map((operation) => (
               <li key={operation.key}>
-                {operation.a} x {operation.b}
+                {operation.a} × {operation.b}
               </li>
             ))}
           </ul>

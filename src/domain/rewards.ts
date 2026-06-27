@@ -30,14 +30,14 @@ export const STICKERS: Sticker[] = [
   {
     id: "space-rocket",
     collectionId: "space",
-    label: "Fusee Eduko",
+    label: "Fusée Eduko",
     symbol: "R1",
     rarity: "common",
   },
   {
     id: "space-planet",
     collectionId: "space",
-    label: "Planete calme",
+    label: "Planète calme",
     symbol: "P1",
     rarity: "common",
   },
@@ -65,26 +65,26 @@ export const STICKERS: Sticker[] = [
   ...FACTORS.map((factor) => ({
     id: `table-${factor}-spark`,
     collectionId: "mastery",
-    label: `Table ${factor} maitrisee`,
+    label: `Table ${factor} maîtrisée`,
     symbol: `M${factor}`,
     rarity: "special" as const,
   })),
 ];
 
 export const BADGES: Badge[] = [
-  { id: "first-session", label: "Premiere mission", starBonus: 5 },
+  { id: "first-session", label: "Première mission", starBonus: 5 },
   { id: "first-perfect-session", label: "Mission parfaite", starBonus: 10 },
   ...FACTORS.map((factor) => ({
     id: `table-${factor}-mastered`,
-    label: `Table ${factor} maitrisee`,
+    label: `Table ${factor} maîtrisée`,
     starBonus: 10,
   })),
-  { id: "ten-correct-answers", label: "10 bonnes reponses", starBonus: 5 },
-  { id: "fifty-correct-answers", label: "50 bonnes reponses", starBonus: 10 },
-  { id: "hundred-answers", label: "100 reponses", starBonus: 15 },
+  { id: "ten-correct-answers", label: "10 bonnes réponses", starBonus: 5 },
+  { id: "fifty-correct-answers", label: "50 bonnes réponses", starBonus: 10 },
+  { id: "hundred-answers", label: "100 réponses", starBonus: 15 },
   {
     id: "difficult-operation-fixed",
-    label: "Difficulte transformee",
+    label: "Difficulté transformée",
     starBonus: 5,
   },
 ];

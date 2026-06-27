@@ -15,9 +15,9 @@ export function FeedbackOverlay({
     <div className={`feedback ${wasCorrect ? "is-happy" : "is-soft"}`} aria-live="polite">
       <strong>{wasCorrect ? "Bravo !" : "Presque !"}</strong>
       <span>
-        {operation.a} x {operation.b} = {correctAnswer}
+        {operation.a} × {operation.b} = {correctAnswer}
       </span>
-      <span>{wasCorrect ? "+1 etoile" : "On la reverra bientot."}</span>
+      <span>{wasCorrect ? "+1 étoile" : "On la reverra bientôt."}</span>
     </div>
   );
 }
