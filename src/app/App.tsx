@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HomeScreen } from "../components/HomeScreen";
 import { ProgressDashboard } from "../components/ProgressDashboard";
 import { SettingsScreen } from "../components/SettingsScreen";
@@ -8,6 +9,7 @@ import { TablePicker } from "../components/TablePicker";
 import { QuestionCard } from "../components/QuestionCard";
 import {
   buildSessionResult,
+  finalizeAbandonedSessionRewards,
   finalizeSessionRewards,
   getStickerById,
 } from "../domain/rewards";
@@ -65,6 +67,7 @@ type SummaryState = {
   config: SessionConfig;
   result: SessionResult;
   grant: RewardGrant;
+  status: "completed" | "abandoned";
 };
 
 const FEEDBACK_DELAY_MS = 700;
@@ -78,6 +81,7 @@ export function App() {
   );
   const [session, setSession] = useState<ActiveSession | null>(null);
   const [summary, setSummary] = useState<SummaryState | null>(null);
+  const [quitDialogOpen, setQuitDialogOpen] = useState(false);
   const advanceTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -101,7 +105,9 @@ export function App() {
       ? "happy"
       : "encouraging"
     : screen === "summary"
-      ? "celebrating"
+      ? summary?.status === "abandoned"
+        ? "encouraging"
+        : "celebrating"
       : screen === "session"
         ? "thinking"
         : "idle";
@@ -142,6 +148,7 @@ export function App() {
       feedback: null,
     });
     setSummary(null);
+    setQuitDialogOpen(false);
     setScreen("session");
   }
 
@@ -191,6 +198,8 @@ export function App() {
     setSession(sessionWithFeedback);
 
     advanceTimerRef.current = window.setTimeout(() => {
+      advanceTimerRef.current = null;
+
       if (nextAnswers.length >= session.config.questionCount) {
         const result = buildSessionResult(nextAnswers);
         const finalizedRewards = finalizeSessionRewards(
@@ -208,6 +217,7 @@ export function App() {
           config: session.config,
           result,
           grant: finalizedRewards.grant,
+          status: "completed",
         });
         setSession(null);
         setScreen("summary");
@@ -235,11 +245,53 @@ export function App() {
     }
   }
 
+  function requestQuitSession(): void {
+    setQuitDialogOpen(true);
+  }
+
+  function continueSession(): void {
+    setQuitDialogOpen(false);
+  }
+
+  function abandonSession(): void {
+    if (!session) return;
+
+    clearAdvanceTimer();
+    setQuitDialogOpen(false);
+
+    if (session.answers.length === 0) {
+      setSession(null);
+      setSummary(null);
+      setScreen("home");
+      return;
+    }
+
+    const result = buildSessionResult(session.answers);
+    const finalizedRewards = finalizeAbandonedSessionRewards(
+      appState.rewards,
+      result,
+    );
+
+    setAppState((current) => ({
+      ...current,
+      rewards: finalizeAbandonedSessionRewards(current.rewards, result).rewards,
+    }));
+    setSummary({
+      config: session.config,
+      result,
+      grant: finalizedRewards.grant,
+      status: "abandoned",
+    });
+    setSession(null);
+    setScreen("summary");
+  }
+
   function handleResetResults(): void {
     clearAdvanceTimer();
     setAppState((current) => resetResults(current));
     setSession(null);
     setSummary(null);
+    setQuitDialogOpen(false);
   }
 
   function handleResetAdventure(): void {
@@ -250,6 +302,7 @@ export function App() {
     setDraftTables(freshState.settings.selectedTables);
     setSession(null);
     setSummary(null);
+    setQuitDialogOpen(false);
     setScreen("home");
   }
 
@@ -324,6 +377,7 @@ export function App() {
           feedback={session.feedback}
           mascotMood={mascotMood}
           onAnswer={handleAnswer}
+          onQuit={requestQuitSession}
         />
       )}
 
@@ -331,11 +385,24 @@ export function App() {
         <SessionSummary
           result={summary.result}
           grant={summary.grant}
+          status={summary.status}
+          totalQuestions={summary.config.questionCount}
           mascotMood={mascotMood}
           onReplay={() =>
             startSession(summary.config.mode, appState.settings.selectedTables)
           }
           onHome={() => setScreen("home")}
+        />
+      )}
+
+      {quitDialogOpen && (
+        <ConfirmDialog
+          title="Arrêter la mission ?"
+          description="Tes réponses déjà données seront gardées. Le sticker est gagné seulement quand les 10 questions sont terminées."
+          cancelLabel="Continuer"
+          confirmLabel="Arrêter"
+          onCancel={continueSession}
+          onConfirm={abandonSession}
         />
       )}
     </main>

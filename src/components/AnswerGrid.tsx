@@ -31,6 +31,7 @@ export function AnswerGrid({ question, feedback, onAnswer }: AnswerGridProps) {
             className={`answer-button ${stateClass}`}
             type="button"
             key={choice}
+            aria-label={`Réponse ${choice}`}
             disabled={feedback !== null}
             onClick={() => onAnswer(choice)}
           >

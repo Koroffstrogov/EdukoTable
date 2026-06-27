@@ -17,6 +17,7 @@ type QuestionCardProps = {
   feedback: FeedbackState | null;
   mascotMood: MascotMood;
   onAnswer: (answer: number) => void;
+  onQuit: () => void;
 };
 
 export function QuestionCard({
@@ -27,11 +28,15 @@ export function QuestionCard({
   feedback,
   mascotMood,
   onAnswer,
+  onQuit,
 }: QuestionCardProps) {
   return (
     <section className="screen question-screen">
       <div className="question-top">
-        <div>
+        <div className="session-heading">
+          <button className="button quiet compact quit-button" type="button" onClick={onQuit}>
+            Quitter
+          </button>
           <p className="eyebrow">
             Question {questionIndex} / {totalQuestions}
           </p>

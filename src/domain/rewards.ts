@@ -289,6 +289,22 @@ export function finalizeSessionRewards(
   };
 }
 
+export function finalizeAbandonedSessionRewards(
+  previousRewards: RewardState,
+  result: SessionResult,
+): { rewards: RewardState; grant: RewardGrant } {
+  const grant: RewardGrant = {
+    stars: result.correctCount,
+    stickerIds: [],
+    badgeIds: [],
+  };
+
+  return {
+    rewards: applyRewardGrant(previousRewards, grant),
+    grant,
+  };
+}
+
 export function buildSessionResult(
   answers: {
     operation: { key: string; a: number; b: number };

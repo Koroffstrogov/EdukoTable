@@ -11,6 +11,7 @@ import {
   updateOperationStats,
 } from "./progress";
 import {
+  finalizeAbandonedSessionRewards,
   finalizeSessionRewards,
   isOperationMastered,
   isTableMastered,
@@ -387,6 +388,53 @@ describe("rewards", () => {
 
     expect(first.grant.badgeIds).toContain("table-6-mastered");
     expect(second.grant.badgeIds).not.toContain("table-6-mastered");
+  });
+
+  it("does not grant anything when abandoning without answers", () => {
+    const initial = resetAdventure();
+    const abandoned = finalizeAbandonedSessionRewards(initial.rewards, {
+      total: 0,
+      correctCount: 0,
+      wrongOperations: [],
+      fixedDifficultOperations: [],
+    });
+
+    expect(abandoned.grant).toEqual({
+      stars: 0,
+      stickerIds: [],
+      badgeIds: [],
+    });
+    expect(abandoned.rewards).toEqual(initial.rewards);
+  });
+
+  it("keeps partial stars only when abandoning after answers", () => {
+    const initial = resetAdventure();
+    const progressAfterAnswers = {
+      ...initial.progress,
+      operationStats: {
+        "6x7": { attempts: 1, correct: 1, wrong: 0 },
+        "7x6": { attempts: 1, correct: 0, wrong: 1 },
+        "8x6": { attempts: 1, correct: 1, wrong: 0 },
+      },
+    };
+    const abandoned = finalizeAbandonedSessionRewards(initial.rewards, {
+      total: 3,
+      correctCount: 2,
+      wrongOperations: [],
+      fixedDifficultOperations: [],
+    });
+
+    expect(progressAfterAnswers.operationStats["6x7"]).toMatchObject({
+      attempts: 1,
+      correct: 1,
+    });
+    expect(abandoned.grant.stars).toBe(2);
+    expect(abandoned.grant.stickerIds).toEqual([]);
+    expect(abandoned.grant.badgeIds).toEqual([]);
+    expect(abandoned.rewards.stars).toBe(2);
+    expect(abandoned.rewards.sessionsCompleted).toBe(0);
+    expect(abandoned.rewards.stickersUnlocked).toEqual([]);
+    expect(abandoned.rewards.badgesUnlocked).toEqual([]);
   });
 
   it("separates reset results from reset adventure", () => {

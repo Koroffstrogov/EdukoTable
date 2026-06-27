@@ -53,3 +53,47 @@ test("starts a quick mission and shows the first question", async ({ page }) => 
   await expect(page.getByText("Question 1 / 10")).toBeVisible();
   await expect(page.getByText("Combien font ?")).toBeVisible();
 });
+
+test("can cancel then abandon a mission without answers", async ({ page }) => {
+  await startQuickMission(page);
+
+  await page.getByRole("button", { name: "Quitter" }).click();
+  await expect(page.getByRole("dialog", { name: "Arrêter la mission ?" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Continuer" }).click();
+  await expect(page.getByText("Question 1 / 10")).toBeVisible();
+
+  await page.getByRole("button", { name: "Quitter" }).click();
+  await page.getByRole("button", { name: "Arrêter" }).click();
+  await expect(page.getByRole("heading", { name: "EdukoTable" })).toBeVisible();
+});
+
+test("shows a partial summary after abandoning answered mission", async ({ page }) => {
+  await startQuickMission(page);
+
+  const operationText = await page.locator(".operation").innerText();
+  const correctAnswer = getProductFromOperation(operationText);
+
+  await page.getByRole("button", { name: `Réponse ${correctAnswer}` }).click();
+  await expect(page.getByText("+1 étoile")).toBeVisible();
+
+  await page.getByRole("button", { name: "Quitter" }).click();
+  await page.getByRole("button", { name: "Arrêter" }).click();
+
+  await expect(page.getByText("Mission arrêtée")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "1 / 10 questions faites" })).toBeVisible();
+  await expect(page.getByText("1 bonne réponse")).toBeVisible();
+  await expect(page.getByText("Tes réponses sont enregistrées.")).toBeVisible();
+  await expect(page.getByText("Pas de sticker cette fois.")).toBeVisible();
+});
+
+async function startQuickMission(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: "Mission rapide" }).click();
+  await page.getByRole("button", { name: "Commencer" }).click();
+  await expect(page.getByText("Question 1 / 10")).toBeVisible();
+}
+
+function getProductFromOperation(operationText: string): number {
+  const [left, right] = operationText.split("×").map((item) => Number(item.trim()));
+  return left * right;
+}
