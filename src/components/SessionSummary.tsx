@@ -52,6 +52,7 @@ export function SessionSummary({
           animationId="mission-complete"
           className="summary-celebration"
           enabled={animationsEnabled}
+          fallback={<span className="summary-celebration-fallback" />}
         />
       )}
 

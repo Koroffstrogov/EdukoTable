@@ -7,7 +7,9 @@ test.beforeEach(async ({ page }) => {
 test("home is visible", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "EdukoTable" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Mission rapide" })).toBeVisible();
+  await expect(page.getByLabel("Eduko Prêt")).toBeVisible();
   await expect(page.locator('[data-animation-id="mascot-idle"]').first()).toBeVisible();
+  await expect(page.locator(".mascot-face").first()).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 
@@ -52,6 +54,19 @@ test("updates settings and returns home", async ({ page }) => {
     "data-animation-state",
     "disabled",
   );
+  await expect(page.locator(".mascot-face").first()).toBeVisible();
+});
+
+test("uses mascot fallback when reduced motion is requested", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.reload();
+
+  await expect(page.getByRole("heading", { name: "EdukoTable" })).toBeVisible();
+  await expect(page.locator('[data-animation-id="mascot-idle"]').first()).toHaveAttribute(
+    "data-animation-state",
+    "reduced",
+  );
+  await expect(page.locator(".mascot-face").first()).toBeVisible();
 });
 
 test("starts a quick mission and shows the first question", async ({ page }) => {

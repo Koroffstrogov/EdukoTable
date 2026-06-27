@@ -30,19 +30,23 @@ export function Mascot({ mood, animationsEnabled }: MascotProps) {
         animationId={moodAnimations[mood]}
         className="mascot-animation"
         enabled={animationsEnabled}
-        fallback={<MascotFallback />}
+        fallback={<MascotFallback mood={mood} />}
       />
       <span className="mascot-label">{moodLabels[mood]}</span>
     </div>
   );
 }
 
-function MascotFallback() {
+function MascotFallback({ mood }: { mood: MascotMood }) {
   return (
-    <span className="mascot-face" aria-hidden="true">
+    <span className={`mascot-face mascot-face-${mood}`} aria-hidden="true">
+      <span className="mascot-brow mascot-brow-left" />
+      <span className="mascot-brow mascot-brow-right" />
       <span className="mascot-eye" />
       <span className="mascot-eye" />
       <span className="mascot-smile" />
+      <span className="mascot-cheek mascot-cheek-left" />
+      <span className="mascot-cheek mascot-cheek-right" />
     </span>
   );
 }

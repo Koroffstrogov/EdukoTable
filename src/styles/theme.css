@@ -259,14 +259,30 @@ h2 {
 }
 
 .eduko-animation {
-  display: inline-flex;
+  position: relative;
+  display: inline-grid;
   align-items: center;
   justify-content: center;
+  place-items: center;
   overflow: hidden;
 }
 
-.eduko-animation > div,
-.eduko-animation svg {
+.eduko-animation-fallback,
+.eduko-animation-layer {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.eduko-animation-layer {
+  pointer-events: none;
+}
+
+.eduko-animation-layer > div,
+.eduko-animation-layer svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -434,6 +450,11 @@ h2 {
   font-weight: 900;
 }
 
+.feedback.is-soft .feedback-animation-fallback {
+  background: #ffe8e6;
+  color: #943333;
+}
+
 .reward-burst {
   display: grid;
   gap: 10px;
@@ -453,13 +474,17 @@ h2 {
   flex: 0 0 34px;
 }
 
-.reward-animation[data-animation-state="disabled"],
-.reward-animation[data-animation-state="missing"],
-.reward-animation[data-animation-state="reduced"],
-.summary-celebration[data-animation-state="disabled"],
-.summary-celebration[data-animation-state="missing"],
-.summary-celebration[data-animation-state="reduced"] {
-  display: none;
+.reward-animation-fallback {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #fff3c4;
+  color: #79550b;
+  font-size: 0.72rem;
+  font-weight: 900;
 }
 
 .summary-celebration {
@@ -468,6 +493,40 @@ h2 {
   align-self: center;
   margin-top: -10px;
   margin-bottom: -8px;
+}
+
+.summary-celebration-fallback {
+  position: relative;
+  display: inline-flex;
+  width: 54px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #dff7ef;
+  border: 3px solid var(--teal);
+}
+
+.summary-celebration-fallback::before,
+.summary-celebration-fallback::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: #ffd766;
+}
+
+.summary-celebration-fallback::before {
+  width: 10px;
+  height: 10px;
+  top: -7px;
+  left: 8px;
+}
+
+.summary-celebration-fallback::after {
+  width: 12px;
+  height: 12px;
+  right: -6px;
+  bottom: 5px;
 }
 
 .review-block {
@@ -717,6 +776,10 @@ h2 {
   height: 64px;
 }
 
+.mascot-animation .eduko-animation-layer {
+  opacity: 0.72;
+}
+
 .mascot-face {
   position: relative;
   display: flex;
@@ -728,9 +791,14 @@ h2 {
   border: 4px solid #20212f;
   border-radius: 8px;
   background: #f8d66d;
+  box-shadow:
+    inset 0 -7px 0 rgba(32, 33, 47, 0.08),
+    0 6px 0 rgba(32, 33, 47, 0.08);
 }
 
 .mascot-eye {
+  position: relative;
+  z-index: 1;
   width: 7px;
   height: 7px;
   border-radius: 999px;
@@ -740,6 +808,7 @@ h2 {
 
 .mascot-smile {
   position: absolute;
+  z-index: 1;
   bottom: 17px;
   left: 20px;
   width: 24px;
@@ -748,13 +817,83 @@ h2 {
   border-radius: 0 0 999px 999px;
 }
 
+.mascot-brow {
+  position: absolute;
+  top: 19px;
+  z-index: 1;
+  width: 13px;
+  height: 4px;
+  border-radius: 999px;
+  background: #20212f;
+  opacity: 0;
+}
+
+.mascot-brow-left {
+  left: 19px;
+}
+
+.mascot-brow-right {
+  right: 19px;
+}
+
+.mascot-cheek {
+  position: absolute;
+  bottom: 23px;
+  z-index: 1;
+  width: 9px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(228, 93, 93, 0.3);
+}
+
+.mascot-cheek-left {
+  left: 13px;
+}
+
+.mascot-cheek-right {
+  right: 13px;
+}
+
 .mascot-happy .mascot-face,
 .mascot-celebrating .mascot-face {
   background: #b9f0d8;
 }
 
+.mascot-thinking .mascot-face {
+  background: #dbe8ff;
+}
+
 .mascot-encouraging .mascot-face {
   background: #ffd9c7;
+}
+
+.mascot-happy .mascot-smile,
+.mascot-celebrating .mascot-smile {
+  bottom: 15px;
+  left: 18px;
+  width: 28px;
+  height: 15px;
+}
+
+.mascot-thinking .mascot-brow,
+.mascot-encouraging .mascot-brow {
+  opacity: 1;
+}
+
+.mascot-thinking .mascot-brow-left {
+  transform: rotate(10deg);
+}
+
+.mascot-thinking .mascot-brow-right {
+  transform: rotate(-10deg);
+}
+
+.mascot-encouraging .mascot-brow-left {
+  transform: rotate(-8deg);
+}
+
+.mascot-encouraging .mascot-brow-right {
+  transform: rotate(8deg);
 }
 
 @media (min-width: 620px) {

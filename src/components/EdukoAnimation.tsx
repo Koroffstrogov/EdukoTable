@@ -1,6 +1,8 @@
 import {
+  Component,
   Suspense,
   lazy,
+  type ErrorInfo,
   type ReactNode,
   useEffect,
   useState,
@@ -17,6 +19,25 @@ type EdukoAnimationProps = {
   fallback?: ReactNode;
   loop?: boolean;
 };
+
+type AnimationErrorBoundaryProps = {
+  children: ReactNode;
+};
+
+type AnimationErrorBoundaryState = {
+  hasError: boolean;
+};
+
+export function getAnimationState(
+  enabled: boolean,
+  prefersReducedMotion: boolean,
+  animationData: Record<string, unknown> | null,
+): "active" | "disabled" | "missing" | "reduced" {
+  if (!animationData) return "missing";
+  if (!enabled) return "disabled";
+  if (prefersReducedMotion) return "reduced";
+  return "active";
+}
 
 export function EdukoAnimation({
   animationId,
@@ -38,31 +59,23 @@ export function EdukoAnimation({
       data-animation-state={state}
       aria-hidden="true"
     >
-      {shouldAnimate ? (
-        <Suspense fallback={fallback}>
-          <Lottie
-            animationData={animationData}
-            autoplay
-            loop={loop ?? definition?.loop ?? false}
-            rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
-          />
-        </Suspense>
-      ) : (
-        fallback
+      <span className="eduko-animation-fallback">{fallback}</span>
+      {shouldAnimate && (
+        <span className="eduko-animation-layer">
+          <AnimationErrorBoundary>
+            <Suspense fallback={null}>
+              <Lottie
+                animationData={animationData}
+                autoplay
+                loop={loop ?? definition?.loop ?? false}
+                rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
+              />
+            </Suspense>
+          </AnimationErrorBoundary>
+        </span>
       )}
     </span>
   );
-}
-
-function getAnimationState(
-  enabled: boolean,
-  prefersReducedMotion: boolean,
-  animationData: Record<string, unknown> | null,
-): "active" | "disabled" | "missing" | "reduced" {
-  if (!animationData) return "missing";
-  if (!enabled) return "disabled";
-  if (prefersReducedMotion) return "reduced";
-  return "active";
 }
 
 function usePrefersReducedMotion(): boolean {
@@ -88,4 +101,26 @@ function usePrefersReducedMotion(): boolean {
   }, []);
 
   return prefersReducedMotion;
+}
+
+class AnimationErrorBoundary extends Component<
+  AnimationErrorBoundaryProps,
+  AnimationErrorBoundaryState
+> {
+  state: AnimationErrorBoundaryState = {
+    hasError: false,
+  };
+
+  static getDerivedStateFromError(): AnimationErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(_error: Error, _errorInfo: ErrorInfo): void {
+    // The static fallback remains visible under the animation layer.
+  }
+
+  render() {
+    if (this.state.hasError) return null;
+    return this.props.children;
+  }
 }

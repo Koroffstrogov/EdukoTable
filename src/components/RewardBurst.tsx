@@ -22,6 +22,7 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
           animationId="star-pop"
           className="reward-animation"
           enabled={animationsEnabled}
+          fallback={<span className="reward-animation-fallback">+1</span>}
         />
         <span className="reward-token">+{grant.stars}</span>
         <span>étoiles gagnées</span>
@@ -33,6 +34,7 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
             animationId="sticker-unlock"
             className="reward-animation"
             enabled={animationsEnabled}
+            fallback={<span className="reward-animation-fallback">S</span>}
           />
           <span className="reward-token">{sticker.symbol}</span>
           <span>Sticker : {sticker.label}</span>

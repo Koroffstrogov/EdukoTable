@@ -24,6 +24,26 @@ export function getAnimationAsset(
   animationId: string,
 ): LottieAnimationData | null {
   const definition = getAnimationDefinition(animationId);
+  const animationData = definition ? animationAssets[definition.id] : null;
 
-  return definition ? animationAssets[definition.id] : null;
+  return isLottieAnimationData(animationData) ? animationData : null;
+}
+
+export function isLottieAnimationData(
+  value: unknown,
+): value is LottieAnimationData {
+  return (
+    isRecord(value) &&
+    typeof value.v === "string" &&
+    typeof value.fr === "number" &&
+    typeof value.ip === "number" &&
+    typeof value.op === "number" &&
+    typeof value.w === "number" &&
+    typeof value.h === "number" &&
+    Array.isArray(value.layers)
+  );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

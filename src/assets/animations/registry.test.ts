@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getAnimationAsset } from "./registry";
+import { getAnimationAsset, isLottieAnimationData } from "./registry";
 
 describe("animation assets", () => {
   it("returns local animation data for known ids", () => {
@@ -13,5 +13,10 @@ describe("animation assets", () => {
 
   it("returns null for missing assets", () => {
     expect(getAnimationAsset("missing-animation")).toBeNull();
+  });
+
+  it("rejects malformed lottie data", () => {
+    expect(isLottieAnimationData({ v: "5.7.4" })).toBe(false);
+    expect(isLottieAnimationData(null)).toBe(false);
   });
 });
