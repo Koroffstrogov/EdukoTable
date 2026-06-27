@@ -258,6 +258,20 @@ h2 {
   font-weight: 900;
 }
 
+.eduko-animation {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.eduko-animation > div,
+.eduko-animation svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .button-grid {
   display: grid;
   gap: 10px;
@@ -381,6 +395,16 @@ h2 {
   padding: 14px 16px;
 }
 
+.feedback.has-animation {
+  grid-template-columns: 46px 1fr;
+  align-items: center;
+}
+
+.feedback-copy {
+  display: grid;
+  gap: 4px;
+}
+
 .feedback strong {
   font-size: 1.2rem;
 }
@@ -391,6 +415,23 @@ h2 {
 
 .feedback.is-soft {
   border-color: rgba(228, 93, 93, 0.32);
+}
+
+.feedback-animation {
+  width: 44px;
+  height: 44px;
+}
+
+.feedback-animation-fallback {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #fff3c4;
+  color: #79550b;
+  font-weight: 900;
 }
 
 .reward-burst {
@@ -404,6 +445,29 @@ h2 {
   align-items: center;
   gap: 10px;
   font-weight: 750;
+}
+
+.reward-animation {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+}
+
+.reward-animation[data-animation-state="disabled"],
+.reward-animation[data-animation-state="missing"],
+.reward-animation[data-animation-state="reduced"],
+.summary-celebration[data-animation-state="disabled"],
+.summary-celebration[data-animation-state="missing"],
+.summary-celebration[data-animation-state="reduced"] {
+  display: none;
+}
+
+.summary-celebration {
+  width: 88px;
+  height: 58px;
+  align-self: center;
+  margin-top: -10px;
+  margin-bottom: -8px;
 }
 
 .review-block {
@@ -646,6 +710,11 @@ h2 {
   font-size: 0.78rem;
   font-weight: 800;
   text-align: center;
+}
+
+.mascot-animation {
+  width: 64px;
+  height: 64px;
 }
 
 .mascot-face {

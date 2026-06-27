@@ -6,6 +6,7 @@ type HomeScreenProps = {
   selectedTables: Factor[];
   latestSticker: Sticker | null;
   mascotMood: MascotMood;
+  animationsEnabled: boolean;
   onStartRandom: () => void;
   onStartTraining: () => void;
   onOpenAlbum: () => void;
@@ -18,6 +19,7 @@ export function HomeScreen({
   selectedTables,
   latestSticker,
   mascotMood,
+  animationsEnabled,
   onStartRandom,
   onStartTraining,
   onOpenAlbum,
@@ -31,7 +33,7 @@ export function HomeScreen({
           <p className="eyebrow">Tables de multiplication</p>
           <h1>EdukoTable</h1>
         </div>
-        <Mascot mood={mascotMood} />
+        <Mascot mood={mascotMood} animationsEnabled={animationsEnabled} />
       </div>
 
       <div className="home-stats" aria-label="Récompenses">

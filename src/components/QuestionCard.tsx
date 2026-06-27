@@ -16,6 +16,7 @@ type QuestionCardProps = {
   sessionStars: number;
   feedback: FeedbackState | null;
   mascotMood: MascotMood;
+  animationsEnabled: boolean;
   onAnswer: (answer: number) => void;
   onQuit: () => void;
 };
@@ -27,6 +28,7 @@ export function QuestionCard({
   sessionStars,
   feedback,
   mascotMood,
+  animationsEnabled,
   onAnswer,
   onQuit,
 }: QuestionCardProps) {
@@ -52,7 +54,7 @@ export function QuestionCard({
             ))}
           </div>
         </div>
-        <Mascot mood={mascotMood} />
+        <Mascot mood={mascotMood} animationsEnabled={animationsEnabled} />
       </div>
 
       <div className="question-card">
@@ -69,6 +71,7 @@ export function QuestionCard({
           operation={question.operation}
           wasCorrect={feedback.wasCorrect}
           correctAnswer={feedback.correctAnswer}
+          animationsEnabled={animationsEnabled}
         />
       )}
     </section>

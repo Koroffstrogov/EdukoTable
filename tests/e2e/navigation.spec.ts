@@ -7,6 +7,7 @@ test.beforeEach(async ({ page }) => {
 test("home is visible", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "EdukoTable" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Mission rapide" })).toBeVisible();
+  await expect(page.locator('[data-animation-id="mascot-idle"]').first()).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 
@@ -47,6 +48,10 @@ test("updates settings and returns home", async ({ page }) => {
 
   await page.getByRole("button", { name: "Accueil" }).click();
   await expect(page.getByRole("heading", { name: "EdukoTable" })).toBeVisible();
+  await expect(page.locator('[data-animation-id="mascot-idle"]').first()).toHaveAttribute(
+    "data-animation-state",
+    "disabled",
+  );
 });
 
 test("starts a quick mission and shows the first question", async ({ page }) => {

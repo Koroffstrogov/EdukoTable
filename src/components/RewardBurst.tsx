@@ -1,11 +1,13 @@
+import { EdukoAnimation } from "./EdukoAnimation";
 import { getBadgeById, getStickerById } from "../domain/rewards";
 import type { RewardGrant } from "../domain/types";
 
 type RewardBurstProps = {
   grant: RewardGrant;
+  animationsEnabled: boolean;
 };
 
-export function RewardBurst({ grant }: RewardBurstProps) {
+export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
   const stickers = grant.stickerIds
     .map((stickerId) => getStickerById(stickerId))
     .filter((sticker) => sticker !== undefined);
@@ -16,12 +18,22 @@ export function RewardBurst({ grant }: RewardBurstProps) {
   return (
     <div className="reward-burst" aria-label="Récompenses gagnées">
       <div className="reward-line">
+        <EdukoAnimation
+          animationId="star-pop"
+          className="reward-animation"
+          enabled={animationsEnabled}
+        />
         <span className="reward-token">+{grant.stars}</span>
         <span>étoiles gagnées</span>
       </div>
 
       {stickers.map((sticker) => (
         <div className="reward-line" key={sticker.id}>
+          <EdukoAnimation
+            animationId="sticker-unlock"
+            className="reward-animation"
+            enabled={animationsEnabled}
+          />
           <span className="reward-token">{sticker.symbol}</span>
           <span>Sticker : {sticker.label}</span>
         </div>

@@ -325,6 +325,7 @@ export function App() {
           selectedTables={appState.settings.selectedTables}
           latestSticker={latestSticker}
           mascotMood={mascotMood}
+          animationsEnabled={appState.settings.animationsEnabled}
           onStartRandom={() => openTablePicker("random")}
           onStartTraining={() => openTablePicker("training")}
           onOpenAlbum={() => setScreen("album")}
@@ -378,6 +379,7 @@ export function App() {
           sessionStars={session.sessionStars}
           feedback={session.feedback}
           mascotMood={mascotMood}
+          animationsEnabled={appState.settings.animationsEnabled}
           onAnswer={handleAnswer}
           onQuit={requestQuitSession}
         />
@@ -390,6 +392,7 @@ export function App() {
           status={summary.status}
           totalQuestions={summary.config.questionCount}
           mascotMood={mascotMood}
+          animationsEnabled={appState.settings.animationsEnabled}
           onReplay={() =>
             startSession(summary.config.mode, appState.settings.selectedTables)
           }

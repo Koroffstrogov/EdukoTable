@@ -1,3 +1,4 @@
+import { EdukoAnimation } from "./EdukoAnimation";
 import { Mascot } from "./Mascot";
 import { RewardBurst } from "./RewardBurst";
 import type { MascotMood, RewardGrant, SessionResult } from "../domain/types";
@@ -8,6 +9,7 @@ type SessionSummaryProps = {
   status: "completed" | "abandoned";
   totalQuestions: number;
   mascotMood: MascotMood;
+  animationsEnabled: boolean;
   onReplay: () => void;
   onHome: () => void;
 };
@@ -18,6 +20,7 @@ export function SessionSummary({
   status,
   totalQuestions,
   mascotMood,
+  animationsEnabled,
   onReplay,
   onHome,
 }: SessionSummaryProps) {
@@ -41,10 +44,20 @@ export function SessionSummary({
             </h1>
           )}
         </div>
-        <Mascot mood={mascotMood} />
+        <Mascot mood={mascotMood} animationsEnabled={animationsEnabled} />
       </div>
 
-      {(!isAbandoned || grant.stars > 0) && <RewardBurst grant={grant} />}
+      {!isAbandoned && (
+        <EdukoAnimation
+          animationId="mission-complete"
+          className="summary-celebration"
+          enabled={animationsEnabled}
+        />
+      )}
+
+      {(!isAbandoned || grant.stars > 0) && (
+        <RewardBurst grant={grant} animationsEnabled={animationsEnabled} />
+      )}
 
       {isAbandoned && (
         <div className="review-block">
