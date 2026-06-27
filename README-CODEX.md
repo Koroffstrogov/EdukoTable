@@ -1,62 +1,60 @@
-# EdukoTable — pack de démarrage Codex
+# EdukoTable
 
-Ce dossier contient les fichiers à copier à la racine du repo avant de lancer Codex en mode poursuite d’objectif.
+EdukoTable est une PWA React/Vite mobile-first pour réviser les tables de multiplication de 2 à 10 avec des sessions courtes, des propositions tactiles et des récompenses locales.
 
-## Installation rapide
-
-Depuis le dossier où ce pack a été extrait :
+## Installation
 
 ```bash
-cp -R .agents AGENTS.md docs prompts README-CODEX.md /chemin/vers/ton/repo/
+npm install
 ```
 
-Puis ouvre Codex depuis la racine du repo.
+## Lancement local
 
-## Contenu
-
-```txt
-AGENTS.md
-docs/
-  00-product-brief.md
-  01-mvp-spec.md
-  02-architecture.md
-  03-domain-model.md
-  04-question-engine.md
-  05-reward-system.md
-  06-ui-ux.md
-  07-testing-plan.md
-  08-pwa-vercel.md
-prompts/
-  codex-pursue-goal.md
-  codex-first-implementation-lot.md
-.agents/
-  skills/
-    edukotable-product-guardian/
-    edukotable-question-engine/
-    edukotable-reward-system/
-    edukotable-mobile-pwa-ui/
-    edukotable-quality-review/
+```bash
+npm run dev
 ```
 
-## Ordre conseillé
+L’application Vite démarre en local et garde la progression dans `localStorage`.
 
-1. Copier les fichiers à la racine du repo.
-2. Lancer Codex.
-3. Donner le prompt `prompts/codex-pursue-goal.md`.
-4. Demander ensuite à Codex de travailler par lots courts et vérifiables.
+## Validation
 
-## Décisions produit non négociables
+```bash
+npm run lint
+npm run test
+npm run build
+npm run test:e2e
+```
 
-- Nom de l’application : **EdukoTable**.
-- PWA React/Vite, mobile-first, compatible iPhone et Android.
-- Pas de compte, pas de backend, stockage local.
-- Tables de 2 à 10.
-- Sessions courtes de 10 questions.
-- Questions à 4 propositions.
-- Pas de saisie clavier.
-- Suivi simple par opération : tentatives, réussites, erreurs, dernier résultat, date.
-- Taux de réussite par opération.
-- Moteur aléatoire simple + moteur d’entraînement ciblé.
-- Système de récompenses dès le MVP : étoiles, stickers, badges, réactions de mascotte.
-- Éviter les répétitions immédiates des mêmes multiplications et des mêmes ensembles de propositions.
-- Deux réinitialisations séparées : résultats seuls, ou aventure complète.
+Ou tout lancer :
+
+```bash
+npm run validate
+```
+
+Les tests unitaires couvrent surtout le domaine. Les tests Playwright vérifient une navigation mobile simple : accueil, album, progression, réglages et démarrage de session.
+
+## Build et Vercel
+
+```bash
+npm run build
+```
+
+Vercel peut utiliser la configuration Vite par défaut :
+
+- build command : `npm run build`
+- output directory : `dist`
+
+Aucun backend et aucun service worker complexe ne sont nécessaires pour le MVP.
+
+## PWA et icônes
+
+Le manifest est dans `public/manifest.webmanifest`.
+
+Les icônes locales sont dans `public/icons/` :
+
+- `icon-192.png`
+- `icon-512.png`
+- `apple-touch-icon.png`
+- `edukotable.svg`
+
+Elles reprennent une mascotte Eduko simple, lisible en petit format.

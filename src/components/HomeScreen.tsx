@@ -10,6 +10,7 @@ type HomeScreenProps = {
   onStartTraining: () => void;
   onOpenAlbum: () => void;
   onOpenProgress: () => void;
+  onOpenSettings: () => void;
 };
 
 export function HomeScreen({
@@ -21,6 +22,7 @@ export function HomeScreen({
   onStartTraining,
   onOpenAlbum,
   onOpenProgress,
+  onOpenSettings,
 }: HomeScreenProps) {
   return (
     <section className="screen home-screen">
@@ -69,6 +71,9 @@ export function HomeScreen({
         </button>
         <button className="button secondary" type="button" onClick={onOpenProgress}>
           Progression
+        </button>
+        <button className="button secondary" type="button" onClick={onOpenSettings}>
+          Réglages
         </button>
       </div>
 

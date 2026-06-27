@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { HomeScreen } from "../components/HomeScreen";
 import { ProgressDashboard } from "../components/ProgressDashboard";
+import { SettingsScreen } from "../components/SettingsScreen";
 import { SessionSummary } from "../components/SessionSummary";
 import { StickerAlbum } from "../components/StickerAlbum";
 import { TablePicker } from "../components/TablePicker";
@@ -32,10 +33,18 @@ import type {
   SessionConfig,
   SessionMode,
   SessionResult,
+  SettingsState,
 } from "../domain/types";
 import { loadAppState, saveAppState } from "../storage/localStore";
 
-type Screen = "home" | "table-picker" | "session" | "summary" | "album" | "progress";
+type Screen =
+  | "home"
+  | "table-picker"
+  | "session"
+  | "summary"
+  | "album"
+  | "progress"
+  | "settings";
 
 type FeedbackState = {
   wasCorrect: boolean;
@@ -244,6 +253,13 @@ export function App() {
     setScreen("home");
   }
 
+  function updateSettings(settings: SettingsState): void {
+    setAppState((current) => ({
+      ...current,
+      settings,
+    }));
+  }
+
   return (
     <main
       className={`app-shell ${
@@ -260,6 +276,7 @@ export function App() {
           onStartTraining={() => openTablePicker("training")}
           onOpenAlbum={() => setScreen("album")}
           onOpenProgress={() => setScreen("progress")}
+          onOpenSettings={() => setScreen("settings")}
         />
       )}
 
@@ -277,6 +294,14 @@ export function App() {
           onBack={() => setScreen("home")}
           onResetResults={handleResetResults}
           onResetAdventure={handleResetAdventure}
+        />
+      )}
+
+      {screen === "settings" && (
+        <SettingsScreen
+          settings={appState.settings}
+          onChange={updateSettings}
+          onBack={() => setScreen("home")}
         />
       )}
 

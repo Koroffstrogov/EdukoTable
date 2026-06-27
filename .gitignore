@@ -6,3 +6,5 @@ coverage/
 *.local
 *.tsbuildinfo
 .vite-server*.log
+playwright-report/
+test-results/
