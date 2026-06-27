@@ -371,7 +371,9 @@ export function App() {
       {screen === "session" && session && (
         <QuestionCard
           question={session.question}
-          questionIndex={session.answers.length + 1}
+          questionIndex={
+            session.feedback ? session.answers.length : session.answers.length + 1
+          }
           totalQuestions={session.config.questionCount}
           sessionStars={session.sessionStars}
           feedback={session.feedback}
