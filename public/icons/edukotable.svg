@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="EdukoTable">
+  <rect width="192" height="192" rx="32" fill="#2F8F83"/>
+  <circle cx="96" cy="74" r="38" fill="#F8D66D"/>
+  <path d="M48 126h96v22H48z" fill="#FFFFFF"/>
+  <path d="M64 118h64v14H64z" fill="#20212F"/>
+  <circle cx="82" cy="72" r="6" fill="#20212F"/>
+  <circle cx="110" cy="72" r="6" fill="#20212F"/>
+  <path d="M78 91c10 10 26 10 36 0" fill="none" stroke="#20212F" stroke-width="8" stroke-linecap="round"/>
+</svg>

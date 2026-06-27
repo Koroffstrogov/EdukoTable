@@ -1,0 +1,89 @@
+.button:hover,
+.table-button:hover,
+.answer-button:hover {
+  transform: translateY(-1px);
+}
+
+.answer-button.is-correct {
+  animation: correct-pop 220ms ease-out;
+}
+
+.answer-button.is-wrong {
+  animation: wrong-shake 220ms ease-out;
+}
+
+.reward-burst {
+  animation: reward-rise 480ms ease-out;
+}
+
+.mascot-happy .mascot-face,
+.mascot-celebrating .mascot-face {
+  animation: mascot-pop 450ms ease-out;
+}
+
+@keyframes correct-pop {
+  0% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes wrong-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  35% {
+    transform: translateX(-4px);
+  }
+  70% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes reward-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mascot-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}
