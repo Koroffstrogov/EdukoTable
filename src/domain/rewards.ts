@@ -1,4 +1,8 @@
 import { buildAllOperations } from "./operations";
+import {
+  getStickerById as findStickerById,
+  selectNextSessionSticker,
+} from "./stickers";
 import { getOperationsForTable } from "./tableSelection";
 import {
   FACTORS,
@@ -9,67 +13,18 @@ import {
   type RewardGrant,
   type RewardState,
   type SessionResult,
-  type Sticker,
 } from "./types";
 
-export const STICKERS: Sticker[] = [
-  {
-    id: "forest-leaf",
-    collectionId: "forest",
-    label: "Feuille brillante",
-    symbol: "L1",
-    rarity: "common",
-  },
-  {
-    id: "forest-tree",
-    collectionId: "forest",
-    label: "Grand arbre",
-    symbol: "T1",
-    rarity: "common",
-  },
-  {
-    id: "space-rocket",
-    collectionId: "space",
-    label: "Fusée Eduko",
-    symbol: "R1",
-    rarity: "common",
-  },
-  {
-    id: "space-planet",
-    collectionId: "space",
-    label: "Planète calme",
-    symbol: "P1",
-    rarity: "common",
-  },
-  {
-    id: "ocean-shell",
-    collectionId: "ocean",
-    label: "Coquillage bleu",
-    symbol: "C1",
-    rarity: "common",
-  },
-  {
-    id: "machine-gear",
-    collectionId: "machine",
-    label: "Roue magique",
-    symbol: "G1",
-    rarity: "common",
-  },
-  {
-    id: "perfect-spark",
-    collectionId: "special",
-    label: "Session parfaite",
-    symbol: "S1",
-    rarity: "special",
-  },
-  ...FACTORS.map((factor) => ({
-    id: `table-${factor}-spark`,
-    collectionId: "mastery",
-    label: `Table ${factor} maîtrisée`,
-    symbol: `M${factor}`,
-    rarity: "special" as const,
-  })),
-];
+export {
+  STICKERS,
+  STICKER_COLLECTIONS,
+  getStickerById,
+  getStickerCollectionById,
+  getStickerRarityLabel,
+  getStickersByCollection,
+  getUnlockedCountForCollection,
+  selectNextSessionSticker,
+} from "./stickers";
 
 export const BADGES: Badge[] = [
   { id: "first-session", label: "Première mission", starBonus: 5 },
@@ -158,10 +113,6 @@ export function getTotalAnswers(
   );
 }
 
-export function getStickerById(stickerId: string): Sticker | undefined {
-  return STICKERS.find((sticker) => sticker.id === stickerId);
-}
-
 export function getBadgeById(badgeId: string): Badge | undefined {
   return BADGES.find((badge) => badge.id === badgeId);
 }
@@ -202,14 +153,12 @@ export function evaluateRewardMilestones(
   result: SessionResult,
 ): RewardGrant {
   const grant = createEmptyRewardGrant();
-  const commonSticker = STICKERS.find(
-    (sticker) =>
-      sticker.rarity === "common" &&
-      !previousRewards.stickersUnlocked.includes(sticker.id),
+  const sessionSticker = selectNextSessionSticker(
+    previousRewards.stickersUnlocked,
   );
 
-  if (commonSticker) {
-    grant.stickerIds.push(commonSticker.id);
+  if (sessionSticker) {
+    grant.stickerIds.push(sessionSticker.id);
   }
 
   if (
@@ -366,6 +315,7 @@ function addStickerOnce(
   stickerId: string,
 ): void {
   if (
+    findStickerById(stickerId) &&
     !rewards.stickersUnlocked.includes(stickerId) &&
     !grant.stickerIds.includes(stickerId)
   ) {

@@ -46,12 +46,24 @@ export type ProgressState = {
   operationStats: Record<string, OperationStats>;
 };
 
+export type StickerRarity = "common" | "rare" | "epic";
+
+export type StickerUnlockKind = "session" | "perfect" | "table" | "special";
+
+export type StickerCollection = {
+  id: string;
+  label: string;
+  description: string;
+};
+
 export type Sticker = {
   id: string;
   collectionId: string;
   label: string;
   symbol: string;
-  rarity: "common" | "special";
+  rarity: StickerRarity;
+  unlockKind: StickerUnlockKind;
+  animationId?: string;
 };
 
 export type Badge = {

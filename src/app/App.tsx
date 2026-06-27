@@ -338,6 +338,7 @@ export function App() {
         <StickerAlbum
           rewards={appState.rewards}
           latestStickerId={latestStickerId ?? null}
+          animationsEnabled={appState.settings.animationsEnabled}
           onBack={() => setScreen("home")}
         />
       )}

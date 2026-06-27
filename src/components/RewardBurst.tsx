@@ -1,5 +1,10 @@
 import { EdukoAnimation } from "./EdukoAnimation";
-import { getBadgeById, getStickerById } from "../domain/rewards";
+import { StickerVisual } from "./StickerVisual";
+import {
+  getBadgeById,
+  getStickerById,
+  getStickerRarityLabel,
+} from "../domain/rewards";
 import type { RewardGrant } from "../domain/types";
 
 type RewardBurstProps = {
@@ -29,15 +34,26 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
       </div>
 
       {stickers.map((sticker) => (
-        <div className="reward-line" key={sticker.id}>
+        <div className="sticker-reveal" key={sticker.id}>
           <EdukoAnimation
-            animationId="sticker-unlock"
-            className="reward-animation"
+            animationId={sticker.animationId ?? "sticker-unlock"}
+            className="sticker-reveal-animation"
             enabled={animationsEnabled}
-            fallback={<span className="reward-animation-fallback">S</span>}
+            fallback={
+              <StickerVisual
+                sticker={sticker}
+                unlocked
+                animated={false}
+                animationsEnabled={animationsEnabled}
+                size="large"
+              />
+            }
           />
-          <span className="reward-token">{sticker.symbol}</span>
-          <span>Sticker : {sticker.label}</span>
+          <div>
+            <span className="sticker-reveal-kicker">Nouveau sticker</span>
+            <strong>Sticker : {sticker.label}</strong>
+            <span>{getStickerRarityLabel(sticker.rarity)}</span>
+          </div>
         </div>
       ))}
 

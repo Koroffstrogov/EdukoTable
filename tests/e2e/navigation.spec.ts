@@ -16,6 +16,11 @@ test("home is visible", async ({ page }) => {
 test("opens album and returns home", async ({ page }) => {
   await page.getByRole("button", { name: "Album" }).click();
   await expect(page.getByRole("heading", { name: "Mes stickers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Forêt Eduko" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Espace Eduko" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Océan Eduko" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Machines rigolotes" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Créatures amies" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 
   await page.getByRole("button", { name: "Accueil" }).click();
@@ -143,6 +148,13 @@ test("completes a full quick mission and shows the final summary", async ({ page
   await expect(page.getByRole("heading", { name: "10 / 10 réussies" })).toBeVisible();
   await expect(page.getByLabel("Récompenses gagnées")).toBeVisible();
   await expect(page.getByText("étoiles gagnées")).toBeVisible();
+  await expect(page.getByText("Nouveau sticker").first()).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+
+  await page.getByRole("button", { name: "Accueil" }).click();
+  await page.getByRole("button", { name: "Album" }).click();
+  await expect(page.getByLabel("Sticker Feuille brillante")).toBeVisible();
+  await expect(page.locator(".sticker-card.is-unlocked").first()).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 

@@ -75,6 +75,16 @@ Elles reprennent une mascotte Eduko simple, lisible en petit format.
 
 `index.html` référence le manifest, la couleur de thème, l’icône iPhone et les balises utiles pour l’affichage mobile.
 
+## Stickers et animations
+
+Le catalogue de stickers est local, défini dans `src/domain/stickers.ts`.
+
+- 50 stickers sont répartis en collections.
+- Il n’y a pas de boutique, pas de monnaie complexe et pas de doublon tant qu’un sticker de session reste disponible.
+- Les visuels de stickers sont rendus avec du CSS local.
+- Quelques stickers rares ou épiques peuvent utiliser une animation Lottie locale.
+- Chaque animation conserve un fallback statique pour les animations désactivées, `prefers-reduced-motion`, ou un asset indisponible.
+
 ## Données locales
 
 La progression, les réglages, étoiles, stickers et badges sont stockés localement sous la clé `edukotable:v1`.
@@ -106,5 +116,5 @@ Avant de considérer une version publiable :
 - Pas de compte, profils multiples ou synchronisation cloud.
 - Pas de service worker offline avancé.
 - Pas de vrais sons pour l’instant, seulement le réglage prêt à brancher.
-- Stickers encore textuels/symboliques.
+- Stickers visuels locaux, encore remplaçables par des illustrations finales.
 - Statistiques volontairement simples et locales.
