@@ -1,5 +1,9 @@
 # EdukoTable — backlog v0.2
 
+> Statut : archivé. Ce backlog court terme a été remplacé par la feuille de
+> route active `docs/edukotable-roadmap-v0.2-v0.3.md` et par les lots déjà
+> livrés sur animations/stickers.
+
 Ce document liste des idées futures. Elles ne font pas partie de la release candidate v0.1.0.
 
 ## Utile court terme

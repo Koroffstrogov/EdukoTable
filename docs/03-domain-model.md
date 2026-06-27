@@ -116,6 +116,41 @@ export type RewardState = {
 };
 ```
 
+## Catalogue de stickers
+
+Le catalogue est local et stable. Les IDs sont persistés dans
+`rewards.stickersUnlocked`.
+
+```ts
+export type StickerRarity = "common" | "rare" | "epic";
+export type StickerUnlockKind = "session" | "perfect" | "table" | "special";
+
+export type StickerCollection = {
+  id: string;
+  label: string;
+  description: string;
+};
+
+export type Sticker = {
+  id: string;
+  collectionId: string;
+  label: string;
+  symbol: string;
+  rarity: StickerRarity;
+  unlockKind: StickerUnlockKind;
+  animationId?: string;
+};
+```
+
+Règles actuelles :
+
+- 50 stickers locaux ;
+- 5 collections ;
+- pas de doublon de sticker de session tant qu’un sticker de session non possédé existe ;
+- les stickers de session, de session parfaite et de table maîtrisée partagent le même stockage ;
+- reset résultats conserve les stickers ;
+- reset aventure les efface.
+
 ## Réglages
 
 ```ts

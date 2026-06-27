@@ -77,10 +77,21 @@ Simuler une session de 10 questions et vérifier :
 - session terminée ajoute bonus de complétion.
 - session parfaite ajoute bonus parfait.
 - sticker débloqué après session si disponible.
+- catalogue stickers avec IDs uniques.
+- stickers répartis dans les collections attendues.
+- pas de doublon de sticker de session tant qu’un sticker de session non possédé existe.
+- les stickers animés gardent un fallback statique.
 - badge première session débloqué une seule fois.
 - badge table maîtrisée débloqué une seule fois.
 - reset résultats conserve récompenses.
 - reset aventure efface récompenses.
+
+### Animations et PWA
+
+- le registre d’animations locales expose les IDs attendus.
+- `EdukoAnimation` rend un fallback si l’asset manque ou si les animations sont désactivées.
+- la mascotte affiche toujours un contenu accessible.
+- les réglages animations/sons persistent.
 
 ## Tests manuels MVP
 
@@ -93,6 +104,8 @@ Sur mobile ou émulation :
 - le résumé de session est compréhensible.
 - le reset résultats ne supprime pas les stickers.
 - l’app build et se lance après déploiement Vercel.
+- l’album affiche les collections et reste lisible sur largeur mobile.
+- une mission complète rend un sticker visible dans l’album.
 
 ## Commandes
 
@@ -100,6 +113,7 @@ Sur mobile ou émulation :
 npm run test
 npm run build
 npm run lint
+npm run test:e2e
 ```
 
 Si une commande n’existe pas, l’ajouter ou documenter le choix dans la PR/le résumé Codex.

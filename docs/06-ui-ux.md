@@ -124,17 +124,24 @@ Tu gagnes :
 
 Afficher collections et stickers.
 
-MVP possible :
+État actuel :
 
 ```txt
-Forêt Eduko
-[🦊] [🌳] [🍄] [ ? ] [ ? ]
+Forêt Eduko        7 / 10
+[sticker] [sticker] [verrouillé] ...
 
-Espace Eduko
-[🚀] [🪐] [ ? ] [ ? ] [ ? ]
+Espace Eduko       4 / 10
+[sticker] [verrouillé] [verrouillé] ...
 ```
 
-Prévoir que ces placeholders puissent devenir des SVG.
+Règles UI :
+
+- séparer clairement les collections ;
+- afficher le compteur par collection ;
+- mettre en valeur le dernier sticker obtenu ;
+- garder les stickers verrouillés attractifs mais lisibles ;
+- utiliser des visuels CSS locaux, avec animation Lottie locale seulement pour certains stickers ;
+- afficher un fallback statique si les animations sont désactivées ou indisponibles.
 
 ### Progression
 
@@ -171,6 +178,13 @@ session-complete-confetti
 mascot-happy
 mascot-encouraging
 ```
+
+État actuel :
+
+- `lottie-react` affiche les animations locales via `EdukoAnimation` ;
+- le registre local est dans `src/assets/animations/registry.ts` ;
+- les IDs d’animation produit sont définis dans `src/domain/animations.ts` ;
+- la mascotte et les stickers doivent toujours avoir un fallback statique visible.
 
 Durées :
 

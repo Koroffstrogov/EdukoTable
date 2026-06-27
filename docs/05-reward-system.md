@@ -34,13 +34,16 @@ Ne jamais retirer d’étoiles après une erreur.
 
 Récompense visuelle principale.
 
-Règles MVP :
+Règles actuelles :
 
 - 1 sticker après chaque session terminée, si le stock de stickers non débloqués le permet ;
-- 1 sticker spécial après première session parfaite ;
-- 1 sticker spécial après maîtrise d’une table.
+- aucun doublon de sticker de session tant qu’un sticker de session non possédé existe ;
+- 1 sticker `perfect-spark` après la première session parfaite ;
+- 1 sticker de table après maîtrise d’une table ;
+- reset résultats conserve les stickers ;
+- reset aventure efface les stickers.
 
-Le MVP peut commencer avec des stickers emoji ou SVG simples.
+Le catalogue est local, défini dans `src/domain/stickers.ts`.
 
 Exemples de collections non genrées :
 
@@ -49,8 +52,17 @@ Forêt Eduko
 Espace Eduko
 Océan Eduko
 Machines rigolotes
-Animaux malins
+Créatures amies
 ```
+
+Les stickers utilisent une rareté simple :
+
+```ts
+type StickerRarity = "common" | "rare" | "epic";
+```
+
+Quelques stickers rares ou épiques peuvent référencer une animation locale.
+Chaque animation doit conserver un fallback statique.
 
 ### 3. Badges
 
@@ -144,7 +156,7 @@ export function computeSessionReward(result: SessionResult): RewardGrant {
 }
 ```
 
-Les stickers et badges peuvent être ajoutés ensuite par une fonction de jalons :
+Les stickers et badges sont ajoutés par une fonction de jalons :
 
 ```ts
 evaluateRewardMilestones(previousState, nextState, sessionResult)

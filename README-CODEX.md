@@ -47,6 +47,12 @@ npx playwright screenshot --viewport-size=375,812 http://127.0.0.1:5173 test-res
 
 Le dossier `test-results/` n’est pas publié.
 
+## Documentation projet
+
+La feuille de route active est `docs/edukotable-roadmap-v0.2-v0.3.md`.
+Les documents historiques qui ne doivent plus guider l’implémentation sont dans
+`docs/archive/`.
+
 ## Build et Vercel
 
 ```bash

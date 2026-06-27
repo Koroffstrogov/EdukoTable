@@ -135,7 +135,13 @@ Tu gagnes :
 
 Afficher les stickers débloqués et ceux verrouillés.
 
-Le MVP peut utiliser des stickers textuels/emoji au départ, mais l’architecture doit permettre de remplacer par des SVG/illustrations.
+État actuel :
+
+- catalogue local de 50 stickers ;
+- collections Forêt Eduko, Espace Eduko, Océan Eduko, Machines rigolotes et Créatures amies ;
+- stickers verrouillés visibles mais clairement distingués ;
+- stickers débloqués colorés et lisibles ;
+- quelques stickers rares ou épiques peuvent utiliser une animation locale avec fallback statique.
 
 ### 7. Progression / réglages
 
@@ -189,6 +195,7 @@ Optionnel en MVP si le temps manque. Peut être une version de l’entraînement
 - Les stats par opération sont enregistrées.
 - Le mode entraînement favorise les difficultés.
 - Une récompense est donnée à la fin d’une session.
+- Une mission terminée débloque un sticker non possédé tant qu’un sticker de session reste disponible.
 - Les résultats peuvent être réinitialisés sans effacer les récompenses.
 - L’aventure complète peut être réinitialisée avec confirmation.
 - `npm run build` fonctionne.

@@ -76,7 +76,7 @@ Vérifier dans `index.html` :
 
 ```html
 <title>EdukoTable</title>
-<meta name="theme-color" content="#6C63FF" />
+<meta name="theme-color" content="#2F8F83" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 ```
@@ -86,10 +86,15 @@ Vérifier dans `index.html` :
 Ajouter au minimum :
 
 ```html
+<meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="EdukoTable" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 ```
+
+`mobile-web-app-capable` évite l’avertissement moderne des navigateurs tout en
+conservant la balise Apple pour compatibilité iOS.
 
 ## Offline
 

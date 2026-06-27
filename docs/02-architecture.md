@@ -5,8 +5,9 @@
 - React
 - Vite
 - TypeScript
-- CSS modules ou CSS simple organisé
+- CSS simple organisé
 - Vitest pour les tests de domaine
+- Playwright pour quelques parcours mobiles critiques
 - localStorage versionné pour le MVP
 
 ## Structure cible
@@ -15,22 +16,27 @@
 src/
   app/
     App.tsx
-    routes.tsx
+
+  assets/
+    animations/
+      registry.ts
+      *.json
 
   domain/
+    animations.ts
     operations.ts
+    progress.ts
     tableSelection.ts
     questionEngine.ts
-    progress.ts
     rewards.ts
-    sessions.ts
+    stickers.ts
+    types.ts
 
   storage/
     localStore.ts
     migrations.ts
 
   components/
-    Layout.tsx
     HomeScreen.tsx
     TablePicker.tsx
     QuestionCard.tsx
@@ -38,7 +44,11 @@ src/
     FeedbackOverlay.tsx
     SessionSummary.tsx
     RewardBurst.tsx
+    EdukoAnimation.tsx
+    ConfirmDialog.tsx
+    SettingsScreen.tsx
     StickerAlbum.tsx
+    StickerVisual.tsx
     ProgressDashboard.tsx
     ResetProgressPanel.tsx
     Mascot.tsx
@@ -46,9 +56,6 @@ src/
   styles/
     theme.css
     animations.css
-
-  test/
-    fixtures.ts
 ```
 
 ## Séparation des responsabilités
@@ -94,7 +101,8 @@ type Screen =
   | "session"
   | "summary"
   | "album"
-  | "progress";
+  | "progress"
+  | "settings";
 ```
 
 ## Scripts attendus
@@ -106,8 +114,10 @@ type Screen =
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "validate": "npm run lint && npm run test && npm run build && npm run test:e2e"
   }
 }
 ```
@@ -122,16 +132,19 @@ Dépendances normales :
 
 - `react`
 - `react-dom`
+- `lottie-react`
 
 Dépendances dev :
 
 - `vite`
 - `typescript`
 - `vitest`
+- `@playwright/test`
 - `@vitejs/plugin-react`
 - types React
 
-Ne pas ajouter de bibliothèque lourde d’animation dans le MVP. Les animations CSS suffisent.
+Ne pas ajouter de bibliothèque lourde supplémentaire. Les animations actuelles
+restent locales, courtes, désactivables, avec fallback statique.
 
 ## Gestion d’état
 

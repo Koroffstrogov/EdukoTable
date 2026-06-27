@@ -11,6 +11,14 @@ La suite doit être centrée sur trois manques :
 
 Le reste du backlog reste optionnel.
 
+## Statut actuel
+
+- Lot 6 livré : couche Lottie locale, registre d’animations et branchements UI.
+- Lot 6.1 livré : fallbacks statiques robustes pour mascotte et animations.
+- Lot 7 livré : album enrichi, 50 stickers locaux en 5 collections, raretés simples et non-doublons de stickers de session.
+- Lot 8 reste à faire : mode chrono adaptatif.
+- Le backlog court terme v0.2 historique est archivé dans `docs/archive/09-backlog-v0.2.md`.
+
 ## Principes
 
 - Ne pas refondre l’application.
@@ -32,7 +40,7 @@ Contenu :
 - animations de feedback ;
 - animation de déblocage de sticker ;
 - album enrichi ;
-- 48 à 60 stickers collectionnables ;
+- 50 stickers collectionnables livrés, dans la cible initiale 48 à 60 ;
 - logique de récompense plus attractive ;
 - tests de non-régression.
 
@@ -51,6 +59,8 @@ Contenu :
 ---
 
 # Lot 6 — Système d’animations Lottie
+
+Statut : livré.
 
 ## Objectif
 
@@ -94,6 +104,8 @@ src/assets/animations/
 
 # Lot 7 — Stickers animés et collections v2
 
+Statut : livré.
+
 ## Objectif
 
 Faire des stickers le cœur de l’application.
@@ -110,12 +122,14 @@ Machines rigolotes
 Créatures amies
 ```
 
-Nombre cible :
+Nombre cible initial :
 
 ```txt
 48 stickers minimum
 60 stickers idéalement
 ```
+
+Implémentation actuelle : 50 stickers locaux.
 
 Structure :
 
@@ -125,19 +139,18 @@ type StickerRarity = "common" | "rare" | "epic";
 type Sticker = {
   id: string;
   collectionId: string;
-  name: string;
+  label: string;
+  symbol: string;
   rarity: StickerRarity;
-  level: number;
-  thumbnailSrc: string;
-  animationSrc?: string;
-  unlockKind: "session" | "perfect" | "table" | "chrono" | "special";
+  unlockKind: "session" | "perfect" | "table" | "special";
+  animationId?: string;
 };
 ```
 
 ## Règles de déblocage
 
 - Mission terminée : 1 sticker non possédé.
-- Session parfaite : chance de sticker rare ou bonus garanti périodique.
+- Session parfaite : sticker `perfect-spark` garanti une seule fois.
 - Table maîtrisée : sticker spécial de table.
 - Chrono : stickers dédiés plus tard.
 - Pas de doublons tant que des stickers restent disponibles.
@@ -263,9 +276,12 @@ npm run test:e2e
 
 ---
 
-# Prompts Codex recommandés
+# Prompts Codex
 
-## Prompt Lot 6
+Les prompts des lots 6 et 7 sont conservés pour contexte historique. Ne pas les
+relancer tels quels : ces lots sont déjà livrés.
+
+## Prompt Lot 6 — historique
 
 ```md
 Tu travailles dans le repo EdukoTable.
@@ -302,7 +318,7 @@ Réponse finale :
 résumé, fichiers modifiés, validations, limites restantes.
 ```
 
-## Prompt Lot 7
+## Prompt Lot 7 — historique
 
 ```md
 Tu travailles dans le repo EdukoTable.
@@ -332,7 +348,7 @@ Réponse finale :
 résumé, fichiers modifiés, validations, limites restantes.
 ```
 
-## Prompt Lot 8
+## Prompt Lot 8 — recommandé
 
 ```md
 Tu travailles dans le repo EdukoTable.
