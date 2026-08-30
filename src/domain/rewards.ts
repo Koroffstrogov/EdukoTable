@@ -1,4 +1,5 @@
 import { buildAllOperations } from "./operations";
+import { selectNextChallengeCard } from "./challengeCards";
 import {
   getStickerById as findStickerById,
   selectNextSessionSticker,
@@ -7,6 +8,8 @@ import { getOperationsForTable } from "./tableSelection";
 import {
   FACTORS,
   type Badge,
+  type ChallengeSixProgress,
+  type ChoiceCount,
   type Factor,
   type OperationStats,
   type ProgressState,
@@ -25,6 +28,15 @@ export {
   getUnlockedCountForCollection,
   selectNextSessionSticker,
 } from "./stickers";
+
+export {
+  CHALLENGE_CARD_COLLECTION_ID,
+  CHALLENGE_CARDS,
+  getChallengeCardById,
+  getChallengeCardProgress,
+  isChallengeCardUnlocked,
+  selectNextChallengeCard,
+} from "./challengeCards";
 
 export const BADGES: Badge[] = [
   { id: "first-session", label: "Première mission", starBonus: 5 },
@@ -49,6 +61,12 @@ export function createInitialRewardState(): RewardState {
     stars: 0,
     totalStarsEarned: 0,
     stickersUnlocked: [],
+    challengeCardsUnlocked: [],
+    challengeSix: {
+      sessionsCompleted: 0,
+      correctAnswers: 0,
+      perfectSessions: 0,
+    },
     badgesUnlocked: [],
     sessionsCompleted: 0,
     practiceDates: [],
@@ -60,6 +78,7 @@ export function createEmptyRewardGrant(): RewardGrant {
   return {
     stars: 0,
     stickerIds: [],
+    cardIds: [],
     badgeIds: [],
   };
 }
@@ -77,6 +96,7 @@ export function computeSessionReward(result: SessionResult): RewardGrant {
       perfectBonus +
       fixedDifficultyBonus,
     stickerIds: [],
+    cardIds: [],
     badgeIds: [],
   };
 }
@@ -124,6 +144,7 @@ export function mergeRewardGrants(
   return {
     stars: left.stars + right.stars,
     stickerIds: unique([...left.stickerIds, ...right.stickerIds]),
+    cardIds: unique([...left.cardIds, ...right.cardIds]),
     badgeIds: unique([...left.badgeIds, ...right.badgeIds]),
   };
 }
@@ -137,12 +158,17 @@ export function applyRewardGrant(
     ...grant.stickerIds,
   ]);
   const badgeIds = unique([...rewardState.badgesUnlocked, ...grant.badgeIds]);
+  const challengeCardsUnlocked = unique([
+    ...rewardState.challengeCardsUnlocked,
+    ...grant.cardIds,
+  ]);
 
   return {
     ...rewardState,
     stars: rewardState.stars + grant.stars,
     totalStarsEarned: rewardState.totalStarsEarned + grant.stars,
     stickersUnlocked: stickerIds,
+    challengeCardsUnlocked,
     badgesUnlocked: badgeIds,
   };
 }
@@ -151,14 +177,27 @@ export function evaluateRewardMilestones(
   previousRewards: RewardState,
   nextProgress: ProgressState,
   result: SessionResult,
+  context: SessionRewardContext = {},
 ): RewardGrant {
   const grant = createEmptyRewardGrant();
-  const sessionSticker = selectNextSessionSticker(
-    previousRewards.stickersUnlocked,
-  );
+  const challengeCard =
+    context.choiceCount === 6 && context.challengeSix
+      ? selectNextChallengeCard(
+          previousRewards.challengeCardsUnlocked,
+          context.challengeSix,
+        )
+      : null;
+
+  const sessionSticker = challengeCard
+    ? null
+    : selectNextSessionSticker(previousRewards.stickersUnlocked);
 
   if (sessionSticker) {
     grant.stickerIds.push(sessionSticker.id);
+  }
+
+  if (challengeCard) {
+    grant.cardIds.push(challengeCard.id);
   }
 
   if (
@@ -206,6 +245,7 @@ export function evaluateRewardMilestones(
   }, 0);
 
   grant.stickerIds = unique(grant.stickerIds);
+  grant.cardIds = unique(grant.cardIds);
   grant.badgeIds = unique(grant.badgeIds);
 
   return grant;
@@ -216,10 +256,17 @@ export function finalizeSessionRewards(
   nextProgress: ProgressState,
   result: SessionResult,
   completedAt = new Date().toISOString(),
+  context: SessionRewardContext = {},
 ): { rewards: RewardState; grant: RewardGrant } {
   const practiceDate = completedAt.slice(0, 10);
+  const challengeSix = updateChallengeSixProgress(
+    previousRewards.challengeSix,
+    result,
+    context.choiceCount === 6,
+  );
   const rewardsWithSession = {
     ...previousRewards,
+    challengeSix,
     sessionsCompleted: previousRewards.sessionsCompleted + 1,
     practiceDates: unique([...previousRewards.practiceDates, practiceDate]),
     lastPracticeDate: practiceDate,
@@ -229,6 +276,10 @@ export function finalizeSessionRewards(
     previousRewards,
     nextProgress,
     result,
+    {
+      ...context,
+      challengeSix,
+    },
   );
   const grant = mergeRewardGrants(baseGrant, milestoneGrant);
 
@@ -245,12 +296,34 @@ export function finalizeAbandonedSessionRewards(
   const grant: RewardGrant = {
     stars: result.correctCount,
     stickerIds: [],
+    cardIds: [],
     badgeIds: [],
   };
 
   return {
     rewards: applyRewardGrant(previousRewards, grant),
     grant,
+  };
+}
+
+export type SessionRewardContext = {
+  choiceCount?: ChoiceCount;
+  challengeSix?: ChallengeSixProgress;
+};
+
+function updateChallengeSixProgress(
+  previous: ChallengeSixProgress,
+  result: SessionResult,
+  isSixChoice: boolean,
+): ChallengeSixProgress {
+  if (!isSixChoice) return previous;
+
+  return {
+    sessionsCompleted: previous.sessionsCompleted + 1,
+    correctAnswers: previous.correctAnswers + result.correctCount,
+    perfectSessions:
+      previous.perfectSessions +
+      (result.total > 0 && result.correctCount === result.total ? 1 : 0),
   };
 }
 

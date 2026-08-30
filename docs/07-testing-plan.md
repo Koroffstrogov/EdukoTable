@@ -85,6 +85,11 @@ Simuler une session de 10 questions et vérifier :
 - session terminée ajoute bonus de complétion.
 - session parfaite ajoute bonus parfait.
 - sticker débloqué après session si disponible.
+- le catalogue « La Bande des Six » contient 6 cartes aux IDs uniques.
+- une session Défi 6 choix incrémente ses compteurs dédiés.
+- les cartes se débloquent dans l’ordre, sans doublon ni saut de collection.
+- un 10/10 ou 10 défis terminés débloque la carte finale.
+- une carte de jalon remplace le sticker de session pour cette récompense.
 - catalogue stickers avec IDs uniques.
 - stickers répartis dans les collections attendues.
 - pas de doublon de sticker de session tant qu’un sticker de session non possédé existe.
@@ -117,6 +122,7 @@ Sur mobile ou émulation :
 - l’app build et se lance après déploiement Vercel.
 - l’album affiche les collections et reste lisible sur largeur mobile.
 - une mission complète rend un sticker visible dans l’album.
+- une mission Défi 6 choix rend une carte visible dans l’album et affiche son objectif suivant.
 - les dialogues conservent le focus, bouclent Tab/Maj+Tab et ferment avec Échap ;
 - les parcours principaux passent sous Chromium mobile et WebKit/iPhone.
 - le Défi 6 choix tient sans scroll sur un écran 320 × 568.

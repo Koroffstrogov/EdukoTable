@@ -5,7 +5,13 @@ import {
   createInitialProgressState,
 } from "../domain/progress";
 import { createInitialRewardState } from "../domain/rewards";
-import { FACTORS, type AppState, type Factor, type OperationStats } from "../domain/types";
+import {
+  FACTORS,
+  type AppState,
+  type ChallengeSixProgress,
+  type Factor,
+  type OperationStats,
+} from "../domain/types";
 
 export function migrateAppState(value: unknown): AppState {
   if (!isRecord(value)) {
@@ -45,6 +51,11 @@ function migrateRewardState(value: unknown): AppState["rewards"] {
       defaults.totalStarsEarned,
     ),
     stickersUnlocked: toStringArray(value.stickersUnlocked),
+    challengeCardsUnlocked: toStringArray(value.challengeCardsUnlocked),
+    challengeSix: migrateChallengeSixProgress(
+      value.challengeSix,
+      defaults.challengeSix,
+    ),
     badgesUnlocked: toStringArray(value.badgesUnlocked),
     sessionsCompleted: toSafeNumber(
       value.sessionsCompleted,
@@ -63,6 +74,28 @@ function migrateRewardState(value: unknown): AppState["rewards"] {
           ]),
         )
       : {},
+  };
+}
+
+function migrateChallengeSixProgress(
+  value: unknown,
+  fallback: ChallengeSixProgress,
+): ChallengeSixProgress {
+  if (!isRecord(value)) return fallback;
+
+  return {
+    sessionsCompleted: toSafeNumber(
+      value.sessionsCompleted,
+      fallback.sessionsCompleted,
+    ),
+    correctAnswers: toSafeNumber(
+      value.correctAnswers,
+      fallback.correctAnswers,
+    ),
+    perfectSessions: toSafeNumber(
+      value.perfectSessions,
+      fallback.perfectSessions,
+    ),
   };
 }
 

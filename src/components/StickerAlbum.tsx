@@ -1,5 +1,8 @@
+import { ChallengeCardVisual } from "./ChallengeCardVisual";
 import { StickerVisual } from "./StickerVisual";
 import {
+  CHALLENGE_CARDS,
+  getChallengeCardProgress,
   STICKER_COLLECTIONS,
   getStickerById,
   getStickerRarityLabel,
@@ -29,6 +32,10 @@ export function StickerAlbum({
   const unlocked = new Set(rewards.stickersUnlocked);
   const groups = buildStickerGroups();
   const latestSticker = latestStickerId ? getStickerById(latestStickerId) : null;
+  const challengeCardsUnlocked = new Set(rewards.challengeCardsUnlocked);
+  const nextChallengeCard = CHALLENGE_CARDS.find(
+    (card) => !challengeCardsUnlocked.has(card.id),
+  );
   const stickerTotal = groups.reduce(
     (total, group) => total + group.stickers.length,
     0,
@@ -65,6 +72,63 @@ export function StickerAlbum({
           </span>
         </div>
       )}
+
+      <section className="album-section challenge-card-section">
+        <div className="album-section-head">
+          <div>
+            <h2>La Bande des Six</h2>
+            <p>Des cartes à gagner en relevant les défis à 6 choix.</p>
+          </div>
+          <strong>
+            {rewards.challengeCardsUnlocked.length}/{CHALLENGE_CARDS.length}
+          </strong>
+        </div>
+        <p className="challenge-card-progress-copy">
+          {rewards.challengeSix.sessionsCompleted} défi
+          {rewards.challengeSix.sessionsCompleted > 1 ? "s" : ""} terminé
+          {rewards.challengeSix.sessionsCompleted > 1 ? "s" : ""} · {rewards.challengeSix.correctAnswers} bonne
+          {rewards.challengeSix.correctAnswers > 1 ? "s" : ""} réponse
+          {rewards.challengeSix.correctAnswers > 1 ? "s" : ""}
+        </p>
+        <div className="challenge-card-grid">
+          {CHALLENGE_CARDS.map((card) => {
+            const isUnlocked = challengeCardsUnlocked.has(card.id);
+            const isNext = nextChallengeCard?.id === card.id;
+            const progress = getChallengeCardProgress(
+              card,
+              rewards.challengeSix,
+            );
+
+            return (
+              <article
+                className={`challenge-card-entry ${
+                  isUnlocked ? "is-unlocked" : "is-locked"
+                } ${isNext ? "is-next" : ""}`}
+                key={card.id}
+                aria-label={
+                  isUnlocked
+                    ? `Carte ${card.label}`
+                    : `Carte verrouillée : ${card.requirement.label}`
+                }
+              >
+                <ChallengeCardVisual card={card} locked={!isUnlocked} />
+                {isUnlocked ? (
+                  <span className="challenge-card-tagline">{card.tagline}</span>
+                ) : (
+                  <>
+                    <span className="challenge-card-unlock-label">
+                      {isNext ? "Prochaine carte" : "À débloquer"}
+                    </span>
+                    <span className="challenge-card-unlock-hint">
+                      {progress.current}/{progress.target} · {progress.label}
+                    </span>
+                  </>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </section>
 
       {groups.map((group) => {
         const unlockedCount = getUnlockedCountForCollection(

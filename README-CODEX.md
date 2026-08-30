@@ -106,9 +106,16 @@ Le catalogue de stickers est local, défini dans `src/domain/stickers.ts`.
 - Quelques stickers rares ou épiques peuvent utiliser une animation Lottie locale.
 - Chaque animation conserve un fallback statique pour les animations désactivées, `prefers-reduced-motion`, ou un asset indisponible.
 
+Le Défi 6 choix possède aussi la collection locale `La Bande des Six`, définie
+dans `src/domain/challengeCards.ts` : six cartes à objectifs déterministes,
+révélées dans l’ordre et affichées au format vertical dans l’album. Une carte
+de jalon remplace le sticker de session lorsque le jalon est atteint.
+
 ## Données locales
 
-La progression, les réglages, étoiles, stickers et badges sont stockés localement sous la clé `edukotable:v1`.
+La progression, les réglages, étoiles, stickers, cartes et badges sont stockés localement sous la clé `edukotable:v1`.
+Le champ de version interne `AppState.version` est migré vers `2` pour ajouter
+le suivi du Défi 6 choix sans perdre les données existantes.
 
 Conséquences :
 
@@ -144,6 +151,7 @@ Avant de considérer une version publiable :
 10. Vérifier que les réglages animations/sons persistent après rechargement.
 11. Vérifier les dialogues au clavier : focus initial, Tab, Maj+Tab et Échap.
 12. Vérifier qu’aucun chemin local absolu n’apparaît dans les docs ou le code applicatif.
+13. Vérifier qu’une session Défi 6 choix révèle une carte et que l’album affiche l’objectif suivant.
 
 ## Limites connues du MVP
 

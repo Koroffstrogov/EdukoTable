@@ -66,6 +66,39 @@ export type Sticker = {
   animationId?: string;
 };
 
+export type ChallengeSixProgress = {
+  sessionsCompleted: number;
+  correctAnswers: number;
+  perfectSessions: number;
+};
+
+export type ChallengeCardRequirement =
+  | {
+      kind: "sessions";
+      threshold: number;
+      label: string;
+    }
+  | {
+      kind: "correct";
+      threshold: number;
+      label: string;
+    }
+  | {
+      kind: "perfect-or-sessions";
+      perfectThreshold: number;
+      sessionsThreshold: number;
+      label: string;
+    };
+
+export type ChallengeCard = {
+  id: string;
+  label: string;
+  symbol: string;
+  rarity: StickerRarity;
+  tagline: string;
+  requirement: ChallengeCardRequirement;
+};
+
 export type Badge = {
   id: string;
   label: string;
@@ -76,6 +109,8 @@ export type RewardState = {
   stars: number;
   totalStarsEarned: number;
   stickersUnlocked: string[];
+  challengeCardsUnlocked: string[];
+  challengeSix: ChallengeSixProgress;
   badgesUnlocked: string[];
   sessionsCompleted: number;
   practiceDates: string[];
@@ -139,6 +174,7 @@ export type SessionResult = {
 export type RewardGrant = {
   stars: number;
   stickerIds: string[];
+  cardIds: string[];
   badgeIds: string[];
 };
 

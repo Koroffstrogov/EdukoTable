@@ -122,7 +122,7 @@ Tu gagnes :
 
 ### Album
 
-Afficher collections et stickers.
+Afficher collections, stickers et cartes de défi.
 
 État actuel :
 
@@ -142,6 +142,12 @@ Règles UI :
 - garder les stickers verrouillés attractifs mais lisibles ;
 - utiliser des visuels CSS locaux, avec animation Lottie locale seulement pour certains stickers ;
 - afficher un fallback statique si les animations sont désactivées ou indisponibles.
+
+La collection « La Bande des Six » apparaît dans l’album avec six cartes
+verticales au format 3:4, disposées en deux colonnes sur mobile. Une carte
+verrouillée montre sa silhouette, son objectif et la progression courante ; la
+prochaine carte est légèrement mise en valeur. Une carte débloquée affiche son
+personnage, sa rareté et une phrase de progression.
 
 ### Progression
 
@@ -232,6 +238,9 @@ Ne pas supposer un grand écran.
 - sélection des tables identique aux autres modes ;
 - réponses en grille 2 × 3 ;
 - boutons compacts mais toujours supérieurs à 44 px ;
+- après une session complète, révéler une nouvelle carte de « La Bande des Six »
+  lorsqu’un jalon est atteint ;
+- révélation courte, compréhensible et désactivable avec les animations réduites ;
 - aucun scroll nécessaire pendant une question sur un écran 320 × 568 ;
 - aucun timer et aucune pénalité supplémentaire.
 

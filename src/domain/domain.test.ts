@@ -470,6 +470,7 @@ describe("rewards", () => {
     expect(abandoned.grant).toEqual({
       stars: 0,
       stickerIds: [],
+      cardIds: [],
       badgeIds: [],
     });
     expect(abandoned.rewards).toEqual(initial.rewards);

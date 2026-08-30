@@ -43,6 +43,7 @@ Ne pas utiliser d’autre nom dans l’interface, le manifest PWA, le titre HTML
 - Sessions courtes.
 - Quatre propositions dans les modes standard.
 - Un mode optionnel à six propositions pour augmenter la difficulté.
+- Une mini-collection de cartes déterministes pour rendre ce défi motivant.
 - Moteur simple mais intelligent.
 - Récompenses attractives.
 - Progression enregistrée localement.

@@ -108,11 +108,39 @@ export type RewardState = {
   stars: number;
   totalStarsEarned: number;
   stickersUnlocked: string[];
+  challengeCardsUnlocked: string[];
+  challengeSix: ChallengeSixProgress;
   badgesUnlocked: string[];
   sessionsCompleted: number;
   practiceDates: string[];
   lastPracticeDate?: string;
   dailyMissionCompletions: Record<string, string[]>;
+};
+```
+
+Le Défi 6 choix conserve une progression dédiée pour débloquer les cartes dans
+l’ordre :
+
+```ts
+export type ChallengeSixProgress = {
+  sessionsCompleted: number;
+  correctAnswers: number;
+  perfectSessions: number;
+};
+```
+
+Les cartes sont définies avec un ID stable, une rareté, une phrase courte et
+un objectif déterministe. Elles sont séparées des stickers afin que l’album
+puisse leur appliquer un format vertical spécifique.
+
+Les gains de session distinguent les deux formats :
+
+```ts
+export type RewardGrant = {
+  stars: number;
+  stickerIds: string[];
+  cardIds: string[];
+  badgeIds: string[];
 };
 ```
 

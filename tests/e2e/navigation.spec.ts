@@ -33,6 +33,7 @@ test("serves the PWA manifest and every declared icon", async ({ request }) => {
 test("opens album and returns home", async ({ page }) => {
   await page.getByRole("button", { name: "Album" }).click();
   await expect(page.getByRole("heading", { name: "Mes stickers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "La Bande des Six" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Forêt Eduko" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Espace Eduko" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Océan Eduko" })).toBeVisible();
@@ -255,6 +256,10 @@ test("completes and replays a full six-choice challenge", async ({ page }) => {
 
   await expect(page.getByText("Mission terminée")).toBeVisible();
   await expect(page.getByRole("heading", { name: "10 / 10 réussies" })).toBeVisible();
+  await expect(page.getByText("Nouvelle carte")).toBeVisible();
+  await expect(page.locator(".challenge-card-reveal strong")).toHaveText(
+    "Hexa la Luciole",
+  );
   await page.getByRole("button", { name: "Rejouer" }).click();
   await expect(page.getByText("Question 1 / 10")).toBeVisible();
   await expect(page.locator(".answer-button")).toHaveCount(6);

@@ -55,6 +55,33 @@ describe("storage migrations", () => {
       soundEnabled: true,
       animationsEnabled: false,
     });
+    expect(state.rewards.challengeCardsUnlocked).toEqual([]);
+    expect(state.rewards.challengeSix).toEqual({
+      sessionsCompleted: 0,
+      correctAnswers: 0,
+      perfectSessions: 0,
+    });
+  });
+
+  it("migrates persisted six-choice card progress", () => {
+    const state = migrateAppState({
+      version: 1,
+      rewards: {
+        challengeCardsUnlocked: ["hexa-firefly"],
+        challengeSix: {
+          sessionsCompleted: 2,
+          correctAnswers: 17,
+          perfectSessions: 1,
+        },
+      },
+    });
+
+    expect(state.rewards.challengeCardsUnlocked).toEqual(["hexa-firefly"]);
+    expect(state.rewards.challengeSix).toEqual({
+      sessionsCompleted: 2,
+      correctAnswers: 17,
+      perfectSessions: 1,
+    });
   });
 
   it("persists settings through save and load", () => {

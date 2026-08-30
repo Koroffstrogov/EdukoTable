@@ -112,7 +112,7 @@ Afficher :
 
 - score ;
 - étoiles gagnées ;
-- sticker/badge débloqué ;
+- sticker, carte ou badge débloqué ;
 - opérations à revoir ;
 - actions :
   - rejouer ;
@@ -137,7 +137,8 @@ Tu gagnes :
 
 ### 6. Album
 
-Afficher les stickers débloqués et ceux verrouillés.
+Afficher les stickers et les cartes débloqués, ainsi que ceux qui restent
+verrouillés.
 
 État actuel :
 
@@ -145,6 +146,8 @@ Afficher les stickers débloqués et ceux verrouillés.
 - collections Forêt Eduko, Espace Eduko, Océan Eduko, Machines rigolotes et Créatures amies ;
 - stickers verrouillés visibles mais clairement distingués ;
 - stickers débloqués colorés et lisibles ;
+- collection « La Bande des Six » avec 6 cartes propres au Défi 6 choix ;
+- objectif de déblocage affiché pour chaque carte verrouillée ;
 - quelques stickers rares ou épiques peuvent utiliser une animation locale avec fallback statique.
 
 ### 7. Progression / réglages
@@ -189,7 +192,8 @@ Mode optionnel plus difficile :
 
 - tirage aléatoire dans les tables sélectionnées ;
 - 6 réponses uniques, dont 5 distracteurs plausibles ;
-- mêmes statistiques et récompenses que Mission rapide ;
+- mêmes statistiques et étoiles que Mission rapide, avec des cartes exclusives ;
+- progression dédiée et cartes de collection « La Bande des Six » ;
 - grille tactile 2 × 3, sans clavier ni pression temporelle.
 
 ### Mes difficultés
@@ -203,6 +207,9 @@ Optionnel en MVP si le temps manque. Peut être une version de l’entraînement
 - On peut faire une session de 10 questions.
 - Les réponses sont toujours 4 propositions uniques.
 - Le Défi 6 choix affiche exactement 6 propositions uniques.
+- Une session complète en Défi 6 choix peut débloquer au plus une carte de
+  « La Bande des Six », sans doublon.
+- Les compteurs et cartes du Défi 6 choix persistent après rechargement.
 - La bonne réponse est toujours présente.
 - La même multiplication n’apparaît pas deux fois de suite.
 - Les mêmes 4 propositions ne se répètent pas d’affilée.
@@ -211,5 +218,6 @@ Optionnel en MVP si le temps manque. Peut être une version de l’entraînement
 - Une récompense est donnée à la fin d’une session.
 - Une mission terminée débloque un sticker non possédé tant qu’un sticker de session reste disponible.
 - Les résultats peuvent être réinitialisés sans effacer les récompenses.
+- La remise à zéro des résultats conserve les cartes Défi 6 choix.
 - L’aventure complète peut être réinitialisée avec confirmation.
 - `npm run build` fonctionne.

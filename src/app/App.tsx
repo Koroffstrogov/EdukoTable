@@ -12,6 +12,7 @@ import {
   buildSessionResult,
   finalizeAbandonedSessionRewards,
   finalizeSessionRewards,
+  getChallengeCardById,
   getStickerById,
 } from "../domain/rewards";
 import {
@@ -27,6 +28,7 @@ import {
 } from "../domain/progress";
 import type {
   AppState,
+  ChallengeCard,
   ChoiceCount,
   Factor,
   MascotMood,
@@ -104,6 +106,11 @@ export function App() {
   const latestStickerId = appState.rewards.stickersUnlocked.at(-1);
   const latestSticker = latestStickerId
     ? (getStickerById(latestStickerId) ?? null)
+    : null;
+  const latestChallengeCardId =
+    appState.rewards.challengeCardsUnlocked.at(-1);
+  const latestChallengeCard: ChallengeCard | null = latestChallengeCardId
+    ? (getChallengeCardById(latestChallengeCardId) ?? null)
     : null;
   const mascotMood: MascotMood = session?.feedback
     ? session.feedback.wasCorrect
@@ -224,6 +231,8 @@ export function App() {
           nextAppState.rewards,
           nextAppState.progress,
           result,
+          undefined,
+          { choiceCount: session.config.choiceCount },
         );
         const finalState = {
           ...nextAppState,
@@ -231,7 +240,8 @@ export function App() {
         };
 
         playSoundEffect(
-          finalizedRewards.grant.stickerIds.length > 0
+          finalizedRewards.grant.stickerIds.length > 0 ||
+          finalizedRewards.grant.cardIds.length > 0
             ? "sticker-unlock"
             : "session-complete",
           nextAppState.settings.soundEnabled,
@@ -356,6 +366,7 @@ export function App() {
           rewards={appState.rewards}
           selectedTables={appState.settings.selectedTables}
           latestSticker={latestSticker}
+          latestChallengeCard={latestChallengeCard}
           mascotMood={mascotMood}
           animationsEnabled={appState.settings.animationsEnabled}
           onStartRandom={() => openTablePicker("random")}

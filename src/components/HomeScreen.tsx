@@ -1,10 +1,18 @@
+import { ChallengeCardVisual } from "./ChallengeCardVisual";
 import { Mascot } from "./Mascot";
-import type { Factor, MascotMood, RewardState, Sticker } from "../domain/types";
+import type {
+  ChallengeCard,
+  Factor,
+  MascotMood,
+  RewardState,
+  Sticker,
+} from "../domain/types";
 
 type HomeScreenProps = {
   rewards: RewardState;
   selectedTables: Factor[];
   latestSticker: Sticker | null;
+  latestChallengeCard: ChallengeCard | null;
   mascotMood: MascotMood;
   animationsEnabled: boolean;
   onStartRandom: () => void;
@@ -19,6 +27,7 @@ export function HomeScreen({
   rewards,
   selectedTables,
   latestSticker,
+  latestChallengeCard,
   mascotMood,
   animationsEnabled,
   onStartRandom,
@@ -57,6 +66,15 @@ export function HomeScreen({
         <div className="latest-reward">
           <span className="reward-token">{latestSticker.symbol}</span>
           <span>Dernier sticker : {latestSticker.label}</span>
+        </div>
+      )}
+
+      {latestChallengeCard && (
+        <div className="latest-reward latest-challenge-card">
+          <ChallengeCardVisual card={latestChallengeCard} />
+          <span>
+            Dernière carte : <strong>{latestChallengeCard.label}</strong>
+          </span>
         </div>
       )}
 

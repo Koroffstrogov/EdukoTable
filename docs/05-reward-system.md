@@ -64,7 +64,45 @@ type StickerRarity = "common" | "rare" | "epic";
 Quelques stickers rares ou épiques peuvent référencer une animation locale.
 Chaque animation doit conserver un fallback statique.
 
-### 3. Badges
+### 3. Cartes Défi 6 choix
+
+Le mode « Défi 6 choix » possède une mini-collection dédiée : **La Bande des Six**.
+Elle contient six cartes stables, stockées localement et visibles dans l’album.
+
+Règles :
+
+- une carte de jalon remplace le sticker de session quand elle est débloquée ;
+- les cartes sont révélées dans l’ordre, une à la fois ;
+- aucun paquet aléatoire, aucun doublon et aucune carte perdue après une erreur ;
+- les objectifs sont visibles dans l’album avant le déblocage ;
+- une carte ne donne pas de pouvoir de jeu : son rôle est de rendre le progrès
+  concret et de donner envie de revenir.
+
+Collection :
+
+```txt
+Hexa la Luciole      → 1 défi terminé
+Tempo la Tortue      → 2 défis terminés
+Prismo le Caméléon   → 20 bonnes réponses en mode 6 choix
+Boulon le Robot      → 5 défis terminés
+Manta-Mémo           → 40 bonnes réponses en mode 6 choix
+Nova Six             → un 10/10 ou 10 défis terminés
+```
+
+Le suivi minimal persiste :
+
+```ts
+type ChallengeSixProgress = {
+  sessionsCompleted: number;
+  correctAnswers: number;
+  perfectSessions: number;
+};
+```
+
+Une remise à zéro des résultats conserve les cartes et leur progression. Une
+remise à zéro de l’aventure les efface.
+
+### 4. Badges
 
 Récompenses de jalons techniques.
 
@@ -89,7 +127,7 @@ comeback-day-3
 difficult-operation-fixed
 ```
 
-### 4. Mascotte
+### 5. Mascotte
 
 La mascotte ne doit pas nécessiter une mécanique complexe en MVP.
 

@@ -29,6 +29,7 @@ src/
     tableSelection.ts
     questionEngine.ts
     rewards.ts
+    challengeCards.ts
     stickers.ts
     types.ts
 
@@ -49,6 +50,7 @@ src/
     SettingsScreen.tsx
     StickerAlbum.tsx
     StickerVisual.tsx
+    ChallengeCardVisual.tsx
     ProgressDashboard.tsx
     ResetProgressPanel.tsx
     Mascot.tsx
@@ -86,6 +88,7 @@ La structure doit être versionnée pour permettre des migrations :
 
 ```ts
 const STORAGE_KEY = "edukotable:v1";
+// AppState.version passe à 2 pour ajouter la progression du Défi 6 choix.
 ```
 
 ### Routing

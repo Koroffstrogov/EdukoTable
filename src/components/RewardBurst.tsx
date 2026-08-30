@@ -1,6 +1,8 @@
 import { EdukoAnimation } from "./EdukoAnimation";
+import { ChallengeCardVisual } from "./ChallengeCardVisual";
 import { StickerVisual } from "./StickerVisual";
 import {
+  getChallengeCardById,
   getBadgeById,
   getStickerById,
   getStickerRarityLabel,
@@ -19,6 +21,9 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
   const badges = grant.badgeIds
     .map((badgeId) => getBadgeById(badgeId))
     .filter((badge) => badge !== undefined);
+  const cards = grant.cardIds
+    .map((cardId) => getChallengeCardById(cardId))
+    .filter((card) => card !== undefined);
 
   return (
     <div className="reward-burst" aria-label="Récompenses gagnées">
@@ -32,6 +37,17 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
         <span className="reward-token">+{grant.stars}</span>
         <span>étoiles gagnées</span>
       </div>
+
+      {cards.map((card) => (
+        <div className="challenge-card-reveal" key={card.id}>
+          <ChallengeCardVisual card={card} size="large" />
+          <div>
+            <span className="sticker-reveal-kicker">Nouvelle carte</span>
+            <strong>{card.label}</strong>
+            <span>{card.tagline}</span>
+          </div>
+        </div>
+      ))}
 
       {stickers.map((sticker) => (
         <div className="sticker-reveal" key={sticker.id}>
