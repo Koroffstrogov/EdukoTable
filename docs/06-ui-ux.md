@@ -226,6 +226,15 @@ Priorité :
 
 Ne pas supposer un grand écran.
 
+### Défi 6 choix
+
+- accès séparé depuis l’accueil ;
+- sélection des tables identique aux autres modes ;
+- réponses en grille 2 × 3 ;
+- boutons compacts mais toujours supérieurs à 44 px ;
+- aucun scroll nécessaire pendant une question sur un écran 320 × 568 ;
+- aucun timer et aucune pénalité supplémentaire.
+
 ## Ton éditorial
 
 Messages courts :

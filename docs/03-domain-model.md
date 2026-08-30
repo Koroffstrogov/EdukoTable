@@ -161,6 +161,22 @@ export type SettingsState = {
 };
 ```
 
+## Configuration de session
+
+```ts
+export type ChoiceCount = 4 | 6;
+
+export type SessionConfig = {
+  mode: SessionMode;
+  selectedTables: Factor[];
+  questionCount: number;
+  choiceCount: ChoiceCount;
+};
+```
+
+`choiceCount` vaut 4 par défaut. Il vaut 6 uniquement dans le mode optionnel
+« Défi 6 choix » et n’est pas persisté dans `AppState`.
+
 ## État racine
 
 ```ts

@@ -13,8 +13,13 @@ type AnswerGridProps = {
 };
 
 export function AnswerGrid({ question, feedback, onAnswer }: AnswerGridProps) {
+  const hasSixChoices = question.choices.length === 6;
+
   return (
-    <div className="answer-grid">
+    <div
+      className={`answer-grid ${hasSixChoices ? "is-six-choices" : ""}`}
+      aria-label={`${question.choices.length} propositions`}
+    >
       {question.choices.map((choice) => {
         const isCorrectChoice = choice === question.correctAnswer;
         const wasSelected = choice === feedback?.selectedAnswer;

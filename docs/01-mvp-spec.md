@@ -7,6 +7,7 @@ Créer une PWA utilisable immédiatement pour réviser les tables de multiplicat
 - sélection enfant-friendly des tables ;
 - sessions de 10 questions ;
 - 4 propositions ;
+- mode optionnel « Défi 6 choix » après le socle MVP ;
 - moteur aléatoire et moteur entraînement ciblé ;
 - suivi simple par opération ;
 - système de récompenses ;
@@ -81,6 +82,9 @@ Chaque question affiche :
 - jauge ou compteur d’étoiles de session.
 
 Pas de clavier. Pas de champ de texte.
+
+Le mode « Défi 6 choix » conserve 10 questions et affiche 6 réponses en grille
+2 × 3. Il ne remplace pas les 4 réponses des modes standard.
 
 ### 4. Feedback immédiat
 
@@ -179,6 +183,15 @@ Priorité aux opérations :
 - taux de réussite faible ;
 - ratées récemment.
 
+### Défi 6 choix
+
+Mode optionnel plus difficile :
+
+- tirage aléatoire dans les tables sélectionnées ;
+- 6 réponses uniques, dont 5 distracteurs plausibles ;
+- mêmes statistiques et récompenses que Mission rapide ;
+- grille tactile 2 × 3, sans clavier ni pression temporelle.
+
 ### Mes difficultés
 
 Optionnel en MVP si le temps manque. Peut être une version de l’entraînement ciblé filtrée sur les opérations avec taux < 80 % et au moins 3 tentatives.
@@ -189,6 +202,7 @@ Optionnel en MVP si le temps manque. Peut être une version de l’entraînement
 - On peut choisir les tables.
 - On peut faire une session de 10 questions.
 - Les réponses sont toujours 4 propositions uniques.
+- Le Défi 6 choix affiche exactement 6 propositions uniques.
 - La bonne réponse est toujours présente.
 - La même multiplication n’apparaît pas deux fois de suite.
 - Les mêmes 4 propositions ne se répètent pas d’affilée.

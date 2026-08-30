@@ -19,6 +19,7 @@ import {
 import { getOperationsForTable, buildOperationPool } from "./tableSelection";
 import type { Factor, OperationStats, QuestionHistoryItem, RewardState, SessionResult } from "./types";
 import {
+  createSessionConfig,
   generateChoices,
   generateQuestion,
   getChoicesFingerprint,
@@ -86,6 +87,31 @@ describe("answer choices", () => {
     }
   });
 
+  it("generates six unique plausible choices for every operation", () => {
+    const operations = buildAllOperations();
+
+    for (const operation of operations) {
+      const choices = generateChoices(operation, [], seededRandom(84), 6);
+      const correctAnswer = operation.a * operation.b;
+
+      expect(choices).toHaveLength(6);
+      expect(new Set(choices).size).toBe(6);
+      expect(choices.filter((choice) => choice === correctAnswer)).toHaveLength(1);
+      expect(choices.every((choice) => choice > 0 && choice <= 100)).toBe(true);
+      expect(choices.every((choice) => Number.isInteger(choice))).toBe(true);
+    }
+  });
+
+  it("keeps four choices as the default session configuration", () => {
+    const config = createSessionConfig({
+      mode: "random",
+      selectedTables: [6],
+    });
+
+    expect(config.choiceCount).toBe(4);
+    expect(config.questionCount).toBe(10);
+  });
+
   it("avoids absurdly distant distractors when credible choices exist", () => {
     const operation = buildAllOperations().find(
       (candidate) => candidate.key === "6x3",
@@ -112,6 +138,7 @@ describe("question anti-repetition", () => {
       mode: "random" as const,
       selectedTables: [6] as Factor[],
       questionCount: 10,
+      choiceCount: 4 as const,
     };
     const history: QuestionHistoryItem[] = [];
     const rng = seededRandom(7);
@@ -145,6 +172,44 @@ describe("question anti-repetition", () => {
     }
   });
 
+  it("keeps anti-repetition safeguards with six choices", () => {
+    const config = {
+      mode: "random" as const,
+      selectedTables: [6] as Factor[],
+      questionCount: 10,
+      choiceCount: 6 as const,
+    };
+    const history: QuestionHistoryItem[] = [];
+    const rng = seededRandom(17);
+
+    for (let index = 0; index < 10; index += 1) {
+      const question = generateQuestion(config, {}, history, rng);
+      const item = toQuestionHistoryItem(question);
+      const previous = history.at(-1);
+      const previousTwo = history.slice(-2);
+
+      expect(question.choices).toHaveLength(6);
+      expect(item.correctChoiceIndex).toBeGreaterThanOrEqual(0);
+      expect(item.correctChoiceIndex).toBeLessThan(6);
+
+      if (previous) {
+        expect(item.operationKey).not.toBe(previous.operationKey);
+        expect(item.choicesFingerprint).not.toBe(previous.choicesFingerprint);
+      }
+
+      if (
+        previousTwo.length === 2 &&
+        previousTwo[0].correctChoiceIndex === previousTwo[1].correctChoiceIndex
+      ) {
+        expect(item.correctChoiceIndex).not.toBe(
+          previousTwo[0].correctChoiceIndex,
+        );
+      }
+
+      history.push(item);
+    }
+  });
+
   it("avoids the last 3 operation keys when the pool allows it", () => {
     const history: QuestionHistoryItem[] = [
       historyItem("6x2", "2x6", 12, [10, 12, 14, 18], 1),
@@ -155,6 +220,7 @@ describe("question anti-repetition", () => {
       mode: "random" as const,
       selectedTables: [6] as Factor[],
       questionCount: 10,
+      choiceCount: 4 as const,
     };
     const question = generateQuestion(config, {}, history, seededRandom(2));
     const recentKeys = new Set(history.map((item) => item.operationKey));
@@ -167,6 +233,7 @@ describe("question anti-repetition", () => {
       mode: "random" as const,
       selectedTables: [6, 7] as Factor[],
       questionCount: 10,
+      choiceCount: 4 as const,
     };
     const history = [
       historyItem("6x7", "6x7", 42, [35, 36, 42, 48], 2),
@@ -196,6 +263,7 @@ describe("question anti-repetition", () => {
       mode: "training" as const,
       selectedTables: [6] as Factor[],
       questionCount: 10,
+      choiceCount: 4 as const,
     };
     const firstQuestion = generateQuestion(config, {}, [], seededRandom(1));
     const history = [toQuestionHistoryItem(firstQuestion)];

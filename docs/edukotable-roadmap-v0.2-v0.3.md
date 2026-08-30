@@ -17,6 +17,7 @@ Le reste du backlog reste optionnel.
 - Lot 6.1 livré : fallbacks statiques robustes pour mascotte et animations.
 - Lot 7 livré : album enrichi, 50 stickers locaux en 5 collections, raretés simples et non-doublons de stickers de session.
 - Lot 7.1 livré : Edukobi intégré, sons Web Audio, stockage résilient, dialogues accessibles et couverture WebKit.
+- Lot 7.2 livré : mode optionnel Défi 6 choix, grille mobile 2 × 3 et distracteurs étendus.
 - Lot 8 reste à faire : mode chrono adaptatif.
 - Le backlog court terme v0.2 historique est archivé dans `docs/archive/09-backlog-v0.2.md`.
 

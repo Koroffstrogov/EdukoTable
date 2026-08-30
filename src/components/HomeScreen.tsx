@@ -9,6 +9,7 @@ type HomeScreenProps = {
   animationsEnabled: boolean;
   onStartRandom: () => void;
   onStartTraining: () => void;
+  onStartSixChoices: () => void;
   onOpenAlbum: () => void;
   onOpenProgress: () => void;
   onOpenSettings: () => void;
@@ -22,6 +23,7 @@ export function HomeScreen({
   animationsEnabled,
   onStartRandom,
   onStartTraining,
+  onStartSixChoices,
   onOpenAlbum,
   onOpenProgress,
   onOpenSettings,
@@ -64,6 +66,15 @@ export function HomeScreen({
         </button>
         <button className="button secondary" type="button" onClick={onStartTraining}>
           Entraînement ciblé
+        </button>
+        <button
+          className="button challenge"
+          type="button"
+          aria-label="Défi 6 choix"
+          onClick={onStartSixChoices}
+        >
+          <span>Défi 6 choix</span>
+          <small>Plus de réponses, plus de défi</small>
         </button>
       </div>
 

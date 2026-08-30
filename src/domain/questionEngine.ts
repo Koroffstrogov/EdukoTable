@@ -2,6 +2,7 @@ import { getOperationProduct } from "./operations";
 import { buildOperationPool } from "./tableSelection";
 import {
   FACTORS,
+  type ChoiceCount,
   type Operation,
   type OperationStats,
   type Question,
@@ -12,15 +13,16 @@ import {
 export type RandomGenerator = () => number;
 
 const DEFAULT_QUESTION_COUNT = 10;
+const DEFAULT_CHOICE_COUNT: ChoiceCount = 4;
 const MAX_OPERATION_ATTEMPTS = 81;
 const MAX_CHOICE_ATTEMPTS = 24;
-const MIN_WRONG_CHOICES = 3;
 
 export function createSessionConfig(
   config: Partial<SessionConfig> & Pick<SessionConfig, "mode" | "selectedTables">,
 ): SessionConfig {
   return {
     questionCount: DEFAULT_QUESTION_COUNT,
+    choiceCount: DEFAULT_CHOICE_COUNT,
     ...config,
   };
 }
@@ -72,21 +74,25 @@ export function generateChoices(
   operation: Operation,
   history: QuestionHistoryItem[] = [],
   rng: RandomGenerator = Math.random,
+  choiceCount: ChoiceCount = DEFAULT_CHOICE_COUNT,
 ): number[] {
   const correctAnswer = getOperationProduct(operation);
-  const wrongChoices = pickWrongChoices(operation, rng);
+  const wrongChoices = pickWrongChoices(operation, choiceCount - 1, rng);
   const recentIndexes = history.slice(-2).map((item) => item.correctChoiceIndex);
   const blockedIndex =
     recentIndexes.length === 2 && recentIndexes[0] === recentIndexes[1]
       ? recentIndexes[0]
       : null;
-  const allowedIndexes = [0, 1, 2, 3].filter((index) => index !== blockedIndex);
+  const allowedIndexes = Array.from(
+    { length: choiceCount },
+    (_, index) => index,
+  ).filter((index) => index !== blockedIndex);
   const correctChoiceIndex = randomItem(allowedIndexes, rng);
   const shuffledWrongChoices = shuffle(wrongChoices, rng);
   const choices: number[] = [];
   let wrongIndex = 0;
 
-  for (let index = 0; index < 4; index += 1) {
+  for (let index = 0; index < choiceCount; index += 1) {
     choices.push(
       index === correctChoiceIndex
         ? correctAnswer
@@ -130,7 +136,12 @@ export function generateQuestion(
       choiceAttempt < MAX_CHOICE_ATTEMPTS;
       choiceAttempt += 1
     ) {
-      const choices = generateChoices(operation, history, rng);
+      const choices = generateChoices(
+        operation,
+        history,
+        rng,
+        config.choiceCount,
+      );
       const question = {
         operation,
         choices,
@@ -159,7 +170,7 @@ export function generateQuestion(
 
   return {
     operation,
-    choices: generateChoices(operation, history, rng),
+    choices: generateChoices(operation, history, rng, config.choiceCount),
     correctAnswer: getOperationProduct(operation),
   };
 }
@@ -291,10 +302,11 @@ function isAcceptableQuestion(
 
 function pickWrongChoices(
   operation: Operation,
+  wrongChoiceCount: number,
   rng: RandomGenerator,
 ): number[] {
   const correctAnswer = getOperationProduct(operation);
-  const candidates = buildDistractorCandidates(operation);
+  const candidates = buildDistractorCandidates(operation, wrongChoiceCount);
   const near = candidates.filter(
     (value) => Math.abs(value - correctAnswer) <= 10,
   );
@@ -305,22 +317,40 @@ function pickWrongChoices(
   const far = candidates.filter((value) => Math.abs(value - correctAnswer) > 25);
   const selected: number[] = [];
 
-  addRandomFromBucket(selected, near, rng);
-  addRandomFromBucket(selected, medium, rng);
-  addRandomFromBucket(selected, far, rng);
+  const bucketTargets =
+    wrongChoiceCount >= 5
+      ? ([
+          [near, 2],
+          [medium, 2],
+          [far, 1],
+        ] as const)
+      : ([
+          [near, 1],
+          [medium, 1],
+          [far, 1],
+        ] as const);
+
+  for (const [bucket, target] of bucketTargets) {
+    for (let index = 0; index < target; index += 1) {
+      addRandomFromBucket(selected, bucket, rng);
+    }
+  }
 
   const remaining = shuffle(candidates, rng).filter(
     (value) => !selected.includes(value),
   );
 
-  while (selected.length < 3 && remaining.length > 0) {
+  while (selected.length < wrongChoiceCount && remaining.length > 0) {
     selected.push(remaining.shift() as number);
   }
 
-  return selected.slice(0, 3);
+  return selected.slice(0, wrongChoiceCount);
 }
 
-function buildDistractorCandidates(operation: Operation): number[] {
+function buildDistractorCandidates(
+  operation: Operation,
+  minimumCandidateCount: number,
+): number[] {
   const { a, b } = operation;
   const correctAnswer = getOperationProduct(operation);
   const rawCandidates = new Map<number, number>();
@@ -381,7 +411,7 @@ function buildDistractorCandidates(operation: Operation): number[] {
     (candidate) => candidate.distance <= plausibleDistanceLimit,
   );
   const candidates =
-    plausibleCandidates.length >= MIN_WRONG_CHOICES
+    plausibleCandidates.length >= minimumCandidateCount
       ? plausibleCandidates
       : validCandidates;
 

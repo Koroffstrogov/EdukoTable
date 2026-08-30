@@ -41,7 +41,8 @@ Ne pas utiliser d’autre nom dans l’interface, le manifest PWA, le titre HTML
 
 - Réviser les tables de 2 à 10.
 - Sessions courtes.
-- Quatre propositions à chaque question.
+- Quatre propositions dans les modes standard.
+- Un mode optionnel à six propositions pour augmenter la difficulté.
 - Moteur simple mais intelligent.
 - Récompenses attractives.
 - Progression enregistrée localement.

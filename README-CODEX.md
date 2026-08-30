@@ -2,6 +2,10 @@
 
 EdukoTable est une PWA React/Vite mobile-first pour réviser les tables de multiplication de 2 à 10 avec des sessions courtes, des propositions tactiles et des récompenses locales.
 
+Les missions standard et l’entraînement ciblé utilisent 4 propositions. Le mode
+optionnel « Défi 6 choix » reprend les mêmes sessions de 10 questions avec une
+grille 2 × 3 et davantage de distracteurs plausibles.
+
 ## Prérequis
 
 - Node.js récent compatible Vite.
@@ -36,7 +40,7 @@ Ou tout lancer :
 npm run validate
 ```
 
-Les tests unitaires couvrent surtout le domaine et le stockage local. Les tests Playwright vérifient la navigation mobile, les réglages persistés, l’abandon sans sticker, une mission complète de 10 questions et l’absence de débordement horizontal aux largeurs 320, 375, 390 et 430 px.
+Les tests unitaires couvrent surtout le domaine et le stockage local. Les tests Playwright vérifient la navigation mobile, les réglages persistés, l’abandon sans sticker, les missions complètes à 4 et 6 choix et l’absence de débordement horizontal aux largeurs 320, 375, 390 et 430 px.
 
 Les parcours E2E sont exécutés sur Chromium mobile et WebKit avec un profil
 iPhone. Installer les deux moteurs avant la première exécution :
@@ -134,11 +138,12 @@ Avant de considérer une version publiable :
 4. Déployer sur Vercel avec `npm run build` et `dist` comme dossier de sortie.
 5. Ouvrir l’URL Vercel sur iPhone Safari et Android Chrome.
 6. Vérifier l’accueil, Album, Progression, Réglages et une session complète de 10 questions.
-7. Vérifier l’abandon de mission : sans réponse retour accueil, avec réponse résumé partiel sans sticker.
-8. Vérifier l’installation mobile : nom EdukoTable, icône lisible, affichage standalone quand disponible.
-9. Vérifier que les réglages animations/sons persistent après rechargement.
-10. Vérifier les dialogues au clavier : focus initial, Tab, Maj+Tab et Échap.
-11. Vérifier qu’aucun chemin local absolu n’apparaît dans les docs ou le code applicatif.
+7. Vérifier le Défi 6 choix sur iPhone compact : six réponses uniques, sans scroll pendant la question.
+8. Vérifier l’abandon de mission : sans réponse retour accueil, avec réponse résumé partiel sans sticker.
+9. Vérifier l’installation mobile : nom EdukoTable, icône lisible, affichage standalone quand disponible.
+10. Vérifier que les réglages animations/sons persistent après rechargement.
+11. Vérifier les dialogues au clavier : focus initial, Tab, Maj+Tab et Échap.
+12. Vérifier qu’aucun chemin local absolu n’apparaît dans les docs ou le code applicatif.
 
 ## Limites connues du MVP
 

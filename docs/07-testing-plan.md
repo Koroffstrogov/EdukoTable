@@ -33,6 +33,14 @@ Pour tous `a,b` dans 2..10 :
 - ne contient pas de nombre > 100 ;
 - ne contient pas `NaN`.
 
+Pour le Défi 6 choix :
+
+- retourne 6 propositions ;
+- contient 5 distracteurs uniques et plausibles ;
+- contient la bonne réponse exactement une fois ;
+- la position correcte reste comprise entre 0 et 5 ;
+- les protections anti-répétition restent actives.
+
 ### Anti-répétition
 
 Simuler une session de 10 questions et vérifier :
@@ -111,6 +119,7 @@ Sur mobile ou émulation :
 - une mission complète rend un sticker visible dans l’album.
 - les dialogues conservent le focus, bouclent Tab/Maj+Tab et ferment avec Échap ;
 - les parcours principaux passent sous Chromium mobile et WebKit/iPhone.
+- le Défi 6 choix tient sans scroll sur un écran 320 × 568.
 
 ## Commandes
 

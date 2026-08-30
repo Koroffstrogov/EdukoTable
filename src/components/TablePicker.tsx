@@ -1,8 +1,14 @@
 import { buildOperationPool } from "../domain/tableSelection";
-import { FACTORS, type Factor, type SessionMode } from "../domain/types";
+import {
+  FACTORS,
+  type ChoiceCount,
+  type Factor,
+  type SessionMode,
+} from "../domain/types";
 
 type TablePickerProps = {
   mode: SessionMode;
+  choiceCount: ChoiceCount;
   selectedTables: Factor[];
   onChange: (tables: Factor[]) => void;
   onBack: () => void;
@@ -17,6 +23,7 @@ const groups: { label: string; tables: Factor[] }[] = [
 
 export function TablePicker({
   mode,
+  choiceCount,
   selectedTables,
   onChange,
   onBack,
@@ -24,7 +31,11 @@ export function TablePicker({
 }: TablePickerProps) {
   const operationCount = buildOperationPool(selectedTables).length;
   const title =
-    mode === "training" ? "Entraînement ciblé" : "Mission rapide";
+    choiceCount === 6
+      ? "Défi 6 choix"
+      : mode === "training"
+        ? "Entraînement ciblé"
+        : "Mission rapide";
 
   function toggleTable(table: Factor): void {
     const nextTables = selectedTables.includes(table)
@@ -46,6 +57,12 @@ export function TablePicker({
       </div>
 
       <h1>Je révise quelles tables ?</h1>
+
+      {choiceCount === 6 && (
+        <p className="challenge-note">
+          Chaque question propose 6 réponses. Prends le temps de bien choisir.
+        </p>
+      )}
 
       <div className="button-grid table-grid" aria-label="Tables">
         {FACTORS.map((table) => {

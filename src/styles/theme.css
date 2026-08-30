@@ -163,6 +163,24 @@ h2 {
   color: var(--ink);
 }
 
+.button.challenge {
+  flex-direction: column;
+  border: 2px solid #d6a42c;
+  background: #fff3c4;
+  color: #684d0c;
+  box-shadow: 0 10px 22px rgba(217, 155, 29, 0.16);
+}
+
+.button.challenge:hover {
+  background: #ffeaa0;
+}
+
+.button.challenge small {
+  margin-top: 2px;
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
 .button.danger {
   background: var(--coral);
   color: #ffffff;
@@ -346,6 +364,15 @@ h2 {
   gap: 10px;
 }
 
+.challenge-note {
+  border-left: 4px solid #d6a42c;
+  border-radius: 6px;
+  background: #fff8dc;
+  color: #684d0c;
+  padding: 10px 12px;
+  line-height: 1.4;
+}
+
 .question-card {
   display: grid;
   place-items: center;
@@ -403,6 +430,18 @@ h2 {
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink);
+}
+
+.answer-grid.is-six-choices {
+  gap: 10px;
+}
+
+.answer-grid.is-six-choices .answer-button {
+  min-height: 70px;
+}
+
+.answer-grid.is-six-choices .answer-value {
+  font-size: 1.75rem;
 }
 
 .answer-value {
@@ -999,6 +1038,47 @@ h2 {
 
   .secondary-actions {
     gap: 8px;
+  }
+}
+
+@media (max-height: 700px) {
+  .app-shell {
+    padding-block: 8px;
+  }
+
+  .question-screen {
+    gap: 10px;
+  }
+
+  .question-screen .mascot {
+    width: 72px;
+    gap: 2px;
+  }
+
+  .question-screen .mascot-animation {
+    width: 52px;
+    height: 52px;
+  }
+
+  .question-screen .question-card {
+    gap: 4px;
+    padding: 10px;
+  }
+
+  .question-screen .operation {
+    font-size: 3rem;
+  }
+
+  .answer-grid.is-six-choices {
+    gap: 8px;
+  }
+
+  .answer-grid.is-six-choices .answer-button {
+    min-height: 58px;
+  }
+
+  .question-screen .feedback {
+    padding: 9px 12px;
   }
 }
 

@@ -7,6 +7,7 @@ test.beforeEach(async ({ page }) => {
 test("home is visible", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "EdukoTable" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Mission rapide" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Défi 6 choix" })).toBeVisible();
   await expect(page.getByLabel("Eduko Prêt")).toBeVisible();
   await expect(page.locator('[data-animation-id="mascot-idle"]').first()).toBeVisible();
   await expect(page.locator(".mascot-image").first()).toBeVisible();
@@ -158,6 +159,18 @@ test("starts a quick mission and shows the first question", async ({ page }) => 
   await expectNoHorizontalOverflow(page);
 });
 
+test("starts a six-choice challenge with six unique answers", async ({ page }) => {
+  await startSixChoiceChallenge(page);
+
+  await expect(page.getByLabel("6 propositions")).toBeVisible();
+  await expect(page.locator(".answer-button")).toHaveCount(6);
+  const answerLabels = await page
+    .locator(".answer-button")
+    .evaluateAll((buttons) => buttons.map((button) => button.textContent?.trim()));
+  expect(new Set(answerLabels).size).toBe(6);
+  await expectNoHorizontalOverflow(page);
+});
+
 test("can cancel then abandon a mission without answers", async ({ page }) => {
   await startQuickMission(page);
 
@@ -231,6 +244,36 @@ test("completes a full quick mission and shows the final summary", async ({ page
   await expectNoHorizontalOverflow(page);
 });
 
+test("completes and replays a full six-choice challenge", async ({ page }) => {
+  await startSixChoiceChallenge(page);
+
+  for (let index = 1; index <= 10; index += 1) {
+    await expect(page.getByText(`Question ${index} / 10`)).toBeVisible();
+    await expect(page.locator(".answer-button")).toHaveCount(6);
+    await answerCurrentQuestionCorrectly(page);
+  }
+
+  await expect(page.getByText("Mission terminée")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "10 / 10 réussies" })).toBeVisible();
+  await page.getByRole("button", { name: "Rejouer" }).click();
+  await expect(page.getByText("Question 1 / 10")).toBeVisible();
+  await expect(page.locator(".answer-button")).toHaveCount(6);
+});
+
+test("six-choice challenge fits an iPhone compact question screen", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto("/");
+  await startSixChoiceChallenge(page);
+
+  await expectNoHorizontalOverflow(page);
+  await expectNoVerticalOverflow(page);
+  await answerCurrentQuestionCorrectly(page);
+  await expectNoHorizontalOverflow(page);
+  await expectNoVerticalOverflow(page);
+});
+
 for (const width of [320, 375, 390, 430]) {
   test(`main session path has no horizontal overflow at ${width}px`, async ({
     page,
@@ -254,6 +297,13 @@ for (const width of [320, 375, 390, 430]) {
 
 async function startQuickMission(page: Page) {
   await page.getByRole("button", { name: "Mission rapide" }).click();
+  await page.getByRole("button", { name: "Commencer" }).click();
+  await expect(page.getByText("Question 1 / 10")).toBeVisible();
+}
+
+async function startSixChoiceChallenge(page: Page) {
+  await page.getByRole("button", { name: "Défi 6 choix" }).click();
+  await expect(page.getByText("Chaque question propose 6 réponses.")).toBeVisible();
   await page.getByRole("button", { name: "Commencer" }).click();
   await expect(page.getByText("Question 1 / 10")).toBeVisible();
 }
@@ -299,6 +349,17 @@ async function expectNoHorizontalOverflow(page: Page) {
   );
   expect(dimensions.bodyScrollWidth).toBeLessThanOrEqual(
     dimensions.clientWidth + 1,
+  );
+}
+
+async function expectNoVerticalOverflow(page: Page) {
+  const dimensions = await page.evaluate(() => ({
+    scrollHeight: document.documentElement.scrollHeight,
+    viewportHeight: window.innerHeight,
+  }));
+
+  expect(dimensions.scrollHeight).toBeLessThanOrEqual(
+    dimensions.viewportHeight + 1,
   );
 }
 

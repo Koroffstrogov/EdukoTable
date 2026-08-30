@@ -15,6 +15,7 @@ type SessionConfig = {
   mode: SessionMode;
   selectedTables: Factor[];
   questionCount: number; // 10 par défaut
+  choiceCount: 4 | 6;    // 4 par défaut
 };
 
 type Question = {
@@ -55,8 +56,8 @@ exclut 7×8
 ### Règles strictes
 
 - Ne jamais poser exactement la même opération deux fois de suite.
-- Ne jamais réutiliser exactement les mêmes 4 propositions deux fois de suite.
-- Les 4 propositions doivent être uniques.
+- Ne jamais réutiliser exactement le même ensemble de propositions deux fois de suite.
+- Les 4 ou 6 propositions doivent être uniques.
 - La bonne réponse doit être présente exactement une fois.
 
 ### Règles préférentielles
@@ -150,11 +151,12 @@ successRate < 0.8
 
 S’il y en a moins de 4 ou si le pool est trop petit, compléter avec le mode entraînement.
 
-## Génération des 4 propositions
+## Génération des 4 ou 6 propositions
 
 Pour une opération `a × b`, la réponse correcte est `a * b`.
 
-Les mauvaises réponses doivent être plausibles et variées.
+Les mauvaises réponses doivent être plausibles et variées. Les modes standard
+produisent 3 distracteurs ; le Défi 6 choix en produit 5.
 
 ### Sources de distracteurs
 
@@ -216,9 +218,13 @@ far: distance > 25
 
 Si un bucket est vide, compléter avec les meilleurs candidats restants.
 
+Avec 5 mauvaises réponses, viser si possible : 2 proches, 2 moyennes et 1 plus
+éloignée mais plausible. Compléter depuis les autres candidats si un bucket est
+insuffisant.
+
 ## Placement de la bonne réponse
 
-L’ordre des 4 propositions doit être mélangé.
+L’ordre des 4 ou 6 propositions doit être mélangé.
 
 Éviter que la bonne réponse apparaisse dans la même position plus de 2 fois d’affilée.
 
@@ -249,6 +255,7 @@ Tests obligatoires :
 - `buildOperationPool([6])` inclut `6x7` et `7x6`.
 - `buildOperationPool([6])` exclut `7x8`.
 - `generateChoices(a,b)` retourne 4 valeurs uniques.
+- `generateChoices(a,b, choiceCount=6)` retourne 6 valeurs uniques.
 - `generateChoices(a,b)` contient `a*b`.
 - `generateChoices(a,b)` ne contient pas de valeur ≤ 0.
 - deux questions consécutives ne peuvent pas avoir le même `operationKey` si le pool > 1.

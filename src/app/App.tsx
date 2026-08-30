@@ -27,6 +27,7 @@ import {
 } from "../domain/progress";
 import type {
   AppState,
+  ChoiceCount,
   Factor,
   MascotMood,
   Question,
@@ -77,6 +78,8 @@ export function App() {
   const [appState, setAppState] = useState<AppState>(() => loadAppState());
   const [screen, setScreen] = useState<Screen>("home");
   const [pendingMode, setPendingMode] = useState<SessionMode>("random");
+  const [pendingChoiceCount, setPendingChoiceCount] =
+    useState<ChoiceCount>(4);
   const [draftTables, setDraftTables] = useState<Factor[]>(
     appState.settings.selectedTables,
   );
@@ -114,19 +117,28 @@ export function App() {
         ? "thinking"
         : "idle";
 
-  function openTablePicker(mode: SessionMode): void {
+  function openTablePicker(
+    mode: SessionMode,
+    choiceCount: ChoiceCount = 4,
+  ): void {
     clearAdvanceTimer();
     setPendingMode(mode);
+    setPendingChoiceCount(choiceCount);
     setDraftTables(appState.settings.selectedTables);
     setScreen("table-picker");
   }
 
-  function startSession(mode: SessionMode, selectedTables: Factor[]): void {
+  function startSession(
+    mode: SessionMode,
+    selectedTables: Factor[],
+    choiceCount: ChoiceCount,
+  ): void {
     clearAdvanceTimer();
     const config = createSessionConfig({
       mode,
       selectedTables,
       questionCount: 10,
+      choiceCount,
     });
     const firstQuestion = generateQuestion(
       config,
@@ -348,6 +360,7 @@ export function App() {
           animationsEnabled={appState.settings.animationsEnabled}
           onStartRandom={() => openTablePicker("random")}
           onStartTraining={() => openTablePicker("training")}
+          onStartSixChoices={() => openTablePicker("random", 6)}
           onOpenAlbum={() => setScreen("album")}
           onOpenProgress={() => setScreen("progress")}
           onOpenSettings={() => setScreen("settings")}
@@ -383,10 +396,13 @@ export function App() {
       {screen === "table-picker" && (
         <TablePicker
           mode={pendingMode}
+          choiceCount={pendingChoiceCount}
           selectedTables={draftTables}
           onChange={setDraftTables}
           onBack={() => setScreen("home")}
-          onStart={() => startSession(pendingMode, draftTables)}
+          onStart={() =>
+            startSession(pendingMode, draftTables, pendingChoiceCount)
+          }
         />
       )}
 
@@ -415,7 +431,11 @@ export function App() {
           mascotMood={mascotMood}
           animationsEnabled={appState.settings.animationsEnabled}
           onReplay={() =>
-            startSession(summary.config.mode, appState.settings.selectedTables)
+            startSession(
+              summary.config.mode,
+              appState.settings.selectedTables,
+              summary.config.choiceCount,
+            )
           }
           onHome={() => setScreen("home")}
         />

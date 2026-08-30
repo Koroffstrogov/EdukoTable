@@ -98,10 +98,13 @@ export type AppState = {
 
 export type SessionMode = "random" | "training" | "difficult";
 
+export type ChoiceCount = 4 | 6;
+
 export type SessionConfig = {
   mode: SessionMode;
   selectedTables: Factor[];
   questionCount: number;
+  choiceCount: ChoiceCount;
 };
 
 export type Question = {
