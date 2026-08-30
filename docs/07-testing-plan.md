@@ -92,6 +92,9 @@ Simuler une session de 10 questions et vérifier :
 - `EdukoAnimation` rend un fallback si l’asset manque ou si les animations sont désactivées.
 - la mascotte affiche toujours un contenu accessible.
 - les réglages animations/sons persistent.
+- les sons désactivés ne créent pas de contexte audio ;
+- l’absence de Web Audio ou de stockage local ne provoque pas de crash ;
+- Edukobi reste visible lorsque les animations sont désactivées ou réduites.
 
 ## Tests manuels MVP
 
@@ -106,6 +109,8 @@ Sur mobile ou émulation :
 - l’app build et se lance après déploiement Vercel.
 - l’album affiche les collections et reste lisible sur largeur mobile.
 - une mission complète rend un sticker visible dans l’album.
+- les dialogues conservent le focus, bouclent Tab/Maj+Tab et ferment avec Échap ;
+- les parcours principaux passent sous Chromium mobile et WebKit/iPhone.
 
 ## Commandes
 

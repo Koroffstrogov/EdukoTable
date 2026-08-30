@@ -16,8 +16,8 @@
   animation: reward-rise 480ms ease-out;
 }
 
-.mascot-happy .mascot-face,
-.mascot-celebrating .mascot-face {
+.mascot-happy .mascot-visual,
+.mascot-celebrating .mascot-visual {
   animation: mascot-pop 450ms ease-out;
 }
 

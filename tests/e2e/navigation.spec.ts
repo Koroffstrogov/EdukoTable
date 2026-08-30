@@ -9,8 +9,24 @@ test("home is visible", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Mission rapide" })).toBeVisible();
   await expect(page.getByLabel("Eduko Prêt")).toBeVisible();
   await expect(page.locator('[data-animation-id="mascot-idle"]').first()).toBeVisible();
-  await expect(page.locator(".mascot-face").first()).toBeVisible();
+  await expect(page.locator(".mascot-image").first()).toBeVisible();
   await expectNoHorizontalOverflow(page);
+});
+
+test("serves the PWA manifest and every declared icon", async ({ request }) => {
+  const manifestResponse = await request.get("/manifest.webmanifest");
+
+  expect(manifestResponse.ok()).toBe(true);
+  const manifest = (await manifestResponse.json()) as {
+    name: string;
+    icons: { src: string }[];
+  };
+  expect(manifest.name).toBe("EdukoTable");
+
+  for (const icon of manifest.icons) {
+    const iconResponse = await request.get(icon.src);
+    expect(iconResponse.ok()).toBe(true);
+  }
 });
 
 test("opens album and returns home", async ({ page }) => {
@@ -46,7 +62,7 @@ test("updates settings and returns home", async ({ page }) => {
   await expect(page.getByText("Animations désactivées.")).toBeVisible();
 
   await page.getByRole("button", { name: "Sons désactivé" }).click();
-  await expect(page.getByText("Sons activés. Ils seront utilisés après une interaction.")).toBeVisible();
+  await expect(page.getByText("Sons activés.")).toBeVisible();
 
   await page.reload();
   await page.getByRole("button", { name: "Réglages" }).click();
@@ -59,7 +75,7 @@ test("updates settings and returns home", async ({ page }) => {
     "data-animation-state",
     "disabled",
   );
-  await expect(page.locator(".mascot-face").first()).toBeVisible();
+  await expect(page.locator(".mascot-image").first()).toBeVisible();
 });
 
 test("uses mascot fallback when reduced motion is requested", async ({ page }) => {
@@ -71,8 +87,65 @@ test("uses mascot fallback when reduced motion is requested", async ({ page }) =
     "data-animation-state",
     "reduced",
   );
-  await expect(page.locator(".mascot-face").first()).toBeVisible();
+  await expect(page.locator(".mascot-image").first()).toBeVisible();
 });
+
+test("keeps session dialog focus contained and restores it on Escape", async ({
+  page,
+}) => {
+  await startQuickMission(page);
+  const quitButton = page.getByRole("button", { name: "Quitter" });
+
+  await quitButton.focus();
+  await page.keyboard.press("Enter");
+  const continueButton = page.getByRole("button", { name: "Continuer" });
+  const stopButton = page.getByRole("button", { name: "Arrêter" });
+
+  await expect(continueButton).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(stopButton).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(continueButton).toBeFocused();
+  await page.keyboard.press("Escape");
+
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(quitButton).toBeFocused();
+});
+
+test("warns without blocking when local storage cannot save", async ({ page }) => {
+  await page.addInitScript(() => {
+    const originalSetItem = Storage.prototype.setItem;
+    let storageBlocked = true;
+
+    window.allowEdukoTableStorage = () => {
+      storageBlocked = false;
+    };
+    Storage.prototype.setItem = function setItem(key, value) {
+      if (storageBlocked) {
+        throw new DOMException("Storage unavailable", "QuotaExceededError");
+      }
+
+      return originalSetItem.call(this, key, value);
+    };
+  });
+  await page.reload();
+
+  await expect(page.getByRole("status")).toContainText(
+    "elle ne peut pas être enregistrée",
+  );
+  await expect(page.getByRole("button", { name: "Mission rapide" })).toBeEnabled();
+
+  await page.evaluate(() => window.allowEdukoTableStorage());
+  await page.getByRole("button", { name: "Réglages" }).click();
+  await page.getByRole("button", { name: "Animations activé" }).click();
+  await expect(page.getByRole("status")).toBeHidden();
+});
+
+declare global {
+  interface Window {
+    allowEdukoTableStorage: () => void;
+  }
+}
 
 test("starts a quick mission and shows the first question", async ({ page }) => {
   await page.getByRole("button", { name: "Mission rapide" }).click();

@@ -7,6 +7,7 @@ import { SessionSummary } from "../components/SessionSummary";
 import { StickerAlbum } from "../components/StickerAlbum";
 import { TablePicker } from "../components/TablePicker";
 import { QuestionCard } from "../components/QuestionCard";
+import { playSoundEffect } from "../audio/soundEffects";
 import {
   buildSessionResult,
   finalizeAbandonedSessionRewards,
@@ -82,10 +83,11 @@ export function App() {
   const [session, setSession] = useState<ActiveSession | null>(null);
   const [summary, setSummary] = useState<SummaryState | null>(null);
   const [quitDialogOpen, setQuitDialogOpen] = useState(false);
+  const [storageUnavailable, setStorageUnavailable] = useState(false);
   const advanceTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    saveAppState(appState);
+    setStorageUnavailable(!saveAppState(appState));
   }, [appState]);
 
   useEffect(() => {
@@ -196,6 +198,10 @@ export function App() {
 
     setAppState(nextAppState);
     setSession(sessionWithFeedback);
+    playSoundEffect(
+      wasCorrect ? "answer-correct" : "answer-encouraging",
+      appState.settings.soundEnabled,
+    );
 
     advanceTimerRef.current = window.setTimeout(() => {
       advanceTimerRef.current = null;
@@ -211,6 +217,13 @@ export function App() {
           ...nextAppState,
           rewards: finalizedRewards.rewards,
         };
+
+        playSoundEffect(
+          finalizedRewards.grant.stickerIds.length > 0
+            ? "sticker-unlock"
+            : "session-complete",
+          nextAppState.settings.soundEnabled,
+        );
 
         setAppState(finalState);
         setSummary({
@@ -319,6 +332,13 @@ export function App() {
         appState.settings.animationsEnabled ? "" : "reduce-motion"
       }`}
     >
+      {storageUnavailable && (
+        <p className="storage-status" role="status" aria-live="polite">
+          La progression reste disponible maintenant, mais elle ne peut pas être
+          enregistrée sur cet appareil pour le moment.
+        </p>
+      )}
+
       {screen === "home" && (
         <HomeScreen
           rewards={appState.rewards}

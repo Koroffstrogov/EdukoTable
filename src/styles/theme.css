@@ -81,6 +81,18 @@ h2 {
   padding: 20px 16px 28px;
 }
 
+.storage-status {
+  margin-bottom: 14px;
+  border: 1px solid #e5c86b;
+  border-radius: 8px;
+  background: #fff8dc;
+  color: #685114;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
 .screen {
   display: flex;
   min-height: calc(100vh - 48px);
@@ -1007,123 +1019,31 @@ h2 {
 }
 
 .mascot-animation .eduko-animation-layer {
-  opacity: 0.72;
+  opacity: 0.38;
 }
 
-.mascot-face {
-  position: relative;
-  display: flex;
+.mascot-visual {
+  display: grid;
   width: 64px;
   height: 64px;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  border: 4px solid #20212f;
-  border-radius: 8px;
-  background: #f8d66d;
-  box-shadow:
-    inset 0 -7px 0 rgba(32, 33, 47, 0.08),
-    0 6px 0 rgba(32, 33, 47, 0.08);
+  place-items: center;
+  transition: transform 180ms ease;
 }
 
-.mascot-eye {
-  position: relative;
-  z-index: 1;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #20212f;
-  transform: translateY(-6px);
+.mascot-image {
+  display: block;
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0 5px 3px rgba(32, 33, 47, 0.14));
+  object-fit: contain;
 }
 
-.mascot-smile {
-  position: absolute;
-  z-index: 1;
-  bottom: 17px;
-  left: 20px;
-  width: 24px;
-  height: 12px;
-  border-bottom: 4px solid #20212f;
-  border-radius: 0 0 999px 999px;
+.mascot-thinking .mascot-visual {
+  transform: rotate(-3deg);
 }
 
-.mascot-brow {
-  position: absolute;
-  top: 19px;
-  z-index: 1;
-  width: 13px;
-  height: 4px;
-  border-radius: 999px;
-  background: #20212f;
-  opacity: 0;
-}
-
-.mascot-brow-left {
-  left: 19px;
-}
-
-.mascot-brow-right {
-  right: 19px;
-}
-
-.mascot-cheek {
-  position: absolute;
-  bottom: 23px;
-  z-index: 1;
-  width: 9px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgba(228, 93, 93, 0.3);
-}
-
-.mascot-cheek-left {
-  left: 13px;
-}
-
-.mascot-cheek-right {
-  right: 13px;
-}
-
-.mascot-happy .mascot-face,
-.mascot-celebrating .mascot-face {
-  background: #b9f0d8;
-}
-
-.mascot-thinking .mascot-face {
-  background: #dbe8ff;
-}
-
-.mascot-encouraging .mascot-face {
-  background: #ffd9c7;
-}
-
-.mascot-happy .mascot-smile,
-.mascot-celebrating .mascot-smile {
-  bottom: 15px;
-  left: 18px;
-  width: 28px;
-  height: 15px;
-}
-
-.mascot-thinking .mascot-brow,
-.mascot-encouraging .mascot-brow {
-  opacity: 1;
-}
-
-.mascot-thinking .mascot-brow-left {
-  transform: rotate(10deg);
-}
-
-.mascot-thinking .mascot-brow-right {
-  transform: rotate(-10deg);
-}
-
-.mascot-encouraging .mascot-brow-left {
-  transform: rotate(-8deg);
-}
-
-.mascot-encouraging .mascot-brow-right {
-  transform: rotate(8deg);
+.mascot-encouraging .mascot-visual {
+  transform: translateY(1px) rotate(3deg);
 }
 
 @media (min-width: 620px) {

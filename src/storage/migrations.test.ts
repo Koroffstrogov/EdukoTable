@@ -69,9 +69,19 @@ describe("storage migrations", () => {
       },
     };
 
-    saveAppState(nextState);
+    expect(saveAppState(nextState)).toBe(true);
 
     expect(loadAppState().settings).toEqual(nextState.settings);
+  });
+
+  it("reports a failed save without throwing", () => {
+    vi.stubGlobal("localStorage", {
+      setItem() {
+        throw new DOMException("Storage unavailable", "QuotaExceededError");
+      },
+    });
+
+    expect(saveAppState(createInitialAppState())).toBe(false);
   });
 });
 

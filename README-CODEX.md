@@ -38,6 +38,13 @@ npm run validate
 
 Les tests unitaires couvrent surtout le domaine et le stockage local. Les tests Playwright vérifient la navigation mobile, les réglages persistés, l’abandon sans sticker, une mission complète de 10 questions et l’absence de débordement horizontal aux largeurs 320, 375, 390 et 430 px.
 
+Les parcours E2E sont exécutés sur Chromium mobile et WebKit avec un profil
+iPhone. Installer les deux moteurs avant la première exécution :
+
+```bash
+npx playwright install chromium webkit
+```
+
 Pour générer une capture ponctuelle pendant un audit mobile :
 
 ```bash
@@ -79,6 +86,10 @@ Les icônes locales sont dans `public/icons/` :
 
 Elles reprennent une mascotte Eduko simple, lisible en petit format.
 
+La mascotte principale Edukobi est un SVG local dans `src/assets/edukobi.svg`.
+Elle reste visible sous les effets Lottie et sert de fallback lorsque les
+animations sont désactivées, réduites ou indisponibles.
+
 `index.html` référence le manifest, la couleur de thème, l’icône iPhone et les balises utiles pour l’affichage mobile.
 
 ## Stickers et animations
@@ -102,6 +113,17 @@ Conséquences :
 - “Réinitialiser les résultats” conserve les récompenses ;
 - “Recommencer toute l’aventure” remet aussi les récompenses à zéro.
 
+Si le navigateur refuse une écriture `localStorage`, la session continue en
+mémoire et un message discret indique que la progression ne pourra peut-être
+pas être retrouvée après fermeture.
+
+## Sons
+
+Les sons sont synthétisés localement avec Web Audio, sans fichier distant ni
+dépendance supplémentaire. Ils couvrent la bonne réponse, l’encouragement après
+une erreur, la fin de mission et le déblocage d’un sticker. Ils sont désactivés
+par défaut, restent facultatifs et ne remplacent aucun feedback visuel ou textuel.
+
 ## Checklist publication
 
 Avant de considérer une version publiable :
@@ -115,12 +137,14 @@ Avant de considérer une version publiable :
 7. Vérifier l’abandon de mission : sans réponse retour accueil, avec réponse résumé partiel sans sticker.
 8. Vérifier l’installation mobile : nom EdukoTable, icône lisible, affichage standalone quand disponible.
 9. Vérifier que les réglages animations/sons persistent après rechargement.
-10. Vérifier qu’aucun chemin local absolu n’apparaît dans les docs ou le code applicatif.
+10. Vérifier les dialogues au clavier : focus initial, Tab, Maj+Tab et Échap.
+11. Vérifier qu’aucun chemin local absolu n’apparaît dans les docs ou le code applicatif.
 
 ## Limites connues du MVP
 
 - Pas de compte, profils multiples ou synchronisation cloud.
 - Pas de service worker offline avancé.
-- Pas de vrais sons pour l’instant, seulement le réglage prêt à brancher.
 - Stickers visuels locaux, encore remplaçables par des illustrations finales.
 - Statistiques volontairement simples et locales.
+- Les sons Web Audio dépendent du support du navigateur et restent silencieux si
+  celui-ci refuse l’initialisation audio.

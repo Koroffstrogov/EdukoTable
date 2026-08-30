@@ -206,14 +206,14 @@ Ne pas bloquer l’enfant inutilement.
 
 ## Sons
 
-MVP facultatif.
+État actuel :
 
-Si sons ajoutés :
-
-- désactivés ou activables explicitement ;
-- jamais indispensables ;
-- pas de son d’erreur agressif ;
-- respecter les contraintes iOS sur l’audio déclenché par interaction utilisateur.
+- sons synthétisés localement avec Web Audio ;
+- désactivés par défaut et activables explicitement ;
+- bonne réponse, encouragement doux, fin de mission et sticker débloqué ;
+- jamais indispensables et toujours doublés par un feedback visuel ou textuel ;
+- aucun son d’erreur agressif ;
+- initialisation audio seulement après une interaction utilisateur pour iOS.
 
 ## Responsive
 

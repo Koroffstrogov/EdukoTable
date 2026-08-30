@@ -53,7 +53,7 @@ export function SettingsScreen({
 
         <SettingToggle
           title="Sons"
-          description="Prépare les petits sons de réussite, sans fichier audio externe."
+          description="Joue de petits sons doux pour les réponses et les récompenses."
           enabled={settings.soundEnabled}
           onToggle={() =>
             update(
@@ -63,7 +63,7 @@ export function SettingsScreen({
               },
               settings.soundEnabled
                 ? "Sons désactivés."
-                : "Sons activés. Ils seront utilisés après une interaction.",
+                : "Sons activés.",
             )
           }
         />

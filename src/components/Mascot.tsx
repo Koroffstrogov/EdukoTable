@@ -1,4 +1,5 @@
 import { EdukoAnimation } from "./EdukoAnimation";
+import edukobiUrl from "../assets/edukobi.svg";
 import type { EdukoAnimationId } from "../domain/animations";
 import type { MascotMood } from "../domain/types";
 
@@ -39,14 +40,8 @@ export function Mascot({ mood, animationsEnabled }: MascotProps) {
 
 function MascotFallback({ mood }: { mood: MascotMood }) {
   return (
-    <span className={`mascot-face mascot-face-${mood}`} aria-hidden="true">
-      <span className="mascot-brow mascot-brow-left" />
-      <span className="mascot-brow mascot-brow-right" />
-      <span className="mascot-eye" />
-      <span className="mascot-eye" />
-      <span className="mascot-smile" />
-      <span className="mascot-cheek mascot-cheek-left" />
-      <span className="mascot-cheek mascot-cheek-right" />
+    <span className={`mascot-visual mascot-visual-${mood}`} aria-hidden="true">
+      <img className="mascot-image" src={edukobiUrl} alt="" />
     </span>
   );
 }
