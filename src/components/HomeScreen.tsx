@@ -1,5 +1,6 @@
 import { ChallengeCardVisual } from "./ChallengeCardVisual";
 import { Mascot } from "./Mascot";
+import { FAIRY_FAMILIES, getFairyProgress } from "../domain/fairyCards";
 import type {
   ChallengeCard,
   Factor,
@@ -37,6 +38,9 @@ export function HomeScreen({
   onOpenProgress,
   onOpenSettings,
 }: HomeScreenProps) {
+  const fairyProgress = getFairyProgress(rewards.fairyCollection);
+  const companion = FAIRY_FAMILIES.find((family) => family.id === rewards.fairyCollection.selectedFamilyId)!;
+  const companionCard = fairyProgress.latestCard ?? fairyProgress.cards[0];
   return (
     <section className="screen home-screen">
       <div className="home-top">
@@ -107,6 +111,18 @@ export function HomeScreen({
           Réglages
         </button>
       </div>
+
+      <button className="fairy-home" type="button" onClick={onOpenAlbum} aria-label="Découvrir les Fabuleuses">
+        <img src={companionCard.artwork} alt="" width={72} height={96} />
+        <span>
+          <small>Les Fabuleuses d’Eduko</small>
+          <strong>{companion.name} t’accompagne</strong>
+          <span>{fairyProgress.nextCard
+            ? `Encore ${fairyProgress.remaining} mission${fairyProgress.remaining > 1 ? "s" : ""} pour sa prochaine carte`
+            : "Ses quatre évolutions sont dans ton album !"}</span>
+          <b>Ouvrir la collection</b>
+        </span>
+      </button>
 
       <p className="selection-note">
         Tables choisies : {selectedTables.join(", ")}

@@ -1,5 +1,6 @@
 import { ChallengeCardVisual } from "./ChallengeCardVisual";
 import { StickerVisual } from "./StickerVisual";
+import { FairyAlbum } from "./FairyAlbum";
 import {
   CHALLENGE_CARDS,
   getChallengeCardProgress,
@@ -9,13 +10,14 @@ import {
   getStickersByCollection,
   getUnlockedCountForCollection,
 } from "../domain/rewards";
-import type { RewardState, Sticker, StickerCollection } from "../domain/types";
+import type { FairyFamilyId, RewardState, Sticker, StickerCollection } from "../domain/types";
 
 type StickerAlbumProps = {
   rewards: RewardState;
   latestStickerId: string | null;
   animationsEnabled: boolean;
   onBack: () => void;
+  onChooseCompanion: (familyId: FairyFamilyId) => void;
 };
 
 type StickerGroup = {
@@ -28,6 +30,7 @@ export function StickerAlbum({
   latestStickerId,
   animationsEnabled,
   onBack,
+  onChooseCompanion,
 }: StickerAlbumProps) {
   const unlocked = new Set(rewards.stickersUnlocked);
   const groups = buildStickerGroups();
@@ -47,11 +50,14 @@ export function StickerAlbum({
         <button className="button quiet" type="button" onClick={onBack}>
           Accueil
         </button>
-        <p className="eyebrow">Album</p>
+        <h1 className="album-page-title">Mon album</h1>
       </div>
 
+      <FairyAlbum collection={rewards.fairyCollection} animationsEnabled={animationsEnabled}
+        onChooseCompanion={onChooseCompanion} />
+
       <div className="screen-title-block">
-        <h1>Mes stickers</h1>
+        <h2>Mes stickers</h2>
         <p>
           {rewards.stickersUnlocked.length} / {stickerTotal} stickers débloqués
         </p>

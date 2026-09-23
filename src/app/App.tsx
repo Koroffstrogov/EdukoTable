@@ -107,7 +107,7 @@ export function App() {
       );
 
       playSoundEffect(
-        finalizedRewards.grant.stickerIds.length > 0 || finalizedRewards.grant.cardIds.length > 0
+        finalizedRewards.grant.stickerIds.length > 0 || finalizedRewards.grant.cardIds.length > 0 || finalizedRewards.grant.fairyCardIds.length > 0
           ? "sticker-unlock"
           : "session-complete",
         currentState.settings.soundEnabled,
@@ -367,6 +367,13 @@ export function App() {
         <StickerAlbum
           rewards={appState.rewards}
           latestStickerId={latestStickerId ?? null}
+          onChooseCompanion={(familyId) => setAppState((current) => ({
+            ...current,
+            rewards: {
+              ...current.rewards,
+              fairyCollection: { ...current.rewards.fairyCollection, selectedFamilyId: familyId },
+            },
+          }))}
           animationsEnabled={appState.settings.animationsEnabled}
           onBack={() => setScreen("home")}
         />
@@ -434,13 +441,14 @@ export function App() {
             )
           }
           onHome={() => setScreen("home")}
+          onOpenAlbum={() => setScreen("album")}
         />
       )}
 
       {quitDialogOpen && (
         <ConfirmDialog
           title="Arrêter la mission ?"
-          description="Tes réponses déjà données seront gardées. Le sticker est gagné seulement quand les 10 questions sont terminées."
+          description="Tes réponses déjà données seront gardées. Les cartes et stickers se gagnent quand les 10 questions sont terminées."
           cancelLabel="Continuer"
           confirmLabel="Arrêter"
           onCancel={continueSession}

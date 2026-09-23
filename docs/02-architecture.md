@@ -88,7 +88,7 @@ La structure doit être versionnée pour permettre des migrations :
 
 ```ts
 const STORAGE_KEY = "edukotable:v1";
-// AppState.version passe à 2 pour ajouter la progression du Défi 6 choix.
+// AppState.version = 3 : Défi 6 choix (v2), puis collection des Fabuleuses (v3).
 ```
 
 ### Routing
@@ -173,3 +173,10 @@ Ne pas introduire Redux/Zustand sauf besoin réel.
 - Les calculs sont petits : 81 opérations ordonnées.
 - Éviter de recalculer inutilement les choix pendant un feedback.
 - Précharger les assets légers de récompense si des images sont ajoutées.
+
+Les Fabuleuses utilisent `domain/fairyCards.ts` pour le catalogue et les évolutions,
+`FairyAlbum` et `FairyCardVisual` pour l'affichage, et `styles/fabuleuses.css` pour
+leur présentation. Les 36 illustrations WebP sont servies depuis
+`public/cards/fabuleuses/`, sans dépendance ni service de génération à l'exécution.
+Les cartes de la grille sont chargées à la demande ; seuls leurs IDs et compteurs
+sont stockés dans localStorage.

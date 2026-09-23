@@ -12,6 +12,7 @@ type SessionSummaryProps = {
   animationsEnabled: boolean;
   onReplay: () => void;
   onHome: () => void;
+  onOpenAlbum: () => void;
 };
 
 export function SessionSummary({
@@ -23,6 +24,7 @@ export function SessionSummary({
   animationsEnabled,
   onReplay,
   onHome,
+  onOpenAlbum,
 }: SessionSummaryProps) {
   const wrongOperations = result.wrongOperations.slice(0, 4);
   const isAbandoned = status === "abandoned";
@@ -91,6 +93,11 @@ export function SessionSummary({
       )}
 
       <div className="action-stack">
+        {grant.fairyCardIds.length > 0 && (
+          <button className="button fairy-primary" type="button" onClick={onOpenAlbum}>
+            Voir ma Fabuleuse dans l’album
+          </button>
+        )}
         <button className="button primary" type="button" onClick={onReplay}>
           {isAbandoned ? "Nouvelle mission" : "Rejouer"}
         </button>

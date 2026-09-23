@@ -1,0 +1,97 @@
+.album-page-title { font-size: 1.35rem; }
+.fairy-album {
+  --fairy-ink: #39294e;
+  --fairy-muted: #6e587b;
+  color: var(--fairy-ink);
+  padding: 24px 16px;
+  border: 1px solid #dfcfe7;
+  border-radius: 24px;
+  background: #faf5fd;
+  display: grid;
+  gap: 24px;
+}
+.fairy-heading { text-align: center; display: grid; justify-items: center; gap: 10px; }
+.fairy-kicker { font-size: .72rem; line-height: 1.5; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: #74528a; }
+.fairy-heading h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.8rem, 6vw, 2.35rem); line-height: 1.1; font-weight: 700; text-wrap: balance; }
+.fairy-heading > p:not(.fairy-kicker) { font-size: .94rem; color: var(--fairy-muted); }
+.fairy-count { background: #eee2f5; color: #59376f; border-radius: 20px; padding: 7px 12px; font-size: .78rem; font-weight: 800; }
+.fairy-family-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fairy-family-picker button { display: grid; justify-items: center; align-content: start; gap: 5px; padding: 8px 3px; border-radius: 14px; background: #fff; border: 2px solid #e6dcec; color: #523760; font-size: .78rem; font-weight: 800; line-height: 1.25; }
+.fairy-family-picker button[aria-pressed="true"] { background: #edddf6; border-color: #8a55a6; }
+.fairy-family-picker img { display: block; width: 42px; height: 56px; object-fit: contain; border-radius: 5px; }
+.fairy-companion { display: grid; gap: 10px; }
+.fairy-companion h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 1.75rem; }
+.fairy-companion > p:not(.fairy-kicker) { font-size: .92rem; line-height: 1.5; }
+.button.fairy-primary { color: #fff; background: #794598; border: 2px solid #794598; font-size: .94rem; }
+.button.fairy-primary:hover:not(:disabled) { background: #63327f; }
+.button.fairy-primary:disabled { color: #54346a; background: #eee2f5; border-color: #dbc6e7; opacity: 1; }
+.fairy-next { background: #fff; border: 1px solid #e3d5ec; border-radius: 12px; padding: 14px; display: grid; gap: 8px; }
+.fairy-next label { font-weight: 800; font-size: .87rem; }
+.fairy-next progress { width: 100%; height: 9px; border: 0; border-radius: 20px; background: #eee5f2; accent-color: #9561ae; }
+.fairy-next progress::-webkit-progress-bar { background: #eee5f2; border-radius: 20px; }
+.fairy-next progress::-webkit-progress-value { background: #9561ae; border-radius: 20px; }
+.fairy-next progress::-moz-progress-bar { background: #9561ae; border-radius: 20px; }
+.fairy-next p { font-size: .8rem; line-height: 1.4; }
+.fairy-companion > .fairy-help { font-size: .78rem !important; color: var(--fairy-muted); }
+.fairy-complete { color: #426650; font-weight: 750; }
+.fairy-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; }
+.fairy-card-button { display: flex; flex-direction: column; align-items: flex-start; padding: 0; text-align: left; color: var(--fairy-ink); background: transparent; gap: 7px; border-radius: 12px; min-width: 0; }
+.fairy-art { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: contain; box-shadow: 0 6px 20px #57326924; }
+.fairy-card-button .fairy-art { transition: transform 200ms ease, box-shadow 200ms ease; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .fairy-card-button:hover .fairy-art { transform: translateY(-4px) rotate(-1deg); box-shadow: 0 12px 24px #80539b40; }
+}
+.fairy-card-status { font-size: .68rem; color: #715880; }
+.is-owned .fairy-card-status { color: #316547; font-weight: 800; }
+.fairy-card-button > strong { font-size: .83rem; line-height: 1.35; }
+.fairy-card-button > small { font-size: .7rem; color: var(--fairy-muted); }
+.fairy-rarity { display: inline-block; max-width: 100%; width: fit-content; padding: 4px 7px; border-radius: 5px; font-size: .66rem; line-height: 1.4; font-weight: 850; letter-spacing: .025em; color: #614475; background: #ecdfF3; }
+.rarity-choupinette { color: #65495e; background: #f0e5eb; }
+.rarity-pailletee { color: #795525; background: #f9edd7; }
+.rarity-etincelante { color: #326361; background: #dceee9; }
+.rarity-feerique { color: #703f80; background: #efddf4; }
+.rarity-royalissime { color: #7e4b23; background: #fae6cd; }
+.rarity-mythique { color: #87394f; background: #f9dce7; }
+.rarity-galactastique { color: #49347a; background: #e3dbfb; }
+.rarity-ultime { color: #fff8e5; background: #70405e; }
+.fairy-rarity-guide { border-top: 1px solid #e3d5ec; padding-top: 14px; font-size: .8rem; line-height: 1.5; }
+.fairy-rarity-guide summary { cursor: pointer; font-weight: 750; min-height: 44px; padding: 6px 0; }
+.fairy-rarity-guide summary:focus-visible { outline: 3px solid #8a55a6; outline-offset: 3px; }
+.fairy-rarity-guide ol { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-left: 24px; }
+.fairy-rarity-guide p, .fairy-edition { color: var(--fairy-muted); font-size: .75rem; line-height: 1.5; }
+.fairy-edition { text-align: center; }
+.fairy-dialog { width: min(94vw, 460px); max-height: 92dvh; padding: 16px; border: 1px solid #d5beda; border-radius: 20px; background: #faf5fd; color: #39294e; overflow-y: auto; overscroll-behavior: contain; }
+.fairy-dialog::backdrop { background: #201329d9; }
+.fairy-dialog-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .85rem; font-weight: 750; padding-bottom: 10px; position: sticky; top: -16px; z-index: 1; background: #faf5fd; }
+.fairy-dialog-toolbar .button { min-height: 44px; padding: 6px 12px; }
+.fairy-story { display: grid; gap: 12px; padding: 20px 4px 8px; line-height: 1.5; }
+.fairy-story h2 { font: 700 1.7rem/1.2 Georgia, "Times New Roman", serif; }
+.fairy-story h3 { font-size: .88rem; margin: 8px 0 -7px; }
+.fairy-story p { font-size: .9rem; }
+.fairy-reveal { display: grid; justify-items: center; text-align: center; gap: 12px; padding: 20px 12px; background: #faf5fd; border: 1px solid #dfcfe7; border-radius: 20px; color: #39294e; }
+.fairy-reveal .fairy-art { max-width: 280px; }
+.fairy-reveal > p:not(.fairy-kicker) { font-size: .88rem; line-height: 1.5; }
+.fairy-reveal > strong { font-family: Georgia, "Times New Roman", serif; font-size: 1.2rem; }
+.fairy-art-animated { animation: fairy-unveil 800ms ease-out both; }
+@keyframes fairy-unveil {
+  from { opacity: .3; transform: perspective(900px) rotateY(-14deg) scale(.96); box-shadow: 0 0 30px #dea0ee90; }
+  to { opacity: 1; transform: none; box-shadow: 0 6px 20px #57326924; }
+}
+.fairy-home { display: flex; align-items: center; gap: 16px; padding: 14px; border: 1px solid #dfcfe7; background: #faf5fd; color: #513160; border-radius: 16px; text-align: left; }
+.fairy-home img { width: 72px; height: 96px; flex-shrink: 0; border-radius: 8px; }
+.fairy-home > span { display: grid; gap: 5px; }
+.fairy-home small { font-size: .68rem; text-transform: uppercase; font-weight: 750; letter-spacing: .04em; }
+.fairy-home strong { font-size: .94rem; }
+.fairy-home span span { font-size: .8rem; line-height: 1.4; }
+.fairy-home b { font-size: .76rem; text-decoration: underline; text-underline-offset: 3px; margin-top: 4px; }
+.reduce-motion .fairy-art, .reduce-motion .fairy-card-button:hover .fairy-art { animation: none; transition: none; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .fairy-art, .fairy-card-button:hover .fairy-art { animation: none; transition: none; transform: none; }
+}
+@media (max-width: 360px) {
+  .fairy-album { padding: 22px 10px; gap: 20px; }
+  .fairy-family-picker { gap: 5px; }
+  .fairy-family-picker button { font-size: .7rem; padding-inline: 0; }
+  .fairy-card-grid { gap: 20px 10px; }
+  .fairy-home { gap: 10px; padding: 12px; }
+}

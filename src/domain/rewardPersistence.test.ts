@@ -47,7 +47,7 @@ describe("immediate answer rewards", () => {
     };
     const abandoned = finalizeAbandonedSessionRewards(credited, result, { answerStarsAlreadyGranted: true });
     expect(abandoned.rewards).toEqual(credited);
-    expect(abandoned.grant).toEqual({ stars: 2, stickerIds: [], cardIds: [], badgeIds: [] });
+    expect(abandoned.grant).toEqual({ stars: 2, stickerIds: [], cardIds: [], fairyCardIds: [], badgeIds: [] });
     expect(abandoned.rewards.sessionsCompleted).toBe(0);
   });
 });

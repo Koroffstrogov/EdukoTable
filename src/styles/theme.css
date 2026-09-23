@@ -31,7 +31,7 @@ body,
 }
 
 body {
-  min-width: 320px;
+  min-width: 0;
   background:
     linear-gradient(180deg, #f7f8fb 0%, #eef7f4 48%, #f9f4ea 100%);
 }

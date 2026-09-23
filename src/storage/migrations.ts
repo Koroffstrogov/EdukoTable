@@ -5,6 +5,7 @@ import {
   createInitialProgressState,
 } from "../domain/progress";
 import { createInitialRewardState } from "../domain/rewards";
+import { createInitialFairyCollection, FAIRY_CARDS, FAIRY_FAMILIES } from "../domain/fairyCards";
 import {
   FACTORS,
   type AppState,
@@ -52,6 +53,7 @@ function migrateRewardState(value: unknown): AppState["rewards"] {
     ),
     stickersUnlocked: toStringArray(value.stickersUnlocked),
     challengeCardsUnlocked: toStringArray(value.challengeCardsUnlocked),
+    fairyCollection: migrateFairyCollection(value.fairyCollection),
     challengeSix: migrateChallengeSixProgress(
       value.challengeSix,
       defaults.challengeSix,
@@ -75,6 +77,27 @@ function migrateRewardState(value: unknown): AppState["rewards"] {
         )
       : {},
   };
+}
+
+function migrateFairyCollection(value: unknown): AppState["rewards"]["fairyCollection"] {
+  const collection = createInitialFairyCollection();
+  if (!isRecord(value)) return collection;
+  collection.selectedFamilyId = FAIRY_FAMILIES.find((family) => family.id === value.selectedFamilyId)?.id
+    ?? collection.selectedFamilyId;
+  const savedSessions = isRecord(value.sessionsByFamily) ? value.sessionsByFamily : {};
+  const savedIds = toStringArray(value.unlockedCardIds);
+  for (const family of FAIRY_FAMILIES) {
+    // Keep earned cards even if an older or damaged counter is lower than their milestone.
+    const earnedMilestone = Math.max(0, ...FAIRY_CARDS.filter((card) =>
+      card.familyId === family.id && savedIds.includes(card.id),
+    ).map((card) => card.requiredSessions));
+    collection.sessionsByFamily[family.id] = Math.max(earnedMilestone,
+      Math.min(7, Math.floor(toSafeNumber(savedSessions[family.id], 0))));
+  }
+  collection.unlockedCardIds = FAIRY_CARDS.filter((card) =>
+    collection.sessionsByFamily[card.familyId] >= card.requiredSessions,
+  ).map((card) => card.id);
+  return collection;
 }
 
 function migrateChallengeSixProgress(

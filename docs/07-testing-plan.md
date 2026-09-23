@@ -145,3 +145,27 @@ Si une commande n’existe pas, l’ajouter ou documenter le choix dans la PR/le
 Le workflow GitHub Actions `validate.yml` exécute les quatre contrôles sur les
 pull requests et les push sur `main`. Les E2E utilisent le build de production
 en CI et conservent un rapport HTML ainsi que les traces des échecs.
+
+## Couverture du lot Fabuleuses
+
+`src/domain/fairyCards.test.ts` vérifie le catalogue de 36 cartes, les huit
+raretés, les jalons 1/2/4/7, le changement de compagnon, les missions avec
+erreurs, les deux formats de réponses, l'abandon, les migrations v2/v3,
+les données endommagées, la persistance et les deux resets.
+
+`tests/e2e/fabuleuses.spec.ts` vérifie sous Chromium et WebKit le choix du
+compagnon, une mission avec dix erreurs, le gain et le rechargement, l'accès
+à la dernière évolution, les 36 images WebP réelles, la consultation des
+aperçus, Échap, le retour du focus et les animations réduites sur 320 × 568.
+
+Le deuxième lot vérifie également qu'un album v3 contenant seulement les trois
+premières familles reçoit les nouveaux compteurs à zéro, sans changer le compagnon
+choisi ni perdre ses cartes. Chaque nouvelle famille atteint ses quatre évolutions
+en tests unitaires ; les trois familles sont consultées et sélectionnées sur mobile
+en E2E, avec un gain de Coralie, une migration et un rechargement.
+
+Le troisième lot vérifie la migration d'un album v3 de six familles, le maintien
+d'une famille complète et d'une famille partielle, puis les quatre évolutions de
+Flûtinelle, Ninachou et Baskétoile. Le parcours mobile consulte leurs derniers
+stades, vérifie le retour du focus et les débordements, recharge le compagnon choisi
+et gagne une carte de Baskétoile tout en conservant la carte de Coralie existante.

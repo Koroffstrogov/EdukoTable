@@ -14,7 +14,7 @@ import type {
   TableProgressSummary,
 } from "./types";
 
-export const APP_STATE_VERSION = 2;
+export const APP_STATE_VERSION = 3;
 export const PROGRESS_STATE_VERSION = 1;
 
 export function createInitialProgressState(): ProgressState {

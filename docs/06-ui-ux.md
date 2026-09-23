@@ -260,3 +260,24 @@ Messages courts :
 - “Mauvais”
 - “Tu as perdu”
 - “Raté”
+
+## Album des Fabuleuses
+
+La direction féérique rose/lilas des cartes a été choisie avec l'utilisateur à
+partir de Ronronova, Impératrice des étoiles. L'interface de révision conserve
+sa charte et ses boutons existants.
+
+L'album affiche d'abord les neuf familles illustrées en trois rangées de trois,
+le choix de compagnon,
+puis ses quatre évolutions. Chaque carte est ouvrable dans un dialogue, avec
+son image entière, sa rareté, son pouvoir et un petit secret. Une carte non
+possédée est explicitement un aperçu ; la regarder ne la débloque pas.
+
+Les objectifs sont visibles dans la fiche et sous la grille. Un encart sur
+l'accueil rappelle le compagnon choisi et les missions restantes. Le résumé
+célèbre la carte gagnée et propose un accès direct à l'album.
+
+L'animation de révélation dure 800 ms et ne bloque aucun bouton. Le réglage
+d'animations et `prefers-reduced-motion` la désactivent. Le dialogue se ferme
+avec Fermer ou Échap, conserve un bouton de fermeture accessible en défilant
+et rend le focus à la carte d'origine, y compris sur Safari.

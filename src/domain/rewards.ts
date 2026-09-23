@@ -1,4 +1,5 @@
 import { buildAllOperations } from "./operations";
+import { advanceFairyCollection, createInitialFairyCollection } from "./fairyCards";
 import { selectNextChallengeCard } from "./challengeCards";
 import {
   getStickerById as findStickerById,
@@ -62,6 +63,7 @@ export function createInitialRewardState(): RewardState {
     totalStarsEarned: 0,
     stickersUnlocked: [],
     challengeCardsUnlocked: [],
+    fairyCollection: createInitialFairyCollection(),
     challengeSix: {
       sessionsCompleted: 0,
       correctAnswers: 0,
@@ -79,6 +81,7 @@ export function createEmptyRewardGrant(): RewardGrant {
     stars: 0,
     stickerIds: [],
     cardIds: [],
+    fairyCardIds: [],
     badgeIds: [],
   };
 }
@@ -105,6 +108,7 @@ export function computeSessionReward(result: SessionResult): RewardGrant {
       fixedDifficultyBonus,
     stickerIds: [],
     cardIds: [],
+    fairyCardIds: [],
     badgeIds: [],
   };
 }
@@ -153,6 +157,7 @@ export function mergeRewardGrants(
     stars: left.stars + right.stars,
     stickerIds: unique([...left.stickerIds, ...right.stickerIds]),
     cardIds: unique([...left.cardIds, ...right.cardIds]),
+    fairyCardIds: unique([...left.fairyCardIds, ...right.fairyCardIds]),
     badgeIds: unique([...left.badgeIds, ...right.badgeIds]),
   };
 }
@@ -177,6 +182,10 @@ export function applyRewardGrant(
     totalStarsEarned: rewardState.totalStarsEarned + grant.stars,
     stickersUnlocked: stickerIds,
     challengeCardsUnlocked,
+    fairyCollection: {
+      ...rewardState.fairyCollection,
+      unlockedCardIds: unique([...rewardState.fairyCollection.unlockedCardIds, ...grant.fairyCardIds]),
+    },
     badgesUnlocked: badgeIds,
   };
 }
@@ -267,6 +276,9 @@ export function finalizeSessionRewards(
   context: SessionRewardContext = {},
 ): { rewards: RewardState; grant: RewardGrant } {
   const practiceDate = completedAt.slice(0, 10);
+  const fairyAdvance = result.total >= 10
+    ? advanceFairyCollection(previousRewards.fairyCollection)
+    : { collection: previousRewards.fairyCollection, cardIds: [] };
   const challengeSix = updateChallengeSixProgress(
     previousRewards.challengeSix,
     result,
@@ -274,6 +286,7 @@ export function finalizeSessionRewards(
   );
   const rewardsWithSession = {
     ...previousRewards,
+    fairyCollection: fairyAdvance.collection,
     challengeSix,
     sessionsCompleted: previousRewards.sessionsCompleted + 1,
     practiceDates: unique([...previousRewards.practiceDates, practiceDate]),
@@ -290,6 +303,7 @@ export function finalizeSessionRewards(
     },
   );
   const grant = mergeRewardGrants(baseGrant, milestoneGrant);
+  grant.fairyCardIds = fairyAdvance.cardIds;
 
   return {
     rewards: applyRewardGrant(rewardsWithSession, {
@@ -309,6 +323,7 @@ export function finalizeAbandonedSessionRewards(
     stars: result.correctCount,
     stickerIds: [],
     cardIds: [],
+    fairyCardIds: [],
     badgeIds: [],
   };
 

@@ -21,7 +21,7 @@ export function ResetProgressPanel({
       <div className="reset-action">
         <div>
           <strong>Réinitialiser les résultats</strong>
-          <p>Les statistiques sont effacées. Les étoiles, stickers et badges restent.</p>
+          <p>Les statistiques sont effacées. Les étoiles, cartes, stickers et badges restent.</p>
         </div>
         {confirmResults ? (
           <div className="confirm-row">
@@ -57,7 +57,7 @@ export function ResetProgressPanel({
       <div className="reset-action reset-action-strong">
         <div>
           <strong>Recommencer toute l’aventure</strong>
-          <p>Tout est effacé : progression, étoiles, stickers et badges.</p>
+          <p>Tout est effacé : progression, étoiles, cartes, stickers et badges.</p>
         </div>
 
         {adventureStep === "idle" && (

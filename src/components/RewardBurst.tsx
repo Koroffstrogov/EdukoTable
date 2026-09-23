@@ -1,6 +1,8 @@
 import { EdukoAnimation } from "./EdukoAnimation";
 import { ChallengeCardVisual } from "./ChallengeCardVisual";
 import { StickerVisual } from "./StickerVisual";
+import { FairyCardVisual } from "./FairyCardVisual";
+import { getFairyCard, getFairyRarityLabel } from "../domain/fairyCards";
 import {
   getChallengeCardById,
   getBadgeById,
@@ -24,6 +26,7 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
   const cards = grant.cardIds
     .map((cardId) => getChallengeCardById(cardId))
     .filter((card) => card !== undefined);
+  const fairyCards = grant.fairyCardIds.map(getFairyCard).filter((card) => card !== undefined);
 
   return (
     <div className="reward-burst" aria-label="Récompenses gagnées">
@@ -37,6 +40,16 @@ export function RewardBurst({ grant, animationsEnabled }: RewardBurstProps) {
         <span className="reward-token">+{grant.stars}</span>
         <span>étoiles gagnées</span>
       </div>
+
+      {fairyCards.map((card) => (
+        <div className="fairy-reveal" key={card.id}>
+          <p className="fairy-kicker">{card.stage === 1 ? "Nouvelle Fabuleuse" : "Ton compagnon évolue !"}</p>
+          <FairyCardVisual card={card} eager animated={animationsEnabled} />
+          <strong>{card.name} · {card.title}</strong>
+          <span className={`fairy-rarity rarity-${card.rarity}`}>{getFairyRarityLabel(card.rarity)}</span>
+          <p>{card.power}</p>
+        </div>
+      ))}
 
       {cards.map((card) => (
         <div className="challenge-card-reveal" key={card.id}>

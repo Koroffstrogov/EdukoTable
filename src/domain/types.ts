@@ -105,12 +105,40 @@ export type Badge = {
   starBonus: number;
 };
 
+export type FairyFamilyId = "ronronova" | "lunabelle" | "pralinette"
+  | "petalipop" | "pomponnette" | "coralie"
+  | "flutinelle" | "ninachou" | "basketoile";
+export type FairyRarity =
+  | "choupinette" | "pailletee" | "etincelante" | "feerique"
+  | "royalissime" | "mythique" | "galactastique" | "ultime";
+
+export type FairyCard = {
+  id: string;
+  familyId: FairyFamilyId;
+  name: string;
+  title: string;
+  stage: 1 | 2 | 3 | 4;
+  rarity: FairyRarity;
+  number: number;
+  requiredSessions: number;
+  artwork: string;
+  power: string;
+  secret: string;
+};
+
+export type FairyCollection = {
+  selectedFamilyId: FairyFamilyId;
+  sessionsByFamily: Record<FairyFamilyId, number>;
+  unlockedCardIds: string[];
+};
+
 export type RewardState = {
   stars: number;
   totalStarsEarned: number;
   stickersUnlocked: string[];
   challengeCardsUnlocked: string[];
   challengeSix: ChallengeSixProgress;
+  fairyCollection: FairyCollection;
   badgesUnlocked: string[];
   sessionsCompleted: number;
   practiceDates: string[];
@@ -175,6 +203,7 @@ export type RewardGrant = {
   stars: number;
   stickerIds: string[];
   cardIds: string[];
+  fairyCardIds: string[];
   badgeIds: string[];
 };
 

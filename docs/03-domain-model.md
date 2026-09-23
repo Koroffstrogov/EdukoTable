@@ -110,6 +110,7 @@ export type RewardState = {
   stickersUnlocked: string[];
   challengeCardsUnlocked: string[];
   challengeSix: ChallengeSixProgress;
+  fairyCollection: FairyCollection;
   badgesUnlocked: string[];
   sessionsCompleted: number;
   practiceDates: string[];
@@ -133,16 +134,34 @@ Les cartes sont définies avec un ID stable, une rareté, une phrase courte et
 un objectif déterministe. Elles sont séparées des stickers afin que l’album
 puisse leur appliquer un format vertical spécifique.
 
-Les gains de session distinguent les deux formats :
+Les gains de session distinguent les stickers, les cartes du Défi 6 et les Fabuleuses :
 
 ```ts
 export type RewardGrant = {
   stars: number;
   stickerIds: string[];
   cardIds: string[];
+  fairyCardIds: string[];
   badgeIds: string[];
 };
 ```
+
+## Collection des Fabuleuses
+
+`FairyCollection` conserve le compagnon choisi (`selectedFamilyId`), un compteur
+de missions par famille (`sessionsByFamily`) et les IDs gagnés (`unlockedCardIds`).
+Les quatre évolutions se gagnent à 1, 2, 4 et 7 missions terminées avec ce compagnon.
+Les compteurs sont plafonnés à 7. Le score et le nombre de propositions n'affectent
+pas cette progression. Une mission abandonnée ne la fait pas avancer.
+
+Le catalogue sépare famille, stade, rareté, numéro de collection, illustration,
+pouvoir et secret. Les huit raretés des Fabuleuses ne modifient pas les raretés
+existantes des stickers ou de la Bande des Six.
+
+La migration v3 garde les collections précédentes, initialise Ronronova comme
+compagnon et démarre les nouveaux compteurs à zéro. Elle filtre les IDs inconnus,
+normalise les compteurs et réconcilie les cartes gagnées avec leurs jalons.
+Les missions antérieures à cette collection ne sont pas converties rétroactivement.
 
 ## Catalogue de stickers
 

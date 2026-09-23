@@ -471,6 +471,7 @@ describe("rewards", () => {
       stars: 0,
       stickerIds: [],
       cardIds: [],
+      fairyCardIds: [],
       badgeIds: [],
     });
     expect(abandoned.rewards).toEqual(initial.rewards);

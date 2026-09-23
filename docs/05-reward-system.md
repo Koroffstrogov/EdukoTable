@@ -326,3 +326,22 @@ Exiger confirmation forte :
 - bouton secondaire d’abord ;
 - puis appui long ou saisie simple non clavier évitée si possible ;
 - au minimum, double confirmation.
+
+## Les Fabuleuses — 36 cartes en neuf familles
+
+Le compagnon choisi dans l'album progresse à chaque mission de 10 questions
+terminée, en 4 ou 6 choix, quel que soit le score. Ses cartes se gagnent après
+1, 2, 4 et 7 missions. Les missions abandonnées gardent leurs étoiles immédiates
+mais n'avancent pas cette collection.
+
+Ronronova, Lunabelle, Pralinette, Pétalipop, Pomponnette, Coralie Glouglou,
+Flûtinelle, Ninachou et Baskétoile ont chacune quatre illustrations distinctes.
+Changer de compagnon préserve les cartes et les compteurs des autres familles.
+Une évolution ne consomme jamais la carte précédente. Les raretés sont :
+Choupinette, Pailletée, Étincelante, Féerique, Royalissime, Mythique,
+Galactastique et WOUAH ULTIME ! Toutes sont accessibles par la persévérance.
+
+Ces cartes s'ajoutent aux récompenses existantes. Aucun tirage au sort, achat,
+compte ou défi parfait obligatoire. Le reset des résultats les conserve ; le
+reset de l'aventure les efface. Le projet de 100 cartes est détaillé dans
+`docs/09-fabuleuses.md` ; seules les 36 illustrations terminées sont proposées.
