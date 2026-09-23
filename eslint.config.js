@@ -11,7 +11,10 @@ const browserGlobals = {
 
 export default [
   {
-    ignores: ["dist/**", "node_modules/**", "coverage/**"],
+    ignores: [
+      "dist/**", "node_modules/**", "coverage/**", ".vite/**",
+      "playwright-report/**", "test-results/**",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -19,6 +19,7 @@ Le reste du backlog reste optionnel.
 - Lot 7.1 livré : Edukobi intégré, sons Web Audio, stockage résilient, dialogues accessibles et couverture WebKit.
 - Lot 7.2 livré : mode optionnel Défi 6 choix, grille mobile 2 × 3 et distracteurs étendus.
 - Lot 7.3 livré : collection « La Bande des Six », progression dédiée et révélation mobile des cartes.
+- Stabilisation : étoiles persistées à chaque réponse, sortie de mission suspendue pendant la confirmation, tests de régression à 4 et 6 choix et workflow CI de validation.
 - Lot 8 reste à faire : mode chrono adaptatif.
 - Le backlog court terme v0.2 historique est archivé dans `docs/archive/09-backlog-v0.2.md`.
 

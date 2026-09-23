@@ -82,6 +82,10 @@ Simuler une session de 10 questions et vérifier :
 ### Récompenses
 
 - bonne réponse ajoute une étoile.
+- recharger pendant le feedback conserve l’étoile et les statistiques.
+- la fin de session et l’abandon ne créditent pas deux fois les étoiles immédiates.
+- le dialogue de sortie suspend le feedback, puis reprend après annulation.
+- confirmer la sortie après la dixième réponse termine la session une seule fois.
 - session terminée ajoute bonus de complétion.
 - session parfaite ajoute bonus parfait.
 - sticker débloqué après session si disponible.
@@ -137,3 +141,7 @@ npm run test:e2e
 ```
 
 Si une commande n’existe pas, l’ajouter ou documenter le choix dans la PR/le résumé Codex.
+
+Le workflow GitHub Actions `validate.yml` exécute les quatre contrôles sur les
+pull requests et les push sur `main`. Les E2E utilisent le build de production
+en CI et conservent un rapport HTML ainsi que les traces des échecs.

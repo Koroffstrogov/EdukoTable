@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HomeScreen } from "../components/HomeScreen";
 import { ProgressDashboard } from "../components/ProgressDashboard";
@@ -14,6 +14,7 @@ import {
   finalizeSessionRewards,
   getChallengeCardById,
   getStickerById,
+  grantAnswerReward,
 } from "../domain/rewards";
 import {
   createSessionConfig,
@@ -89,19 +90,61 @@ export function App() {
   const [summary, setSummary] = useState<SummaryState | null>(null);
   const [quitDialogOpen, setQuitDialogOpen] = useState(false);
   const [storageUnavailable, setStorageUnavailable] = useState(false);
-  const advanceTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     setStorageUnavailable(!saveAppState(appState));
   }, [appState]);
 
-  useEffect(() => {
-    return () => {
-      if (advanceTimerRef.current !== null) {
-        window.clearTimeout(advanceTimerRef.current);
-      }
-    };
+  const advanceSession = useCallback((activeSession: ActiveSession, currentState: AppState): void => {
+    if (activeSession.answers.length >= activeSession.config.questionCount) {
+      const result = buildSessionResult(activeSession.answers);
+      const finalizedRewards = finalizeSessionRewards(
+        currentState.rewards,
+        currentState.progress,
+        result,
+        undefined,
+        { choiceCount: activeSession.config.choiceCount, answerStarsAlreadyGranted: true },
+      );
+
+      playSoundEffect(
+        finalizedRewards.grant.stickerIds.length > 0 || finalizedRewards.grant.cardIds.length > 0
+          ? "sticker-unlock"
+          : "session-complete",
+        currentState.settings.soundEnabled,
+      );
+      setAppState({ ...currentState, rewards: finalizedRewards.rewards });
+      setSummary({
+        config: activeSession.config,
+        result,
+        grant: finalizedRewards.grant,
+        status: "completed",
+      });
+      setSession(null);
+      setQuitDialogOpen(false);
+      setScreen("summary");
+      return;
+    }
+
+    setSession({
+      ...activeSession,
+      question: generateQuestion(
+        activeSession.config,
+        currentState.progress.operationStats,
+        activeSession.history,
+      ),
+      feedback: null,
+    });
   }, []);
+
+  useEffect(() => {
+    if (screen !== "session" || !session?.feedback || quitDialogOpen) return;
+
+    const timer = window.setTimeout(() => {
+      advanceSession(session, appState);
+    }, FEEDBACK_DELAY_MS);
+    // Opening the quit dialog pauses feedback; continuing starts a fresh delay.
+    return () => window.clearTimeout(timer);
+  }, [screen, session, appState, quitDialogOpen, advanceSession]);
 
   const latestStickerId = appState.rewards.stickersUnlocked.at(-1);
   const latestSticker = latestStickerId
@@ -128,7 +171,6 @@ export function App() {
     mode: SessionMode,
     choiceCount: ChoiceCount = 4,
   ): void {
-    clearAdvanceTimer();
     setPendingMode(mode);
     setPendingChoiceCount(choiceCount);
     setDraftTables(appState.settings.selectedTables);
@@ -140,7 +182,6 @@ export function App() {
     selectedTables: Factor[],
     choiceCount: ChoiceCount,
   ): void {
-    clearAdvanceTimer();
     const config = createSessionConfig({
       mode,
       selectedTables,
@@ -174,7 +215,7 @@ export function App() {
   }
 
   function handleAnswer(selectedAnswer: number): void {
-    if (!session || session.feedback) return;
+    if (!session || session.feedback || quitDialogOpen) return;
 
     const { question } = session;
     const wasCorrect = selectedAnswer === question.correctAnswer;
@@ -201,6 +242,7 @@ export function App() {
     const nextAppState = {
       ...appState,
       progress: nextProgress,
+      rewards: grantAnswerReward(appState.rewards, wasCorrect),
     };
     const feedback = {
       wasCorrect,
@@ -222,62 +264,6 @@ export function App() {
       appState.settings.soundEnabled,
     );
 
-    advanceTimerRef.current = window.setTimeout(() => {
-      advanceTimerRef.current = null;
-
-      if (nextAnswers.length >= session.config.questionCount) {
-        const result = buildSessionResult(nextAnswers);
-        const finalizedRewards = finalizeSessionRewards(
-          nextAppState.rewards,
-          nextAppState.progress,
-          result,
-          undefined,
-          { choiceCount: session.config.choiceCount },
-        );
-        const finalState = {
-          ...nextAppState,
-          rewards: finalizedRewards.rewards,
-        };
-
-        playSoundEffect(
-          finalizedRewards.grant.stickerIds.length > 0 ||
-          finalizedRewards.grant.cardIds.length > 0
-            ? "sticker-unlock"
-            : "session-complete",
-          nextAppState.settings.soundEnabled,
-        );
-
-        setAppState(finalState);
-        setSummary({
-          config: session.config,
-          result,
-          grant: finalizedRewards.grant,
-          status: "completed",
-        });
-        setSession(null);
-        setScreen("summary");
-        return;
-      }
-
-      const nextQuestion = generateQuestion(
-        session.config,
-        nextProgress.operationStats,
-        nextHistory,
-      );
-
-      setSession({
-        ...sessionWithFeedback,
-        question: nextQuestion,
-        feedback: null,
-      });
-    }, FEEDBACK_DELAY_MS);
-  }
-
-  function clearAdvanceTimer(): void {
-    if (advanceTimerRef.current !== null) {
-      window.clearTimeout(advanceTimerRef.current);
-      advanceTimerRef.current = null;
-    }
   }
 
   function requestQuitSession(): void {
@@ -291,8 +277,12 @@ export function App() {
   function abandonSession(): void {
     if (!session) return;
 
-    clearAdvanceTimer();
     setQuitDialogOpen(false);
+
+    if (session.answers.length >= session.config.questionCount) {
+      advanceSession(session, appState);
+      return;
+    }
 
     if (session.answers.length === 0) {
       setSession(null);
@@ -305,12 +295,9 @@ export function App() {
     const finalizedRewards = finalizeAbandonedSessionRewards(
       appState.rewards,
       result,
+      { answerStarsAlreadyGranted: true },
     );
 
-    setAppState((current) => ({
-      ...current,
-      rewards: finalizeAbandonedSessionRewards(current.rewards, result).rewards,
-    }));
     setSummary({
       config: session.config,
       result,
@@ -322,7 +309,6 @@ export function App() {
   }
 
   function handleResetResults(): void {
-    clearAdvanceTimer();
     setAppState((current) => resetResults(current));
     setSession(null);
     setSummary(null);
@@ -330,7 +316,6 @@ export function App() {
   }
 
   function handleResetAdventure(): void {
-    clearAdvanceTimer();
     const freshState = resetAdventure();
 
     setAppState(freshState);

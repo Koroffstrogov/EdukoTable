@@ -83,6 +83,14 @@ export function createEmptyRewardGrant(): RewardGrant {
   };
 }
 
+export function grantAnswerReward(
+  rewards: RewardState,
+  wasCorrect: boolean,
+): RewardState {
+  if (!wasCorrect) return rewards;
+  return applyRewardGrant(rewards, { ...createEmptyRewardGrant(), stars: 1 });
+}
+
 export function computeSessionReward(result: SessionResult): RewardGrant {
   const starsForCorrectAnswers = result.correctCount;
   const completionBonus = result.total > 0 ? 3 : 0;
@@ -284,7 +292,10 @@ export function finalizeSessionRewards(
   const grant = mergeRewardGrants(baseGrant, milestoneGrant);
 
   return {
-    rewards: applyRewardGrant(rewardsWithSession, grant),
+    rewards: applyRewardGrant(rewardsWithSession, {
+      ...grant,
+      stars: grant.stars - (context.answerStarsAlreadyGranted ? result.correctCount : 0),
+    }),
     grant,
   };
 }
@@ -292,6 +303,7 @@ export function finalizeSessionRewards(
 export function finalizeAbandonedSessionRewards(
   previousRewards: RewardState,
   result: SessionResult,
+  context: SessionRewardContext = {},
 ): { rewards: RewardState; grant: RewardGrant } {
   const grant: RewardGrant = {
     stars: result.correctCount,
@@ -301,7 +313,9 @@ export function finalizeAbandonedSessionRewards(
   };
 
   return {
-    rewards: applyRewardGrant(previousRewards, grant),
+    rewards: context.answerStarsAlreadyGranted
+      ? previousRewards
+      : applyRewardGrant(previousRewards, grant),
     grant,
   };
 }
@@ -309,6 +323,8 @@ export function finalizeAbandonedSessionRewards(
 export type SessionRewardContext = {
   choiceCount?: ChoiceCount;
   challengeSix?: ChallengeSixProgress;
+  /** Keep the full session total in the summary, but do not credit answer stars twice. */
+  answerStarsAlreadyGranted?: boolean;
 };
 
 function updateChallengeSixProgress(

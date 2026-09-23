@@ -154,6 +154,13 @@ animation étoile vers compteur
 mascotte contente
 ```
 
+L’étoile est enregistrée avec les statistiques dès la réponse, même si la page
+est rechargée avant la fin de la mission. La finalisation ajoute uniquement les
+bonus restants ; le résumé continue d’afficher le total des gains de la session.
+L’abandon conserve les étoiles déjà gagnées sans les créditer une seconde fois.
+Le dialogue de sortie suspend le feedback. Si les dix réponses sont déjà données,
+confirmer la sortie termine la mission avec ses récompenses de fin.
+
 Après erreur :
 
 ```txt

@@ -42,6 +42,16 @@ npm run validate
 
 Les tests unitaires couvrent surtout le domaine et le stockage local. Les tests Playwright vérifient la navigation mobile, les réglages persistés, l’abandon sans sticker, les missions complètes à 4 et 6 choix et l’absence de débordement horizontal aux largeurs 320, 375, 390 et 430 px.
 
+Les régressions de session sont vérifiées avec une horloge contrôlée : étoiles
+conservées après rechargement pendant le feedback, pause du dialogue de sortie,
+reprise et fin de mission sans double attribution des récompenses.
+
+Le workflow `.github/workflows/validate.yml` lance `npm run validate` sur les
+pull requests et les push sur `main`, avec Node.js 24 et les deux moteurs mobiles.
+En CI, Playwright utilise le build de production via `vite preview` ; en local,
+il démarre le serveur de développement. Le rapport HTML et les traces d’échec
+sont conservés pendant 7 jours dans les artefacts GitHub Actions.
+
 Les parcours E2E sont exécutés sur Chromium mobile et WebKit avec un profil
 iPhone. Installer les deux moteurs avant la première exécution :
 
@@ -127,6 +137,11 @@ Conséquences :
 Si le navigateur refuse une écriture `localStorage`, la session continue en
 mémoire et un message discret indique que la progression ne pourra peut-être
 pas être retrouvée après fermeture.
+
+Chaque bonne réponse enregistre immédiatement son étoile avec les statistiques.
+Recharger pendant une mission conserve ces gains, mais ne reprend pas la mission
+en cours. Le résumé affiche le total gagné ; les étoiles déjà enregistrées ne
+sont pas créditées une deuxième fois lors de la fin ou de l’abandon.
 
 ## Sons
 
