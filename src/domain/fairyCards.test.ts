@@ -8,11 +8,11 @@ import type { SessionResult } from "./types";
 const completed: SessionResult = { total: 10, correctCount: 0, wrongOperations: [], fixedDifficultOperations: [] };
 
 describe("Les Fabuleuses", () => {
-  it("offers thirty-six distinct artworks in nine complete evolution families and eight rarities", () => {
-    expect(FAIRY_FAMILIES).toHaveLength(9);
-    expect(FAIRY_CARDS).toHaveLength(36);
+  it("offers sixty distinct artworks in fifteen complete evolution families and eight rarities", () => {
+    expect(FAIRY_FAMILIES).toHaveLength(15);
+    expect(FAIRY_CARDS).toHaveLength(60);
     for (const field of ["id", "number", "artwork"] as const) {
-      expect(new Set(FAIRY_CARDS.map((card) => card[field])).size).toBe(36);
+      expect(new Set(FAIRY_CARDS.map((card) => card[field])).size).toBe(60);
     }
     expect(new Set(FAIRY_CARDS.map((card) => card.rarity))).toEqual(new Set(FAIRY_RARITIES.map((rarity) => rarity.id)));
     for (const family of FAIRY_FAMILIES) {
@@ -35,7 +35,7 @@ describe("Les Fabuleuses", () => {
         collection = next.collection;
       }
     }
-    expect(collection.unlockedCardIds).toHaveLength(36);
+    expect(collection.unlockedCardIds).toHaveLength(60);
     expect(getFairyProgress(collection).nextCard).toBeUndefined();
     expect(advanceFairyCollection(collection)).toEqual({ collection, cardIds: [] });
     expect(initial.unlockedCardIds).toEqual([]);
@@ -127,12 +127,44 @@ describe("Les Fabuleuses", () => {
     const loaded = migrateAppState({ ...state, rewards: { ...state.rewards, fairyCollection: previousCollection } });
     expect(loaded.rewards.fairyCollection).toEqual({
       ...previousCollection,
-      sessionsByFamily: { ...previousCollection.sessionsByFamily, flutinelle: 0, ninachou: 0, basketoile: 0 },
+      sessionsByFamily: { ...createInitialFairyCollection().sessionsByFamily, ...previousCollection.sessionsByFamily },
     });
     expect(resetResults(loaded).rewards).toEqual(loaded.rewards);
   });
 
-  it.each(["petalipop", "pomponnette", "coralie", "flutinelle", "ninachou", "basketoile"] as const)("earns and reloads all %s evolutions without consuming earlier cards", (familyId) => {
+  it("extends a nine-family album while retaining every old counter, card and selected companion", () => {
+    const state = createInitialAppState();
+    const previousCollection = {
+      selectedFamilyId: "ninachou",
+      sessionsByFamily: { ronronova: 1, lunabelle: 0, pralinette: 0, petalipop: 0, pomponnette: 0, coralie: 0, flutinelle: 2, ninachou: 7, basketoile: 4 },
+      unlockedCardIds: ["ronronova-1", "flutinelle-1", "flutinelle-2", "ninachou-1", "ninachou-2", "ninachou-3", "ninachou-4", "basketoile-1", "basketoile-2", "basketoile-3"],
+    };
+    const loaded = migrateAppState({ ...state, rewards: { ...state.rewards, fairyCollection: previousCollection } });
+    expect(loaded.version).toBe(3);
+    expect(loaded.rewards.fairyCollection).toEqual({
+      ...previousCollection,
+      sessionsByFamily: { ...createInitialFairyCollection().sessionsByFamily, ...previousCollection.sessionsByFamily },
+    });
+    expect(resetResults(loaded).rewards).toEqual(loaded.rewards);
+  });
+
+  it("extends a twelve-family album without losing the previous lot's earned stages", () => {
+    const state = createInitialAppState();
+    const previousCollection = {
+      selectedFamilyId: "shampouff",
+      sessionsByFamily: { ronronova: 0, lunabelle: 0, pralinette: 0, petalipop: 0, pomponnette: 0, coralie: 0, flutinelle: 0, ninachou: 0, basketoile: 0, poussinelle: 4, loutrelune: 2, shampouff: 7 },
+      unlockedCardIds: ["poussinelle-1", "poussinelle-2", "poussinelle-3", "loutrelune-1", "loutrelune-2", "shampouff-1", "shampouff-2", "shampouff-3", "shampouff-4"],
+    };
+    const loaded = migrateAppState({ ...state, rewards: { ...state.rewards, fairyCollection: previousCollection } });
+    expect(loaded.version).toBe(3);
+    expect(loaded.rewards.fairyCollection).toEqual({
+      ...previousCollection,
+      sessionsByFamily: { ...previousCollection.sessionsByFamily, fluoribelle: 0, sacapouic: 0, uranounet: 0 },
+    });
+    expect(resetResults(loaded).rewards).toEqual(loaded.rewards);
+  });
+
+  it.each(["petalipop", "pomponnette", "coralie", "flutinelle", "ninachou", "basketoile", "poussinelle", "loutrelune", "shampouff", "fluoribelle", "sacapouic", "uranounet"] as const)("earns and reloads all %s evolutions without consuming earlier cards", (familyId) => {
     const state = createInitialAppState();
     state.rewards.fairyCollection.selectedFamilyId = familyId;
     for (let mission = 0; mission < 7; mission += 1) {

@@ -1,97 +1,110 @@
-# Design QA — Les Fabuleuses, troisième lot
+# Design QA — Les Fabuleuses, cinquième lot
 
-Date : 23 septembre 2026.
+Date : 26 septembre 2026.
 
 final result: passed
 
 ## Périmètre et preuves
 
-Douze nouvelles illustrations : Flûtinelle, Ninachou et Baskétoile, chacune en
-quatre évolutions. L'album contient 36 cartes et neuf familles. La référence
-choisie reste Ronronova, Impératrice des étoiles. Le rapport du deuxième lot
-est conservé dans `docs/qa/fabuleuses-lot-2/design-qa.md`.
+Fluoribelle, Sacapouic et Uranounet 235, quatre évolutions chacun. Le catalogue
+contient 60 cartes et quinze familles. Référence artistique : Ronronova,
+Impératrice des étoiles, choisie par l'utilisateur. Le rapport précédent est
+conservé dans `docs/qa/fabuleuses-lot-4/design-qa.md`.
 
 - Aperçu : `http://127.0.0.1:4174/`, Album, Les Fabuleuses.
-- Direction artistique : `public/cards/fabuleuses/ronronova-4.webp`.
-- Source de comparaison : `C:/Users/Seb/.codex/generated_images/01a0ceb1-1b83-7ed1-9117-13401d2f88b7/exec-d8deaab1-ff37-4a41-85d4-24b31c72ecbc.png` (1086 × 1448).
-- Asset intégré : `public/cards/fabuleuses/flutinelle-1.webp` (768 × 1024).
-- Capture : `docs/qa/fabuleuses-lot-3/flutinelle-dialog.png`.
-- Source à gauche / rendu à droite : `docs/qa/fabuleuses-lot-3/flutinelle-comparison.png`.
-- Douze cartes inspectées : `docs/qa/fabuleuses-lot-3/new-families.jpg`.
-- Sélecteur avant/après correction : `docs/qa/fabuleuses-lot-3/families-320-before.png`, `families-320.png`.
-- Formes finales : `flutinelle-final-dialog.png`, `ninachou-320.png`, `basketoile-320.png`, dans le même dossier.
-- Album à la taille normale du navigateur : `docs/qa/fabuleuses-lot-3/album-desktop.png`.
+- Source de style : `public/cards/fabuleuses/ronronova-4.webp`.
+- Sources comparées au rendu : `public/cards/fabuleuses/fluoribelle-1.webp`,
+  `sacapouic-1.webp`, `uranounet-1.webp`, chacune 768 × 1024.
+- Captures : `docs/qa/fabuleuses-lot-5/fluoribelle-390.png`,
+  `sacapouic-390.png`, `uranounet-390.png`.
+- Comparaisons source à gauche / rendu à droite : `fluoribelle-comparison.png`,
+  `sacapouic-comparison.png`, `uranounet-comparison.png`, dans le même dossier.
+- Contrôle des formes finales : `fluoribelle-final-320.png`,
+  `sacapouic-final-320.png`, `uranounet-final-320.png`.
+- Sélecteur : `families-320.png` ; grand écran : `album-desktop.png`.
+- Douze illustrations inspectées : `new-families.jpg`, 1240 × 1250.
+- Vue des trois fiches : `preview.jpg`, 1157 × 836.
+- Identités, titres et ensemble de prompts : `docs/09-fabuleuses.md`, cinquième lot.
 
-La comparaison ciblée porte sur la carte entière dans sa fiche d'aperçu, sans
-recadrage de son illustration. Viewport CSS 390 × 844, image de 288 × 384 à x=36,
-y=104,765625, après la fin de l'animation. La capture du fournisseur mesure
-375 × 812 ; le crop normalisé mesure 277 × 369. La source est réduite à cette
-même taille et placée à côté. À 320 × 568, les captures mesurent 305 × 541.
-La densité de capture et le lissage du fournisseur expliquent la perte de
-micro-détails face à la source ; la composition et les cadres restent identiques.
-La flûte, les titres et les ornements sont lisibles dans la comparaison ciblée.
+## Normalisation et état
 
-## Constats et correction
+Viewports contrôlés : 320 × 568, 390 × 844 et 1280 × 900 CSS. DPR : 1.
+Le fournisseur capture respectivement 305 × 541, 375 × 812 et 1265 × 889 pixels.
+La comparaison porte sur le premier stade ouvert en aperçu, animation terminée.
+À 390 × 844, chaque image occupe 288 × 384 CSS à (36, 104.765625).
+La zone (35, 101, 312, 470) de la capture donne 277 × 369 pixels. La source
+est réduite à la même taille puis affichée côte à côte dans une image 594 × 413.
+Les trois comparaisons ont été ouvertes et inspectées, ainsi que les vues complètes.
+Le léger lissage des captures est lié à cette mise à l'échelle, sans agrandissement
+des miniatures dans les fiches.
 
-**P2 corrigé — nom Pomponnette à 320 px.** Le texte occupait 75,30 px et débordait
-l'espace intérieur du bouton : scrollWidth 78 pour clientWidth 76. Le padding
-horizontal des boutons est désormais nul jusqu'à 360 px, sans réduire leur police
-ou leurs cibles tactiles. La nouvelle capture et la mesure DOM montrent neuf
-boutons sans débordement, document scrollWidth = clientWidth = 305. Les tests
-navigateur vérifient aussi tous les noms. Les images temporairement manquantes de
-la capture initiale sont remplacées par les neuf miniatures finales.
+## Constats et surfaces de fidélité
 
-Aucun P0/P1/P2 restant. Aucun blocage de capture ou de comparaison.
+Aucun problème P0/P1/P2 restant. Première comparaison du rendu acceptée.
 
-## Cinq surfaces de fidélité
+- **Typographie** : nom, titre, numéro, rareté et stade sont intégrés au raster.
+  Les mêmes textes sont accessibles dans l'interface. Georgia pour les titres,
+  police système pour les contrôles, hiérarchie inchangée. Les noms tiennent à
+  320 pixels ; Uranounet 235 passe proprement sur deux lignes dans le sélecteur.
+- **Espacement et disposition** : cinq rangées de trois compagnons, deux colonnes
+  de cartes, ratio 3:4 complet. Boutons tactiles et fermeture toujours accessibles.
+  Le défilement vertical du catalogue est attendu ; aucun débordement horizontal
+  dans l'album ou les dialogues. Cadres et illustrations non rognés.
+- **Couleurs** : cohérence opale/or/rose/lilas avec la collection ; arc-en-ciel du
+  surligneur, prune/framboise du sac et corail/lavande du noyau distinguent les
+  personnages. Contrastes et couleurs de rareté de l'interface conservés.
+- **Images** : douze générations natives distinctes ; pointe biseautée visible,
+  vrai sac à bretelles avec attributs de diablotin, noyau perlé et médaillon U-235.
+  Les silhouettes restent reconnaissables à chaque évolution. Les 60 WebP
+  totalisent 18,72 Mio ; quinze miniatures 120 × 160 totalisent 127,3 Kio.
+  Les grands visuels sont chargés à la demande. Aucune illustration CSS/SVG ajoutée.
+- **Contenu** : numéros 009–012, 069–072 et 097–100 sans collision. La carte 100
+  n'augmente pas artificiellement le compteur, qui indique 60 cartes. Pouvoirs,
+  secrets et objectifs présents ; la consultation reste explicitement un aperçu.
+  Uranounet est un personnage fantastique, sans prétention de schéma scientifique.
+  Sacapouic est démoniaque et farceur, adapté au public de l'application.
 
-- **Typographie :** titres, accents, numéros 085–096, raretés et stades vérifiés.
-  Le nom et la rareté intégrés aux images sont aussi disponibles en texte dans
-  l'interface. La police Georgia des titres et la police système des commandes
-  restent celles de l'album. Les noms du sélecteur restent entiers.
-- **Espacement :** cadre 3:4 complet, grille de deux cartes, sélecteur de neuf
-  familles sur trois rangées. Cibles de 80 × 95 ou 109 px à 320 px ; aucun
-  débordement de la page ou des fiches. Le bouton Fermer reste accessible.
-- **Couleurs :** palette opale/or/rose/lilas conservée ; aurores musicales,
-  éclipse nocturne et terrain cosmique différencient les trois univers visuels.
-  Les raretés sont indiquées par du texte en plus de leur couleur.
-- **Images :** douze générations natives Image Gen, sans placeholders. Flûte
-  traversière argentée horizontale à clés, ninja acrobatique aux rubans lumineux,
-  basketteuse avec ballon et panier reconnaissables. Identités constantes et
-  poses/décors/tenues qui progressent. Les gemmes du cadre sont décoratives ;
-  le bandeau nommé est la référence de rareté.
-- **Contenu :** 36 cartes réellement intégrées, huit raretés existantes, quatre
-  stades par famille. Aperçu et possession distingués. Jalons 1/2/4/7 terminés,
-  progression conservée en changeant de compagnon et malgré les erreurs.
+Les gemmes sont décoratives ; leur nombre ne définit pas la rareté.
 
-Les 36 WebP de 768 × 1024 totalisent 11,14 Mio. Les neuf miniatures de 120 × 160
-ne totalisent que 76,6 Kio ; la grille charge les grandes images à la demande.
-Aucune nouvelle dépendance ni génération à l'exécution.
+## Historique de préparation des assets
 
-## Validation
+Un premier rendu de Sacapouic stade 4 avait un portrait trop étroit. Avant
+intégration, une édition native ImageGen a corrigé le format en 1086 × 1448,
+exactement 3:4, sans étirement ni rognage. Le PNG retenu est
+`C:/Users/Seb/.codex/generated_images/01a0ceb1-a6f0-7dd1-aea9-266e6f2e81c0/exec-3b67c2b7-c7b7-429e-b43b-047bc57b4617.png`.
+Le WebP réduit à 768 × 1024 a été inspecté sur la planche complète puis dans
+`sacapouic-final-320.png` : cadre entier, textes et personnage conservés.
+Aucune correction CSS ou autre écart visuel de l'interface n'a été nécessaire.
 
-- Neuf familles consultables, trois nouveaux compagnons sélectionnables.
-- Sauvegarde v3 de six familles rechargée sans perte ; nouveaux compteurs à zéro.
-- Familles partielle et complète préservées ; quatre évolutions gagnées et
-  rechargées pour chaque nouvelle famille, sans consommer les précédentes.
-- Gain de Baskétoile après dix erreurs en conservant une carte Coralie, sous
-  Chromium mobile et WebKit/iPhone.
-- Fiches, fermeture, retour du focus, miniatures, 36 réponses WebP et absence de
-  débordement vérifiés par les parcours navigateur.
-- Console du navigateur intégré après chargement des assets finalisés : aucune
-  erreur ni alerte. Préférence de viewport remise à zéro ; album laissé ouvert.
-- `npm run lint` : succès.
-- `npm run test` : 84 tests réussis.
-- `npm run build` : succès ; avertissement préexistant de lottie-web sur eval.
-- `npm run test:e2e` : 66 tests réussis, code de sortie 0.
+## Parcours et validations
 
-Sous Windows, le serveur de test a été arrêté après les 66 tests pour terminer
-le teardown Playwright. Le serveur d'aperçu sur 4174 reste actif.
+Le navigateur intégré a permis de parcourir les trois familles et leurs fiches,
+vérifier les grandes images 768 pixels, les quinze miniatures 120 pixels,
+le retour du focus et les formats compact/standard/bureau. Après disponibilité
+des douze assets, rechargement puis parcours des trois familles : aucune erreur
+ni avertissement console. L'album affiche 60 cartes et quinze compagnons.
+Les overrides de viewport sont retirés et l'aperçu reste ouvert.
 
-## Livraison et limites
+- `npm run lint` : réussi.
+- `npm run test` : 92 tests réussis.
+- `npm run build` : réussi ; avertissement préexistant `eval` dans lottie-web.
+- `npm run test:e2e` : 70 tests réussis (35 Chromium mobile et 35 WebKit/iPhone),
+  3,5 minutes, sortie 0. Le serveur de test a été arrêté après les 70 résultats
+  pour débloquer sa fermeture Windows ; l’aperçu 4174 reste actif.
 
-Les sources, tests et docs sont mis à jour ; les assets et miniatures sont dans
-`public/cards/fabuleuses/`. Prompts et catalogue : `docs/09-fabuleuses.md`.
-La progression reste locale. Les 64 autres cartes du projet de 100 restent à
-illustrer ; elles ne sont pas présentées comme disponibles. L'aperçu local reste
-actif, sans publication effectuée dans ce lot.
+La couverture porte sur les anciens albums v3 de trois, six, neuf et douze
+familles, la conservation des progrès partiels/complets, les jalons 1/2/4/7,
+le gain malgré les erreurs, les resets et les rechargements. Les tests mobiles
+consultent les dernières formes, choisissent les compagnons et gagnent Uranounet
+après dix erreurs tout en conservant Shampouff. Ils vérifient aussi les 60 images
+HTTP réelles, le focus, Échap et les animations réduites.
+
+## Limites et suite
+
+Validation réalisée dans l'aperçu local. Sauvegarde locale à l'appareil et pas de garantie
+de premier chargement hors ligne. Aucun changement de schéma (v3), de moteur de
+questions ou de calcul d'étoiles ; aucune nouvelle dépendance.
+
+P3 pour un prochain lot : envisager un filtre par univers avec la croissance vers
+25 familles, afin de limiter la hauteur du sélecteur. Aucun blocage pour les quinze
+familles actuelles.

@@ -107,7 +107,9 @@ export type Badge = {
 
 export type FairyFamilyId = "ronronova" | "lunabelle" | "pralinette"
   | "petalipop" | "pomponnette" | "coralie"
-  | "flutinelle" | "ninachou" | "basketoile";
+  | "flutinelle" | "ninachou" | "basketoile"
+  | "poussinelle" | "loutrelune" | "shampouff"
+  | "fluoribelle" | "sacapouic" | "uranounet";
 export type FairyRarity =
   | "choupinette" | "pailletee" | "etincelante" | "feerique"
   | "royalissime" | "mythique" | "galactastique" | "ultime";

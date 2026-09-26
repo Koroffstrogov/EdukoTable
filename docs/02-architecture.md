@@ -176,7 +176,7 @@ Ne pas introduire Redux/Zustand sauf besoin réel.
 
 Les Fabuleuses utilisent `domain/fairyCards.ts` pour le catalogue et les évolutions,
 `FairyAlbum` et `FairyCardVisual` pour l'affichage, et `styles/fabuleuses.css` pour
-leur présentation. Les 36 illustrations WebP sont servies depuis
+leur présentation. Les 60 illustrations WebP sont servies depuis
 `public/cards/fabuleuses/`, sans dépendance ni service de génération à l'exécution.
 Les cartes de la grille sont chargées à la demande ; seuls leurs IDs et compteurs
 sont stockés dans localStorage.

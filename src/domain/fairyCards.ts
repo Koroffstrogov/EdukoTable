@@ -21,6 +21,12 @@ export const FAIRY_FAMILIES: { id: FairyFamilyId; name: string; world: string; d
   { id: "flutinelle", name: "Flûtinelle", world: "Le Bal des Princesses Cosmiques", description: "Sa flûte traversière fait danser les étoiles… et les chaussettes !" },
   { id: "ninachou", name: "Ninachou", world: "Le Bal des Princesses Cosmiques", description: "Un pas de velours, une pirouette… et une pluie de paillettes." },
   { id: "basketoile", name: "Baskétoile", world: "Le Bal des Princesses Cosmiques", description: "Elle dribble entre les nuages et vise les paniers de la galaxie." },
+  { id: "poussinelle", name: "Poussinelle", world: "Le Jardin des Fées Farceuses", description: "Une petite pousse, de grandes idées… et des feuilles qui chatouillent !" },
+  { id: "loutrelune", name: "Loutrelune", world: "L’Archipel des Sirènes Pétillantes", description: "Elle cache des secrets de lune entre deux galipettes dans l’eau." },
+  { id: "shampouff", name: "Shampouff", world: "Le Palais des Bulles Malicieuses", description: "Un flacon futé, une coiffure de mousse et mille idées qui pétillent !" },
+  { id: "fluoribelle", name: "Fluoribelle", world: "L’Atelier des Couleurs Impossibles", description: "Un coup de surligneur… et les idées prennent toutes les couleurs !" },
+  { id: "sacapouic", name: "Sacapouic", world: "Le Manoir des Cartables Farceurs", description: "Deux petites cornes, un zip malicieux et un cartable plein de bêtises !" },
+  { id: "uranounet", name: "Uranounet 235", world: "L’Observatoire des Atomes Rêveurs", description: "Ce petit atome d’uranium 235 rêve de devenir la vedette du bal cosmique." },
 ];
 
 const STAGE_SESSIONS = [1, 2, 4, 7] as const;
@@ -95,6 +101,42 @@ export const FAIRY_CARDS: FairyCard[] = [
     { title: "Dribble comète", rarity: "feerique", power: "Ses dribbles tracent une piste de comètes entre les nuages.", secret: "Elle donne un prénom à ses baskets : Pouf et Paf." },
     { title: "Duchesse du dunk", rarity: "royalissime", power: "Elle saute par-dessus les arcs-en-ciel pour marquer des paniers magiques.", secret: "Son filet de basket lui réclame des spaghettis au goûter." },
     { title: "Reine du panier cosmique", rarity: "ultime", power: "Son dunk fait briller toute la galaxie dans une explosion de couleurs.", secret: "Son plus beau panier ? Celui où elle range les dessins de ses amis." },
+  ]),
+  ...familyCards("poussinelle", 5, [
+    { title: "Pousse-Pouce", rarity: "choupinette", power: "Ses petites feuilles font éclore des fleurs en forme de sourire.", secret: "Elle réclame une histoire avant chaque arrosage." },
+    { title: "Liane malicieuse", rarity: "pailletee", power: "Ses lianes tressent des balançoires pour les papillons fatigués.", secret: "Elle fait des chatouilles aux arrosoirs pour déclencher la pluie." },
+    { title: "Duchesse chlorophylle", rarity: "feerique", power: "Elle transforme un rayon de soleil en un jardin suspendu.", secret: "Son jardinier est un escargot qui prend trois semaines de pause." },
+    { title: "Floraison cosmique", rarity: "mythique", power: "Ses pétales géants font fleurir les constellations.", secret: "Elle cherche encore un pot assez grand pour ses racines." },
+  ]),
+  ...familyCards("loutrelune", 45, [
+    { title: "Galipette de rosée", rarity: "choupinette", power: "Elle roule sur l’eau et laisse des perles de lumière derrière elle.", secret: "Son caillou préféré s’appelle Monsieur Patate." },
+    { title: "Perle de lune", rarity: "etincelante", power: "Elle berce une perle qui éclaire les rêves de la rivière.", secret: "Elle dort sur le dos pour ne pas décoiffer ses moustaches." },
+    { title: "Gardienne des brumes", rarity: "royalissime", power: "Elle guide les petits voyageurs avec des rubans de brume argentée.", secret: "Elle perd toujours sa couronne au fond de sa piscine." },
+    { title: "Oracle des marées", rarity: "galactastique", power: "Sa grande perle de lune révèle des rivières d’étoiles.", secret: "Elle prédit surtout l’heure de la prochaine sieste." },
+  ]),
+  ...familyCards("shampouff", 65, [
+    { title: "Bulle-Malice", rarity: "pailletee", power: "Ses bulles coiffent les mèches rebelles en petits cœurs.", secret: "Il se fait une moustache de mousse pour passer incognito." },
+    { title: "Mousse futée", rarity: "etincelante", power: "Il invente des bulles qui démêlent les nœuds en un clin d’œil.", secret: "Son peigne lui raconte des histoires à dormir debout." },
+    { title: "Prince du démêlage", rarity: "royalissime", power: "Son sceptre de mousse dénoue même les rubans des nuages.", secret: "Sa couronne fait pouic à chaque fois qu’il s’incline." },
+    { title: "Génie des bulles", rarity: "mythique", power: "Il fait flotter un palais de bulles aux reflets de mille aurores.", secret: "Son grand secret : il répète ses discours devant un canard de bain." },
+  ]),
+  ...familyCards("fluoribelle", 9, [
+    { title: "Trait-Malice", rarity: "pailletee", power: "Elle surligne les bonnes idées d’un petit arc-en-ciel.", secret: "Elle souligne aussi les blagues… surtout celles qui ne font rire qu’elle." },
+    { title: "Arc-en-Surligne", rarity: "etincelante", power: "Ses traits multicolores deviennent des toboggans pour les mots.", secret: "Son capuchon joue à cache-cache dans les trousses." },
+    { title: "Marquise des couleurs", rarity: "feerique", power: "Elle dessine des ponts de lumière entre les pages des livres.", secret: "Elle a inventé une couleur qui s’appelle Prout-de-Licorne." },
+    { title: "Aurore fluo", rarity: "galactastique", power: "Son grand trait arc-en-ciel illumine la bibliothèque des étoiles.", secret: "Même en reine du fluo, elle dépasse encore un peu des lignes." },
+  ]),
+  ...familyCards("sacapouic", 69, [
+    { title: "Mini-Diablotin", rarity: "choupinette", power: "Sa poche secrète attrape les crayons avant qu’ils tombent.", secret: "Il fait grr… mais son zip répond toujours pouic." },
+    { title: "Zip infernal", rarity: "pailletee", power: "Ses petites ailes transportent les cahiers dans un tourbillon de confettis.", secret: "Il cache les gommes, puis oublie dans quelle poche." },
+    { title: "Duc des bêtises", rarity: "royalissime", power: "Il ouvre des passages magiques entre toutes les trousses du manoir.", secret: "Il a peur des devoirs… surtout quand ils sont déjà terminés." },
+    { title: "Seigneur du bazar", rarity: "mythique", power: "Son grand sac déploie un château volant de fournitures enchantées.", secret: "Son plus terrible secret : il adore qu’on range ses chaussettes." },
+  ]),
+  ...familyCards("uranounet", 97, [
+    { title: "Noyau-Chou", rarity: "choupinette", power: "Dans son monde magique, ses petites lumières dansent autour des rêves.", secret: "Ses amis l’appellent U-235, mais lui préfère Monsieur Câlin." },
+    { title: "Pirouette quantique", rarity: "etincelante", power: "Il fait tournoyer ses anneaux en un ballet de rubans étoilés.", secret: "Il donne le tournis à son propre nœud papillon." },
+    { title: "Prince des orbitales", rarity: "feerique", power: "Il tisse une couronne de lumières pour les petits rêveurs du ciel.", secret: "Ses électrons refusent de se mettre en rang pour la photo." },
+    { title: "Majesté atomique", rarity: "ultime", power: "Son grand ballet cosmique dessine un palais de constellations.", secret: "Son trône est minuscule, mais il exige un coussin gigantesque." },
   ]),
 ];
 

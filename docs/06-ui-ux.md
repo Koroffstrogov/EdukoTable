@@ -267,7 +267,7 @@ La direction féérique rose/lilas des cartes a été choisie avec l'utilisateur
 partir de Ronronova, Impératrice des étoiles. L'interface de révision conserve
 sa charte et ses boutons existants.
 
-L'album affiche d'abord les neuf familles illustrées en trois rangées de trois,
+L'album affiche d'abord les quinze familles illustrées en cinq rangées de trois,
 le choix de compagnon,
 puis ses quatre évolutions. Chaque carte est ouvrable dans un dialogue, avec
 son image entière, sa rareté, son pouvoir et un petit secret. Une carte non

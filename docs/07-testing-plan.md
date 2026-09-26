@@ -148,14 +148,14 @@ en CI et conservent un rapport HTML ainsi que les traces des échecs.
 
 ## Couverture du lot Fabuleuses
 
-`src/domain/fairyCards.test.ts` vérifie le catalogue de 36 cartes, les huit
+`src/domain/fairyCards.test.ts` vérifie le catalogue de 60 cartes, les huit
 raretés, les jalons 1/2/4/7, le changement de compagnon, les missions avec
 erreurs, les deux formats de réponses, l'abandon, les migrations v2/v3,
 les données endommagées, la persistance et les deux resets.
 
 `tests/e2e/fabuleuses.spec.ts` vérifie sous Chromium et WebKit le choix du
 compagnon, une mission avec dix erreurs, le gain et le rechargement, l'accès
-à la dernière évolution, les 36 images WebP réelles, la consultation des
+à la dernière évolution, les 60 images WebP réelles, la consultation des
 aperçus, Échap, le retour du focus et les animations réduites sur 320 × 568.
 
 Le deuxième lot vérifie également qu'un album v3 contenant seulement les trois
@@ -169,3 +169,15 @@ d'une famille complète et d'une famille partielle, puis les quatre évolutions 
 Flûtinelle, Ninachou et Baskétoile. Le parcours mobile consulte leurs derniers
 stades, vérifie le retour du focus et les débordements, recharge le compagnon choisi
 et gagne une carte de Baskétoile tout en conservant la carte de Coralie existante.
+
+Le quatrième lot couvre un album v3 de neuf familles, dont plusieurs compagnons
+partiellement ou complètement évolués. Les douze nouvelles cartes sont gagnées
+et rechargées en tests unitaires. Le parcours mobile consulte les trois familles,
+vérifie les images et le focus sur 320 × 568, puis gagne Shampouff après dix erreurs
+et recharge l'album en conservant la carte Ninachou déjà acquise.
+
+Le cinquième lot couvre la reprise d'un album v3 de douze familles, avec
+Poussinelle, Loutrelune et Shampouff partiellement ou complètement évolués.
+Les nouvelles familles gagnent leurs quatre cartes en tests unitaires. En E2E,
+leurs formes finales sont consultées et leurs compagnons sélectionnés à 320 pixels ;
+une mission avec dix erreurs gagne Uranounet et conserve la carte Shampouff existante.

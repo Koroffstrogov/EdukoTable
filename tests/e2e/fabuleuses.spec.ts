@@ -13,7 +13,7 @@ test("chooses a companion, earns a card despite mistakes, and keeps it after rel
   await expect(page.getByText("Nouvelle Fabuleuse", { exact: true })).toBeVisible();
   await expect(page.locator(".fairy-reveal strong")).toHaveText("Coralie Glouglou · Bulle-Bisou");
   await page.getByRole("button", { name: "Voir ma Fabuleuse dans l’album" }).click();
-  await expect(page.getByText("1 / 36 cartes gagnées")).toBeVisible();
+  await expect(page.getByText("1 / 60 cartes gagnées")).toBeVisible();
   const rewards = (await persistedState(page)).rewards;
   expect(rewards.fairyCollection.unlockedCardIds).toEqual(["coralie-1"]);
   expect(rewards.fairyCollection.sessionsByFamily).toEqual({ ...createInitialFairyCollection().sessionsByFamily, coralie: 1 });
@@ -51,7 +51,7 @@ test("previews the selected cat artwork on compact mobile with keyboard and redu
   expect((await persistedState(page)).rewards.fairyCollection.unlockedCardIds).toEqual([]);
 });
 
-test("reaches the final evolution and serves all thirty-six real card images", async ({ page, request }) => {
+test("reaches the final evolution and serves all sixty real card images", async ({ page, request }) => {
   for (const card of FAIRY_CARDS) {
     const response = await request.get(card.artwork);
     expect(response.ok(), card.artwork).toBe(true);
@@ -87,7 +87,7 @@ test("browses and selects the second-lot families on compact mobile without losi
   })), state);
   await page.reload();
   await page.getByRole("button", { name: "Album", exact: true }).click();
-  await expect(page.getByRole("group", { name: "Familles de Fabuleuses" }).getByRole("button")).toHaveCount(9);
+  await expect(page.getByRole("group", { name: "Familles de Fabuleuses" }).getByRole("button")).toHaveCount(15);
   await expect.poll(() => page.locator(".fairy-family-picker img").evaluateAll((images) =>
     images.every((image) => (image as HTMLImageElement).naturalWidth === 120),
   )).toBe(true);
@@ -158,6 +158,98 @@ test("adds musician, ninja and basketball companions to a saved six-family album
   await completeMission(page, false);
   await expect(page.locator(".fairy-reveal strong")).toHaveText("Baskétoile · Mini-Rebond");
   expect((await persistedState(page)).rewards.fairyCollection.unlockedCardIds).toEqual(["coralie-1", "basketoile-1"]);
+});
+
+test("adds plant, otter and shampoo families to a saved nine-family album and earns a card", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto("/");
+  const state = await persistedState(page);
+  await page.evaluate((value) => localStorage.setItem("edukotable:v1", JSON.stringify({
+    ...value,
+    rewards: { ...value.rewards, fairyCollection: {
+      selectedFamilyId: "ninachou",
+      sessionsByFamily: { ronronova: 0, lunabelle: 0, pralinette: 0, petalipop: 0, pomponnette: 0, coralie: 0, flutinelle: 0, ninachou: 1, basketoile: 0 },
+      unlockedCardIds: ["ninachou-1"],
+    } },
+  })), state);
+  await page.reload();
+  await page.getByRole("button", { name: "Album", exact: true }).click();
+  for (const family of [
+    { id: "poussinelle", name: "Poussinelle", title: "Floraison cosmique" },
+    { id: "loutrelune", name: "Loutrelune", title: "Oracle des marées" },
+    { id: "shampouff", name: "Shampouff", title: "Génie des bulles" },
+  ]) {
+    const button = page.getByRole("button", { name: family.name, exact: true });
+    await button.click();
+    expect(await button.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    await page.getByRole("button", { name: `Choisir ${family.name}`, exact: true }).click();
+    const card = page.getByRole("button", { name: `Voir ${family.name} : ${family.title}, aperçu à débloquer`, exact: true });
+    await card.click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.locator("img")).toHaveAttribute("src", `/cards/fabuleuses/${family.id}-4.webp`);
+    await expect.poll(() => dialog.locator("img").evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBe(768);
+    expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    await page.getByRole("button", { name: "Fermer", exact: true }).click();
+    await expect(card).toBeFocused();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  }
+  await page.reload();
+  const saved = (await persistedState(page)).rewards.fairyCollection;
+  expect(saved.selectedFamilyId).toBe("shampouff");
+  expect(saved.unlockedCardIds).toEqual(["ninachou-1"]);
+  expect(saved.sessionsByFamily).toEqual({ ...createInitialFairyCollection().sessionsByFamily, ninachou: 1 });
+  await completeMission(page, false);
+  await expect(page.locator(".fairy-reveal strong")).toHaveText("Shampouff · Bulle-Malice");
+  await page.getByRole("button", { name: "Voir ma Fabuleuse dans l’album" }).click();
+  await expect(page.getByText("2 / 60 cartes gagnées")).toBeVisible();
+  await page.reload();
+  expect((await persistedState(page)).rewards.fairyCollection.unlockedCardIds).toEqual(["ninachou-1", "shampouff-1"]);
+});
+
+test("adds highlighter, demonic backpack and uranium atom to a saved twelve-family album", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto("/");
+  const state = await persistedState(page);
+  await page.evaluate((value) => localStorage.setItem("edukotable:v1", JSON.stringify({
+    ...value,
+    rewards: { ...value.rewards, fairyCollection: {
+      selectedFamilyId: "shampouff",
+      sessionsByFamily: { ronronova: 0, lunabelle: 0, pralinette: 0, petalipop: 0, pomponnette: 0, coralie: 0, flutinelle: 0, ninachou: 0, basketoile: 0, poussinelle: 0, loutrelune: 0, shampouff: 1 },
+      unlockedCardIds: ["shampouff-1"],
+    } },
+  })), state);
+  await page.reload();
+  await page.getByRole("button", { name: "Album", exact: true }).click();
+  for (const family of [
+    { id: "fluoribelle", name: "Fluoribelle", title: "Aurore fluo" },
+    { id: "sacapouic", name: "Sacapouic", title: "Seigneur du bazar" },
+    { id: "uranounet", name: "Uranounet 235", title: "Majesté atomique" },
+  ]) {
+    const button = page.getByRole("button", { name: family.name, exact: true });
+    await button.click();
+    expect(await button.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    await page.getByRole("button", { name: `Choisir ${family.name}`, exact: true }).click();
+    const card = page.getByRole("button", { name: `Voir ${family.name} : ${family.title}, aperçu à débloquer`, exact: true });
+    await card.click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.locator("img")).toHaveAttribute("src", `/cards/fabuleuses/${family.id}-4.webp`);
+    await expect.poll(() => dialog.locator("img").evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBe(768);
+    expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    await page.getByRole("button", { name: "Fermer", exact: true }).click();
+    await expect(card).toBeFocused();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  }
+  await page.reload();
+  const saved = (await persistedState(page)).rewards.fairyCollection;
+  expect(saved.selectedFamilyId).toBe("uranounet");
+  expect(saved.unlockedCardIds).toEqual(["shampouff-1"]);
+  expect(saved.sessionsByFamily).toEqual({ ...createInitialFairyCollection().sessionsByFamily, shampouff: 1 });
+  await completeMission(page, false);
+  await expect(page.locator(".fairy-reveal strong")).toHaveText("Uranounet 235 · Noyau-Chou");
+  await page.getByRole("button", { name: "Voir ma Fabuleuse dans l’album" }).click();
+  await expect(page.getByText("2 / 60 cartes gagnées")).toBeVisible();
+  await page.reload();
+  expect((await persistedState(page)).rewards.fairyCollection.unlockedCardIds).toEqual(["shampouff-1", "uranounet-1"]);
 });
 
 async function persistedState(page: Page): Promise<AppState> {
