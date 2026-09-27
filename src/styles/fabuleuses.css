@@ -16,7 +16,8 @@
 .fairy-heading > p:not(.fairy-kicker) { font-size: .94rem; color: var(--fairy-muted); }
 .fairy-count { background: #eee2f5; color: #59376f; border-radius: 20px; padding: 7px 12px; font-size: .78rem; font-weight: 800; }
 .fairy-family-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.fairy-family-picker button { display: grid; justify-items: center; align-content: start; gap: 5px; padding: 8px 3px; border-radius: 14px; background: #fff; border: 2px solid #e6dcec; color: #523760; font-size: .78rem; font-weight: 800; line-height: 1.25; }
+.fairy-family-picker button { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: start; gap: 5px; padding: 8px 3px; border-radius: 14px; background: #fff; border: 2px solid #e6dcec; color: #523760; font-size: .78rem; font-weight: 800; line-height: 1.25; }
+.fairy-family-picker button > span { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 .fairy-family-picker button[aria-pressed="true"] { background: #edddf6; border-color: #8a55a6; }
 .fairy-family-picker img { display: block; width: 42px; height: 56px; object-fit: contain; border-radius: 5px; }
 .fairy-companion { display: grid; gap: 10px; }

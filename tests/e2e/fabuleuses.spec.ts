@@ -92,8 +92,10 @@ test("browses and selects the second-lot families on compact mobile without losi
     images.every((image) => (image as HTMLImageElement).naturalWidth === 120),
   )).toBe(true);
   expect(await page.locator(".fairy-family-picker button").evaluateAll((buttons) =>
-    buttons.every((button) => button.scrollWidth <= button.clientWidth),
-  )).toBe(true);
+    buttons.filter((button) => button.scrollWidth > button.clientWidth)
+      .map((button) => button.textContent),
+  )).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath("family-picker-320.png") });
   for (const family of [
     { id: "petalipop", name: "Pétalipop", title: "Impératrice du printemps" },
     { id: "pomponnette", name: "Pomponnette", title: "Gardienne des rêves" },

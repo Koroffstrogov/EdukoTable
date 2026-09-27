@@ -273,6 +273,9 @@ puis ses quatre évolutions. Chaque carte est ouvrable dans un dialogue, avec
 son image entière, sa rareté, son pouvoir et un petit secret. Une carte non
 possédée est explicitement un aperçu ; la regarder ne la débloque pas.
 
+Les noms des familles peuvent revenir à la ligne, y compris au milieu d'un nom
+long sur écran compact, sans débordement ni texte masqué.
+
 Les objectifs sont visibles dans la fiche et sous la grille. Un encart sur
 l'accueil rappelle le compagnon choisi et les missions restantes. Le résumé
 célèbre la carte gagnée et propose un accès direct à l'album.
